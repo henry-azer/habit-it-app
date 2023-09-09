@@ -39,21 +39,25 @@ flutter:
     - lang/ar.json
     - lang/en.json
     - assets/images/user.png
+    - assets/images/onboarding_1.png
+    - assets/images/onboarding_2.png
+    - assets/images/onboarding_3.png
 
   fonts:
-    - family: Tajawal
+    - family: MajorMonoDisplay
       fonts:
-        - asset: assets/fonts/Tajawal-Black.ttf
-          weight: 900
-        - asset: assets/fonts/Tajawal-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/Tajawal-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Tajawal-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Tajawal-Regular.ttf
+        - asset: assets/fonts/MajorMonoDisplay-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Tajawal-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Tajawal-ExtraLight.ttf
-          weight: 200
+
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Bold.ttf
+        - asset: fonts/Roboto-Italic.ttf
+        - asset: fonts/Roboto-BoldItalic.ttf
+        - asset: fonts/Roboto-Light.ttf
+        - asset: fonts/Roboto-LightItalic.ttf
+        - asset: fonts/Roboto-Medium.ttf
+        - asset: fonts/Roboto-MediumItalic.ttf
+        - asset: fonts/Roboto-Thin.ttf
+        - asset: fonts/Roboto-ThinItalic.ttf

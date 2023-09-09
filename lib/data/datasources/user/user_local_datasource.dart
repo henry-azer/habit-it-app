@@ -1,7 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/utils/app_strings.dart';
+
 abstract class UserLocalDataSource {
-  Future<void> cacheIsAppWelcomedUser();
+  Future<void> cacheIsApGetStarted();
 }
 
 class UserLocalDataSourceImpl implements UserLocalDataSource {
@@ -10,8 +12,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   UserLocalDataSourceImpl({required this.sharedPreferences});
 
   @override
-  Future<void> cacheIsAppWelcomedUser() async {
-    // TODO: Remove it when production
-    // sharedPreferences.setBool(AppStrings.cachedIsAppWelcomedUser, true);
+  Future<void> cacheIsApGetStarted() async {
+    sharedPreferences.setBool(AppStrings.cachedIsUserGetStarted, true);
   }
 }

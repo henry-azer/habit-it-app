@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:habit_it/features/onboarding/domain/cubit/app_get_started_cubit.dart';
+import 'package:habit_it/features/onboarding/domain/usecase/app_get_started_usecase.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/api/api_consumer.dart';
@@ -18,9 +20,9 @@ import 'data/repositories/user/user_repository_impl.dart';
 import 'data/datasources/localization/localization_local_data_source.dart';
 import 'data/repositories/localization/localization_repository_impl.dart';
 import 'data/repositories/localization/localization_repository.dart';
+import 'features/splash/domain/cubit/localization_cubit.dart';
 import 'features/splash/domain/usecases/change_lang_usecase.dart';
 import 'features/splash/domain/usecases/get_saved_lang_usecase.dart';
-import 'features/splash/presentation/cubit/localization_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -29,12 +31,16 @@ Future<void> init() async {
   // !---- Cubits ----!
   // splash
   sl.registerFactory<LocalizationCubit>(() => LocalizationCubit(getSavedLangUseCase: sl(), changeLangUseCase: sl()));
+  sl.registerFactory<AppGetStartedCubit>(() => AppGetStartedCubit(appGetStartedUseCase: sl()));
 
 
   // !---- Use cases ----!
   // splash
   sl.registerLazySingleton<ChangeLangUseCase>(() => ChangeLangUseCase(langRepository: sl()));
   sl.registerLazySingleton<GetSavedLangUseCase>(() => GetSavedLangUseCase(langRepository: sl()));
+
+  // onboarding
+  sl.registerLazySingleton<AppGetStartedUseCase>(() => AppGetStartedUseCase(userRepository: sl()));
 
 
   // !---- Repository ----!

@@ -1,4 +1,7 @@
 class AppLocalizationKeys {
+  /// SPLASH
+  static const String splashTitle = 'splash_title';
+
   /// ONBOARDING
   static const String onboardingTitle = 'onboarding_title';
   static const String onboardingGettingStarted = 'onboarding_getting_started';

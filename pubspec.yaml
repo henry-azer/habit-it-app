@@ -39,6 +39,7 @@ flutter:
     - lang/ar.json
     - lang/en.json
     - assets/images/user.png
+    - assets/images/logo.png
     - assets/images/onboarding_1.png
     - assets/images/onboarding_2.png
     - assets/images/onboarding_3.png

@@ -8,10 +8,10 @@ class AppTextStyles with Diagnosticable {
 
   /// SPLASH
   static TextStyle? splashText = TextStyle(
-    fontSize: 32,
-    fontWeight: FontWeight.w400,
+    fontSize: 52,
+    fontWeight: FontWeight.w800,
     color: AppColors.white,
-    fontFamily: AppFonts.roboto,
+    fontFamily: AppFonts.rubik,
   );
 
   /// ONBOARDING

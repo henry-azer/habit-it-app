@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:habit_it/config/locale/app_localization_helper.dart';
+import 'package:habit_it/core/utils/app_assets_manager.dart';
+import 'package:habit_it/core/utils/app_localization_strings.dart';
+import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../config/routes/app_routes.dart';
@@ -33,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   _startDelay() {
-    _timer = Timer(const Duration(milliseconds: 1000), () => _goNext());
+    _timer = Timer(const Duration(milliseconds: 7000), () => _goNext());
   }
 
   _goNext() => {
@@ -54,9 +58,25 @@ class _SplashScreenState extends State<SplashScreen>
     return Material(
       child: Scaffold(
         body: Center(
-          child: Text(
-            "Splash Screen",
-            style: AppTextStyles.homeText,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                AppImageAssets.logo,
+                height: 300,
+              ),
+              SizedBox(
+                height: context.height * 0.05,
+              ),
+              Text(
+                AppLocalizationHelper.translate(
+                    context, AppLocalizationKeys.splashTitle),
+                style: AppTextStyles.splashText,
+              ),
+              SizedBox(
+                height: context.height * 0.10,
+              ),
+            ],
           ),
         ),
       ),

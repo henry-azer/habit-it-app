@@ -7,8 +7,8 @@ import 'core/utils/app_strings.dart';
 import 'features/splash/presentation/cubit/localization_cubit.dart';
 import 'injection_container.dart' as di;
 
-class FlutterStarterApp extends StatelessWidget {
-  const FlutterStarterApp({Key? key}) : super(key: key);
+class HabitItApp extends StatelessWidget {
+  const HabitItApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

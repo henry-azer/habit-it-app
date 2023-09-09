@@ -1,4 +1,4 @@
-import 'package:flutter_starter/core/validation/validation_types.dart';
+import 'package:habit_it/core/validation/validation_types.dart';
 
 class ValidateTextFiled {
   final String value;

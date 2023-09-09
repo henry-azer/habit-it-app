@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_starter/data/repositories/user/user_repository.dart';
+import 'package:habit_it/data/repositories/user/user_repository.dart';
 
 import '../../../core/error/exceptions.dart';
 import '../../../core/models/response_model.dart';

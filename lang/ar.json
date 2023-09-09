@@ -22,5 +22,15 @@
   "create_new_account": "انشاء مستخدم جديد؟",
   "required": " * مطلوب",
   "invalid_email": " * بريد إلكتروني خاطئ",
-  "at_least_8_chars": "* علي الاقل 8 حروف"
+  "at_least_8_chars": "* علي الاقل 8 حروف",
+
+  "onboarding_title": "HABIT IT",
+  "onboarding_getting_started": "Let's Start",
+  "onboarding_page_one_title": "Build Better Habits",
+  "onboarding_page_one_description": "Start your journey towards improved productivity...",
+  "onboarding_page_two_title": "Optimize Your Time",
+  "onboarding_page_two_description": "Time is your most valuable resource, make every moment count...",
+  "onboarding_page_three_title": "Track Your Habits",
+  "onboarding_page_three_description": "Input habits and watch your progress over time..."
+
 }

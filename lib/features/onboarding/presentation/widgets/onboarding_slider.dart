@@ -2,6 +2,7 @@ library flutter_onboarding_slider;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/features/onboarding/presentation/widgets/page_offset_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -124,11 +125,11 @@ class OnBoardingSlider extends StatefulWidget {
     this.hasSkip = true,
     this.finishButtonTextStyle = const TextStyle(
       fontSize: 20,
-      color: Colors.white,
+      color: Colors.black,
     ),
     this.skipIcon = const Icon(
       Icons.arrow_forward,
-      color: Colors.white,
+      color: Colors.black,
     ),
     this.indicatorAbove = false,
     this.indicatorPosition = 90,
@@ -154,21 +155,7 @@ class _OnBoardingSliderState extends State<OnBoardingSlider> {
     return ChangeNotifierProvider(
       create: (BuildContext context) => PageOffsetNotifier(_pageController),
       child: Scaffold(
-        backgroundColor: widget.pageBackgroundColor ?? null,
-        floatingActionButton: widget.hasFloatingButton
-            ? BackgroundFinalButton(
-                buttonTextStyle: widget.finishButtonTextStyle,
-                skipIcon: widget.skipIcon,
-                addButton: widget.addButton,
-                currentPage: _currentPage,
-                pageController: _pageController,
-                totalPage: widget.totalPage,
-                onPageFinish: widget.onFinish,
-                finishButtonStyle: widget.finishButtonStyle,
-                buttonText: widget.finishButtonText,
-                hasSkip: widget.hasSkip,
-              )
-            : SizedBox.shrink(),
+        backgroundColor: widget.pageBackgroundColor,
         body: CupertinoPageScaffold(
           navigationBar: OnBoardingNavigationBar(
             skipFunctionOverride: widget.skipFunctionOverride,
@@ -178,15 +165,12 @@ class _OnBoardingSliderState extends State<OnBoardingSlider> {
             currentPage: _currentPage,
             onSkip: _onSkip,
             headerBackgroundColor: widget.headerBackgroundColor,
-            onFinish: widget.trailingFunction,
-            finishButton: widget.trailing,
-            skipTextButton: widget.skipTextButton,
           ),
           child: Container(
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
-              gradient: widget.pageBackgroundGradient ?? null,
-              color: widget.pageBackgroundColor ?? null,
+              gradient: widget.pageBackgroundGradient,
+              color: widget.pageBackgroundColor,
             ),
             child: SafeArea(
               child: Background(
@@ -217,8 +201,22 @@ class _OnBoardingSliderState extends State<OnBoardingSlider> {
                               totalPage: widget.totalPage,
                               controllerColor: widget.controllerColor,
                             )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
+                      BackgroundFinalButton(
+                        buttonTextStyle: widget.finishButtonTextStyle,
+                        skipIcon: widget.skipIcon,
+                        addButton: widget.addButton,
+                        currentPage: _currentPage,
+                        pageController: _pageController,
+                        totalPage: widget.totalPage,
+                        onPageFinish: widget.onFinish,
+                        finishButtonStyle: widget.finishButtonStyle,
+                        buttonText: widget.finishButtonText,
+                        hasSkip: widget.hasSkip,
+                      ),
+                      SizedBox(height: context.height * 0.02,)
                     ]),
+
               ),
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
 
 import '../../core/utils/app_strings.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
@@ -7,6 +8,7 @@ import '../../features/splash/presentation/screens/splash_screen.dart';
 class Routes {
   static const String initial = '/';
   static const String appHome = '/app-home';
+  static const String appOnboarding = '/app-onboarding';
 }
 
 class AppRoutes {
@@ -20,6 +22,11 @@ class AppRoutes {
       case Routes.appHome:
         return MaterialPageRoute(builder: (context) {
           return const HomeScreen();
+        }, settings: routeSettings);
+
+      case Routes.appOnboarding:
+        return MaterialPageRoute(builder: (context) {
+          return const OnboardingScreen();
         }, settings: routeSettings);
 
       default:

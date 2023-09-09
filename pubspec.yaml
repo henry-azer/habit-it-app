@@ -44,11 +44,6 @@ flutter:
     - assets/images/onboarding_3.png
 
   fonts:
-    - family: MajorMonoDisplay
-      fonts:
-        - asset: assets/fonts/MajorMonoDisplay-Regular.ttf
-          weight: 400
-
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Regular.ttf

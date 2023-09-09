@@ -27,7 +27,7 @@ class AppTextStyles with Diagnosticable {
     fontSize: 32,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
-    fontFamily: AppFonts.rubik,
+    fontFamily: AppFonts.roboto,
   );
 
   static TextStyle? onboardingDescription = TextStyle(

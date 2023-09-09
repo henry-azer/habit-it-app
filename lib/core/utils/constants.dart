@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'app_colors.dart';
-import 'app_text_style.dart';
+import 'app_text_styles.dart';
 
 class Constants {
   static void showErrorDialog({required BuildContext context, required String message}) {
@@ -34,7 +34,7 @@ class Constants {
       backgroundColor: AppColors.snackbar.withOpacity(0.4),
       behavior: SnackBarBehavior.floating,
       dismissDirection: DismissDirection.none,
-      content: Text(message, style: AppTextStyle.snackbar,),
+      content: Text(message, style: AppTextStyles.snackbar,),
     ));
   }
 }

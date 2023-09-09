@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../core/utils/app_text_style.dart';
+import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/navigation_bar_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
             centerTitle: false,
             title: Padding(
               padding: const EdgeInsets.only(top: 30.0, left: 30.0),
-              child: Text("Hello Developer!", style: AppTextStyle.homeText,),
+              child: Text("Hello Developer!", style: AppTextStyles.homeText,),
             ),
             actions: [
               Padding(
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
           extendBody: true,
           resizeToAvoidBottomInset: true,
           bottomNavigationBar: NavigationBarWidget(path: ModalRoute.of(context)?.settings.name),
-          body: Center(child: Text("Start Coding!", style: AppTextStyle.homeText,),
+          body: Center(child: Text("Start Coding!", style: AppTextStyles.homeText,),
           )),
     );
   }

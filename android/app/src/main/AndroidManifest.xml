@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.henry.flutter_starter">
    <application
-        android:label="flutter_starter"
+        android:label="Habit It"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

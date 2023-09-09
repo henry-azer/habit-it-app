@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/utils/app_assets_manager.dart';
 import '../../core/utils/app_colors.dart';
-import '../../core/utils/app_strings.dart';
 
 ThemeData appTheme() {
   return ThemeData(
@@ -22,7 +22,7 @@ ThemeData appTheme() {
           height: 1.3,
           fontSize: 45,
           color: AppColors.fontPrimary,
-          fontFamily: AppStrings.fontFamilyComfortaa,
+          fontFamily: AppFonts.roboto,
         ),
       ));
 }

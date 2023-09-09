@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:habit_it/core/utils/app_assets_manager.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_text_style.dart';
-import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/widgets/navigation_bar_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pushReplacementNamed(context, Routes.appHome);
                   },
                   child: Image.asset(
-                    ImgAssets.user,
+                    AppImageAssets.user,
                     width: 50,
                     height: 50,
                   ),

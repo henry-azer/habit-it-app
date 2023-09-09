@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../config/routes/app_routes.dart';
 import '../utils/app_colors.dart';
-import '../utils/assets_manager.dart';
+import '../utils/app_assets_manager.dart';
 
 class AppBarWidget extends StatefulWidget {
   const AppBarWidget({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               Navigator.pushReplacementNamed(context, Routes.appHome);
             },
             child: Image.asset(
-              ImgAssets.user,
+              AppImageAssets.user,
               width: 35,
               height: 50,
             ),

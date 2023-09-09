@@ -56,3 +56,14 @@ flutter:
         - asset: assets/fonts/roboto/Roboto-MediumItalic.ttf
         - asset: assets/fonts/roboto/Roboto-Thin.ttf
         - asset: assets/fonts/roboto/Roboto-ThinItalic.ttf
+
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/rubik/Rubik-Regular.ttf
+        - asset: assets/fonts/rubik/Rubik-Bold.ttf
+        - asset: assets/fonts/rubik/Rubik-Italic.ttf
+        - asset: assets/fonts/rubik/Rubik-BoldItalic.ttf
+        - asset: assets/fonts/rubik/Rubik-Light.ttf
+        - asset: assets/fonts/rubik/Rubik-LightItalic.ttf
+        - asset: assets/fonts/rubik/Rubik-Medium.ttf
+        - asset: assets/fonts/rubik/Rubik-MediumItalic.ttf

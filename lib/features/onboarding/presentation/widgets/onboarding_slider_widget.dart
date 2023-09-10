@@ -3,14 +3,14 @@ library flutter_onboarding_slider;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
-import 'package:habit_it/features/onboarding/presentation/widgets/page_offset_provider.dart';
+import 'package:habit_it/features/onboarding/presentation/widgets/page_offset_provider_widget.dart';
 import 'package:provider/provider.dart';
 
-import 'background.dart';
-import 'background_body.dart';
-import 'background_controller.dart';
-import 'background_final_button.dart';
-import 'onboarding_navigation_bar.dart';
+import 'background_widget.dart';
+import 'background_body_widget.dart';
+import 'background_controller_widget.dart';
+import 'background_final_button_widget.dart';
+import 'onboarding_navigation_bar_widget.dart';
 
 class OnBoardingSlider extends StatefulWidget {
   /// Number of total pages.

@@ -7,11 +7,11 @@ import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_localization_strings.dart';
 import 'package:habit_it/core/utils/app_text_styles.dart';
 import 'package:habit_it/features/onboarding/domain/cubit/app_get_started_cubit.dart';
-import 'package:habit_it/features/onboarding/presentation/widgets/onboarding_item.dart';
+import 'package:habit_it/features/onboarding/presentation/widgets/onboarding_item_widget.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../widgets/background_final_button.dart';
-import '../widgets/onboarding_slider.dart';
+import '../widgets/background_final_button_widget.dart';
+import '../widgets/onboarding_slider_widget.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});

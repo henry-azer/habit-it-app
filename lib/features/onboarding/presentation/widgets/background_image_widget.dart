@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_it/features/onboarding/presentation/widgets/page_offset_provider.dart';
+import 'package:habit_it/features/onboarding/presentation/widgets/page_offset_provider_widget.dart';
 import 'package:provider/provider.dart';
 
 class BackgroundImage extends StatelessWidget {

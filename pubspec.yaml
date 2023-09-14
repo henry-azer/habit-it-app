@@ -25,6 +25,8 @@ dependencies:
   loading_animation_widget: ^1.2.0+3
   im_animations: ^0.1.2
   flutter_snake_navigationbar: ^0.6.1
+  local_auth: ^2.1.7
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -43,6 +45,7 @@ flutter:
     - assets/images/onboarding_1.png
     - assets/images/onboarding_2.png
     - assets/images/onboarding_3.png
+    - assets/images/signup.png
 
   fonts:
     - family: Roboto

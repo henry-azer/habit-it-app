@@ -1,6 +1,7 @@
 class ValidationTypes {
   static const String signinEmail = 'signin email';
   static const String signinPassword = 'signin password';
+  static const String signupName = 'signin name';
   static const String signupFirstName = 'signup first name';
   static const String signupLastName = 'signup last name';
   static const String signupPhoneNumber = 'signup phone number';

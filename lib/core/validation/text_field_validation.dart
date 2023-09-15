@@ -16,6 +16,10 @@ class ValidateTextFiled {
         {
           return _validateSigninPassword(value!);
         }
+      case (ValidationTypes.signupName):
+        {
+          return _validateSignupName(value!);
+        }
       case (ValidationTypes.signupFirstName):
         {
           return _validateSignupFirstName(value!);
@@ -61,6 +65,18 @@ String? _validateSigninPassword(String value) {
     return "required";
   } else if (value.length < 8) {
     return "at_least_8_chars";
+  } else {
+    return "";
+  }
+}
+
+String? _validateSignupName(String value) {
+  if (value.isEmpty) {
+    return "required";
+  } else if (value.length < 2) {
+    return "at_least_3_chars";
+  } else if (value.length > 15) {
+    return "max_15_chars";
   } else {
     return "";
   }
@@ -145,7 +161,9 @@ String? _validateSignupYearBirthday(String value) {
 }
 
 bool _isValidEmail(String value) {
-  return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
+  return RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(value);
 }
 
 bool _isValidPhoneNumber(String value) {

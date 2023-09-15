@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:habit_it/config/locale/app_localization_helper.dart';
+import 'package:habit_it/core/managers/storage-manager/i_storage_manager.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'package:habit_it/core/utils/app_localization_strings.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/app_local_storage_strings.dart';
 import '../../../../core/utils/app_text_styles.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,14 +21,19 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
+  late IStorageManager _storageManager;
+  bool _isUserBiometricAuthenticated = false;
+  bool _isUserAuthenticated = false;
+  bool _isUserRegistered = false;
   bool _isUserGetStarted = false;
+
   late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    _isUserGetStartedCache();
     _startDelay();
+    _initUserCachedSession();
   }
 
   @override
@@ -40,17 +46,37 @@ class _SplashScreenState extends State<SplashScreen>
     _timer = Timer(const Duration(milliseconds: 7000), () => _goNext());
   }
 
-  _goNext() => {
-        if (_isUserGetStarted)
-          {Navigator.pushReplacementNamed(context, Routes.appHome)}
-        else
-          {Navigator.pushReplacementNamed(context, Routes.appOnboarding)}
-      };
+  _goNext() {
+    if (!_isUserGetStarted) {
+      Navigator.pushReplacementNamed(context, Routes.appOnboarding);
+      return;
+    }
 
-  Future _isUserGetStartedCache() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (_isUserRegistered) {
+      if (!_isUserAuthenticated && _isUserBiometricAuthenticated) {
+        Navigator.pushReplacementNamed(context, Routes.signinBiometric);
+      } else {
+        Navigator.pushReplacementNamed(context, Routes.signinPIN);
+      }
+    } else {
+      Navigator.pushReplacementNamed(context, Routes.appSignup);
+    }
+  }
+
+  Future _initUserCachedSession() async {
+    _storageManager = GetIt.instance<IStorageManager>();
     _isUserGetStarted =
-        sharedPreferences.getBool(AppStrings.cachedIsUserGetStarted) ?? false;
+        await _storageManager.getValue(AppLocalStorageKeys.isUserGetStarted) ??
+            false;
+    _isUserAuthenticated = await _storageManager
+            .getValue(AppLocalStorageKeys.isUserAuthenticated) ??
+        false;
+    _isUserRegistered =
+        await _storageManager.getValue(AppLocalStorageKeys.isUserRegistered) ??
+            false;
+    _isUserBiometricAuthenticated = await _storageManager
+            .getValue(AppLocalStorageKeys.isUserBiometricAuthenticated) ??
+        false;
   }
 
   @override

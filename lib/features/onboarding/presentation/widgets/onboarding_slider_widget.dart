@@ -1,5 +1,3 @@
-library flutter_onboarding_slider;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
@@ -10,96 +8,67 @@ import 'background_widget.dart';
 import 'background_body_widget.dart';
 import 'background_controller_widget.dart';
 import 'background_final_button_widget.dart';
-import 'onboarding_navigation_bar_widget.dart';
+import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 
 class OnBoardingSlider extends StatefulWidget {
-  /// Number of total pages.
   final int totalPage;
 
-  /// NavigationBars color.
   final Color headerBackgroundColor;
 
-  /// List of Widgets to be shown in the backgrounds of the pages. For example a picture or some illustration.
   final List<Widget> background;
 
-  /// The speed of the animation for the [background].
   final double speed;
 
-  /// Background Color of whole screen apart from the NavigationBar.
   final Color? pageBackgroundColor;
 
-  /// Background Gradient of whole screen apart from the NavigationBar.
   final Gradient? pageBackgroundGradient;
 
-  /// Callback to be executed when clicked on the [finishButton].
   final Function? onFinish;
 
-  /// NavigationBar trailing widget when on last screen.
   final Widget? trailing;
 
-  /// NavigationBar trailing widget when not on last screen.
   final Widget? skipTextButton;
 
-  /// The main content ont the screen displayed above the [background].
   final List<Widget> pageBodies;
 
-  /// Callback to be executed when clicked on the last pages bottom button.
   final Function? trailingFunction;
 
-  /// Style of the bottom button on the last page.
   final FinishButtonStyle? finishButtonStyle;
 
-  /// Text inside last pages bottom button.
   final String? finishButtonText;
 
-  /// Text style for text inside last pages bottom button.
   final TextStyle finishButtonTextStyle;
 
-  /// Color of the bottom page indicators.
   final Color? controllerColor;
 
-  /// Toggle bottom button.
   final bool addButton;
 
-  /// Center [background].
-  /// Do not pass [imageHorizontalOffset] when you turn this flag to true otherwise that will get ignored
   final bool centerBackground;
 
-  /// Toggle bottom page controller visibilty.
   final bool addController;
 
-  /// Defines the vertical offset of the [background].
   final double imageVerticalOffset;
 
-  /// Defines the horizontal offset of the [background].
-  /// Do not set [centerBackground] to true when you use this property otherwise this will get ignored
   final double imageHorizontalOffset;
 
-  /// leading widget in the navigationBar.
   final Widget? leading;
 
-  /// middle widget in the navigationBar.
   final Widget? middle;
 
-  /// Whether has the floating action button to skip and the finish button
   final bool hasFloatingButton;
 
-  /// Whether has the skip button in the bottom;
   final bool hasSkip;
 
-  /// icon on the skip button
   final Icon skipIcon;
 
-  /// is the indicator located on top of the screen
   final bool indicatorAbove;
 
-  /// distance of indicator from bottom
   final double indicatorPosition;
 
-  /// override the function for kip button in the navigator.
   final Function? skipFunctionOverride;
 
-  OnBoardingSlider({
+  const OnBoardingSlider({
+    super.key,
     required this.totalPage,
     required this.headerBackgroundColor,
     required this.background,
@@ -137,10 +106,10 @@ class OnBoardingSlider extends StatefulWidget {
   });
 
   @override
-  _OnBoardingSliderState createState() => _OnBoardingSliderState();
+  OnBoardingSliderState createState() => OnBoardingSliderState();
 }
 
-class _OnBoardingSliderState extends State<OnBoardingSlider> {
+class OnBoardingSliderState extends State<OnBoardingSlider> {
   final PageController _pageController = PageController(initialPage: 0);
 
   int _currentPage = 0;
@@ -157,13 +126,10 @@ class _OnBoardingSliderState extends State<OnBoardingSlider> {
       child: Scaffold(
         backgroundColor: widget.pageBackgroundColor,
         body: CupertinoPageScaffold(
-          navigationBar: OnBoardingNavigationBar(
-            skipFunctionOverride: widget.skipFunctionOverride,
+          navigationBar: CupertinoAppBar(
             leading: widget.leading,
             middle: widget.middle,
-            totalPage: widget.totalPage,
-            currentPage: _currentPage,
-            onSkip: _onSkip,
+            trailing: widget.trailing,
             headerBackgroundColor: widget.headerBackgroundColor,
           ),
           child: Container(
@@ -214,9 +180,10 @@ class _OnBoardingSliderState extends State<OnBoardingSlider> {
                         buttonText: widget.finishButtonText,
                         hasSkip: widget.hasSkip,
                       ),
-                      SizedBox(height: context.height * 0.02,)
+                      SizedBox(
+                        height: context.height * 0.02,
+                      )
                     ]),
-
               ),
             ),
           ),
@@ -225,18 +192,9 @@ class _OnBoardingSliderState extends State<OnBoardingSlider> {
     );
   }
 
-  /// Slide to Next Page.
   void slide(int page) {
     setState(() {
       _currentPage = page;
-    });
-  }
-
-  /// Skip to last Slide.
-  void _onSkip() {
-    _pageController.jumpToPage(widget.totalPage - 1);
-    setState(() {
-      _currentPage = widget.totalPage - 1;
     });
   }
 }

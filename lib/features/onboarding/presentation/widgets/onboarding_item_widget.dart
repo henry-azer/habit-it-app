@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/app_assets_manager.dart';
-import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 
 class OnboardingItem extends StatelessWidget {
@@ -29,12 +27,7 @@ class OnboardingItem extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w400,
-              color: AppColors.fontPrimary,
-              fontFamily: AppFonts.rubik,
-            ),
+            style: AppTextStyles.onboardingSubtitle,
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.1),
           Image.asset(image),

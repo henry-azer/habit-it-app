@@ -2,13 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:habit_it/data/repositories/user/user_repository.dart';
 
 import '../../../core/error/exceptions.dart';
-import '../../../core/models/response_model.dart';
 import '../../../core/network/network_info.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../datasources/user/user_local_datasource.dart';
 import '../../datasources/user/user_remote_datasource.dart';
-import '../../entities/user/signup.dart';
-import '../../entities/user/user.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final NetworkInfo networkInfo;
@@ -27,20 +24,6 @@ class UserRepositoryImpl implements UserRepository {
       return Right(NoParams());
     } on GenericException catch (exception) {
       return Left(CacheException(exception));
-    }
-  }
-
-  @override
-  Future<Either<GenericException, ResponseModel<User>>> signup(Signup signup) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final responseCurrentUser = await userRemoteDataSource.signup(signup);
-        return Right(responseCurrentUser);
-      } on GenericException catch (exception) {
-        return Left(exception);
-      }
-    } else {
-      return const Left(CacheException());
     }
   }
 }

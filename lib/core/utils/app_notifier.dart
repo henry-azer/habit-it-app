@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
-class Constants {
+class AppNotifier {
   static void showErrorDialog({required BuildContext context, required String message}) {
     showDialog(
         context: context,
@@ -31,7 +31,7 @@ class Constants {
 
   static void showSnackBar({required BuildContext context, required String message}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: AppColors.snackbar.withOpacity(0.4),
+      backgroundColor: AppColors.snackbar.withOpacity(0.9),
       behavior: SnackBarBehavior.floating,
       dismissDirection: DismissDirection.none,
       content: Text(message, style: AppTextStyles.snackbar,),

@@ -11,12 +11,12 @@ class AppColors {
   static Color background = HexColor('#000000');
 
   static Color fontPrimary = HexColor('#FFFFFF');
-  static Color fontSecondary = HexColor('#E8C39E');
+  static Color fontSecondary = HexColor('#000000');
 
-  static Color border = HexColor('#2F2C79');
+  static Color border = HexColor('#FFFFFF');
 
-  static Color button = HexColor('#2F2C79');
-  static Color snackbar = HexColor('#2F2C79');
+  static Color button = HexColor('#FFFFFF');
+  static Color snackbar = HexColor('#FFFFFF');
   static Color navigator = HexColor('#000020');
 
   static Color black = HexColor('#000000');

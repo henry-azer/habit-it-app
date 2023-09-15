@@ -23,7 +23,7 @@ class OnboardingScreen extends StatelessWidget {
           context, AppLocalizationKeys.onboardingGettingStarted),
       onFinish: () {
         BlocProvider.of<AppGetStartedCubit>(context).setAppGetStarted();
-        Navigator.pushReplacementNamed(context, Routes.appHome);
+        Navigator.pushReplacementNamed(context, Routes.appSignup);
       },
       finishButtonStyle: FinishButtonStyle(
         backgroundColor: AppColors.white,
@@ -33,7 +33,7 @@ class OnboardingScreen extends StatelessWidget {
         child: Text(
           AppLocalizationHelper.translate(
               context, AppLocalizationKeys.onboardingTitle),
-          style: AppTextStyles.onboardingTitle,
+          style: AppTextStyles.appbarTitle,
         ),
       ),
       totalPage: 3,

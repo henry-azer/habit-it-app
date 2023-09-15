@@ -5,6 +5,7 @@ import 'config/locale/app_localizations_setup.dart';
 import 'config/routes/app_routes.dart';
 import 'config/themes/app_theme.dart';
 import 'core/utils/app_strings.dart';
+import 'features/signup/local-pin/domain/cubit/user_pin_registration_cubit.dart';
 import 'features/splash/domain/cubit/localization_cubit.dart';
 import 'injection_container.dart' as di;
 
@@ -17,6 +18,7 @@ class HabitItApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => di.sl<LocalizationCubit>()),
           BlocProvider(create: (context) => di.sl<AppGetStartedCubit>()),
+          BlocProvider(create: (context) => di.sl<UserPINRegistrationCubit>()),
         ],
         child: BlocBuilder<LocalizationCubit, LocalizationState>(
           buildWhen: (previousState, currentState) {
@@ -31,9 +33,9 @@ class HabitItApp extends StatelessWidget {
               onGenerateRoute: AppRoutes.onGenerateRoute,
               supportedLocales: AppLocalizationsSetup.supportedLocales,
               localeResolutionCallback:
-              AppLocalizationsSetup.localeResolutionCallback,
+                  AppLocalizationsSetup.localeResolutionCallback,
               localizationsDelegates:
-              AppLocalizationsSetup.localizationsDelegates,
+                  AppLocalizationsSetup.localizationsDelegates,
             );
           },
         ));

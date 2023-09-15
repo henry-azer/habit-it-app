@@ -46,6 +46,9 @@ flutter:
     - assets/images/onboarding_2.png
     - assets/images/onboarding_3.png
     - assets/images/signup.png
+    - assets/images/signup_success.png
+    - assets/images/pin.png
+    - assets/images/biometric.png
 
   fonts:
     - family: Roboto

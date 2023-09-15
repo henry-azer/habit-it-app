@@ -15,5 +15,41 @@ class AppLocalizationKeys {
   static const String onboardingPageThreeTitle = 'onboarding_page_three_title';
   static const String onboardingPageThreeDescription = 'onboarding_page_three_description';
 
+  /// SIGNUP
+  static const String signupTitle = 'signup_title';
+  static const String signupSubtitle = 'signup_subtitle';
+  static const String signupDescription = 'signup_description';
+  static const String signupWith = 'signup_with';
+
+  static const String signupPINTitle = 'signup_pin_title';
+  static const String signupPINDescription = 'signup_pin_description';
+  static const String signupPINButton = 'signup_pin_button';
+  static const String signupPINSuccess = 'signup_pin_success';
+  static const String signupPINFailed = 'signup_biometric_failed';
+
+  static const String signupBiometricTitle = 'signup_biometric_title';
+  static const String signupBiometricDescription = 'signup_biometric_description';
+  static const String signupBiometricButton = 'signup_biometric_button';
+  static const String signupBiometricSuccess = 'signup_biometric_success';
+  static const String signupBiometricFailed = 'signup_biometric_failed';
+
+  static const String signupNameFailed = 'signup_name_failed';
+
+  static const String signupSuccess = 'signup_success';
+  static const String signupSuccessTitle = 'signup_success_title';
+  static const String signupSuccessDescription = 'signup_success_description';
+  static const String signupSuccessButton = 'signup_success_button';
+
+  /// SIGNIN
+  static const String signinPINTitle = 'signin_pin_title';
+  static const String signinPINDescription = 'signin_pin_description';
+  static const String signinPINInvalid = 'signin_pin_invalid';
+
+  static const String signinBiometricTitle = 'signin_biometric_title';
+  static const String signinBiometricDescription = 'signin_biometric_description';
+  static const String signinBiometricInvalid = 'signin_biometric_invalid';
+
+  static const String signinSuccess = 'signin_success';
+
 
 }

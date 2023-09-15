@@ -48,6 +48,7 @@
   "invalid_birth_year": " * Invalid",
   "at_least_8_chars": " * At least 8 characters",
   "at_least_3_chars": " * At least 3 characters",
+  "max_15_chars": " * Maximum 15 characters",
 
   "splash_title": "HABIT IT",
 
@@ -58,7 +59,37 @@
   "onboarding_page_two_title": "Optimize Your Time",
   "onboarding_page_two_description": "Time is your most valuable resource, make every moment count...",
   "onboarding_page_three_title": "Track Your Habits",
-  "onboarding_page_three_description": "Input habits and watch your progress over time..."
+  "onboarding_page_three_description": "Input habits and watch your progress over time...",
 
+  "signup_title": "SIGN UP",
+  "signup_subtitle": "Join our World Now!",
+  "signup_description": "Create your account to access all the amazing features of our app. \n\n * Choose sign-up method.",
+  "signup_with": "Sign up with",
+  "signup_pin_title": "PIN SIGN UP",
+  "signup_pin_description": "Your security is our priority. This PIN will serve as a quick & secure way to access your account. \n\n * Please enter your 5-digit PIN code below.",
+  "signup_pin_button": "PIN",
+  "signup_pin_success": "PIN registered successfully.",
+  "signup_pin_failed": "Failed to register your PIN, please try again!",
+  "signup_biometric_title": "BIOMETRIC SIGN UP",
+  "signup_biometric_description": "Your security is our priority. This Biometric will serve as a quick & secure way to access your account. \n\n * Please place your finger on the sensor.",
+  "signup_biometric_button": "Biometric",
+  "signup_biometric_failed": "Failed to register your biometric, please try again!",
+  "signup_biometric_success": "Biometric registered successfully.",
+
+  "signup_name_failed": "Failed to register your name, please try again!",
+
+  "signup_success": "Welcome to your world!",
+  "signup_success_title": "WELCOME TO HABIT IT",
+  "signup_success_description": "* Please tell us your name.",
+  "signup_success_button": "Let's Gooooo",
+
+  "signin_pin_title": "PIN SIGN IN",
+  "signin_pin_description": "* Please enter your 5-digit PIN code below.",
+  "signin_pin_invalid": "Invalid pin, please try again!",
+  "signin_biometric_title": "BIOMETRIC SIGN IN",
+  "signin_biometric_description": "* Please place your finger on the sensor.",
+  "signin_biometric_invalid": "Invalid biometric, please try again!",
+
+  "signin_success": "Signin successfully."
 
 }

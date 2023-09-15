@@ -277,10 +277,17 @@ class OtpTextFieldState extends State<OTPTextField> {
     }
   }
 
-  void onSubmit({required List<String?> verificationCode}) {
+  void onSubmit({required List<String?> verificationCode}) async {
     if (verificationCode.every((String? code) => code != null && code != '')) {
       if (widget.onSubmit != null) {
         widget.onSubmit!(verificationCode.join());
+        await Future.delayed(const Duration(milliseconds: 800));
+        setState(() {
+          for (var controller in _textControllers) {
+            controller?.clear();
+          }
+          _verificationCode = List<String?>.filled(widget.numberOfFields, null);
+        });
       }
     }
   }

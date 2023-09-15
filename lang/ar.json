@@ -38,15 +38,15 @@
 
   "signup_title": "SIGN UP",
   "signup_subtitle": "Join our World Now!",
-  "signup_description": "Create your account to access all the amazing features of our app. \n\n * Choose sign-up method.",
+  "signup_description": "Create your account to access all the amazing features of our app. \n\n Choose sign-up method.",
   "signup_with": "Sign up with",
   "signup_pin_title": "PIN SIGN UP",
-  "signup_pin_description": "Your security is our priority. This PIN will serve as a quick & secure way to access your account. \n\n * Please enter your 5-digit PIN code below.",
+  "signup_pin_description": "Your security is our priority. This PIN will serve as a quick & secure way to access your account. \n\n Please enter your 5-digit PIN code below.",
   "signup_pin_button": "PIN",
   "signup_pin_success": "PIN registered successfully.",
   "signup_pin_failed": "Failed to register your PIN, please try again!",
   "signup_biometric_title": "BIOMETRIC SIGN UP",
-  "signup_biometric_description": "Your security is our priority. This Biometric will serve as a quick & secure way to access your account. \n\n * Please place your finger on the sensor.",
+  "signup_biometric_description": "Your security is our priority. This Biometric will serve as a quick & secure way to access your account. \n\n Please place your finger on the sensor.",
   "signup_biometric_button": "Biometric",
   "signup_biometric_failed": "Failed to register your biometric, please try again!",
   "signup_biometric_success": "Biometric registered successfully.",
@@ -55,14 +55,14 @@
 
   "signup_success": "Welcome to your world!",
   "signup_success_title": "WELCOME TO HABIT IT",
-  "signup_success_description": "* Please tell us your name.",
-  "signup_success_button": "Swipe to Gooooo",
+  "signup_success_description": "Please tell us your name.",
+  "signup_success_button": "Let's Goooooo",
 
   "signin_pin_title": "PIN SIGN IN",
-  "signin_pin_description": "* Please enter your 5-digit PIN code below.",
+  "signin_pin_description": "Please enter your 5-digit PIN code below.",
   "signin_pin_invalid": "Invalid pin, please try again!",
   "signin_biometric_title": "BIOMETRIC SIGN IN",
-  "signin_biometric_description": "* Please place your finger on the sensor.",
+  "signin_biometric_description": "Please place your finger on the sensor.",
   "signin_biometric_invalid": "Invalid biometric, please try again!",
 
   "signin_success": "Signin successfully."

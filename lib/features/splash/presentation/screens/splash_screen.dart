@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   _startDelay() {
-    _timer = Timer(const Duration(milliseconds: 7000), () => _goNext());
+    _timer = Timer(const Duration(seconds: 4), () => _goNext());
   }
 
   _goNext() {

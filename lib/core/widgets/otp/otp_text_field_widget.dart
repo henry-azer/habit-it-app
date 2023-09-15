@@ -116,9 +116,6 @@ class OtpTextFieldState extends State<OTPTextField> {
   @override
   void dispose() {
     super.dispose();
-    for (var controller in _textControllers) {
-      controller?.dispose();
-    }
   }
 
   @override
@@ -155,22 +152,22 @@ class OtpTextFieldState extends State<OTPTextField> {
         decoration: widget.hasCustomInputDecoration
             ? widget.decoration
             : InputDecoration(
-          counterText: "",
-          filled: widget.filled,
-          fillColor: widget.fillColor,
-          focusedBorder: widget.showFieldAsBox
-              ? outlineBorder(widget.focusedBorderColor)
-              : underlineInputBorder(widget.focusedBorderColor),
-          enabledBorder: widget.showFieldAsBox
-              ? outlineBorder(widget.enabledBorderColor)
-              : underlineInputBorder(widget.enabledBorderColor),
-          disabledBorder: widget.showFieldAsBox
-              ? outlineBorder(widget.disabledBorderColor)
-              : underlineInputBorder(widget.disabledBorderColor),
-          border: widget.showFieldAsBox
-              ? outlineBorder(widget.borderColor)
-              : underlineInputBorder(widget.borderColor),
-        ),
+                counterText: "",
+                filled: widget.filled,
+                fillColor: widget.fillColor,
+                focusedBorder: widget.showFieldAsBox
+                    ? outlineBorder(widget.focusedBorderColor)
+                    : underlineInputBorder(widget.focusedBorderColor),
+                enabledBorder: widget.showFieldAsBox
+                    ? outlineBorder(widget.enabledBorderColor)
+                    : underlineInputBorder(widget.enabledBorderColor),
+                disabledBorder: widget.showFieldAsBox
+                    ? outlineBorder(widget.disabledBorderColor)
+                    : underlineInputBorder(widget.disabledBorderColor),
+                border: widget.showFieldAsBox
+                    ? outlineBorder(widget.borderColor)
+                    : underlineInputBorder(widget.borderColor),
+              ),
         obscureText: widget.obscureText,
         onChanged: (String value) {
           //save entered value in a list
@@ -282,12 +279,10 @@ class OtpTextFieldState extends State<OTPTextField> {
       if (widget.onSubmit != null) {
         widget.onSubmit!(verificationCode.join());
         await Future.delayed(const Duration(milliseconds: 800));
-        setState(() {
-          for (var controller in _textControllers) {
-            controller?.clear();
-          }
-          _verificationCode = List<String?>.filled(widget.numberOfFields, null);
-        });
+        for (var controller in _textControllers) {
+          controller?.clear();
+        }
+        _verificationCode = List<String?>.filled(widget.numberOfFields, null);
       }
     }
   }

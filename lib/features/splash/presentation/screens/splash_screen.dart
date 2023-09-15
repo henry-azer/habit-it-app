@@ -23,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late IStorageManager _storageManager;
   bool _isUserBiometricAuthenticated = false;
-  bool _isUserAuthenticated = false;
   bool _isUserRegistered = false;
   bool _isUserGetStarted = false;
 
@@ -52,14 +51,15 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
 
-    if (_isUserRegistered) {
-      if (!_isUserAuthenticated && _isUserBiometricAuthenticated) {
-        Navigator.pushReplacementNamed(context, Routes.signinBiometric);
-      } else {
-        Navigator.pushReplacementNamed(context, Routes.signinPIN);
-      }
-    } else {
+    if (!_isUserRegistered) {
       Navigator.pushReplacementNamed(context, Routes.appSignup);
+      return;
+    }
+
+    if (_isUserBiometricAuthenticated) {
+      Navigator.pushReplacementNamed(context, Routes.signinBiometric);
+    } else {
+      Navigator.pushReplacementNamed(context, Routes.signinPIN);
     }
   }
 
@@ -68,9 +68,6 @@ class _SplashScreenState extends State<SplashScreen>
     _isUserGetStarted =
         await _storageManager.getValue(AppLocalStorageKeys.isUserGetStarted) ??
             false;
-    _isUserAuthenticated = await _storageManager
-            .getValue(AppLocalStorageKeys.isUserAuthenticated) ??
-        false;
     _isUserRegistered =
         await _storageManager.getValue(AppLocalStorageKeys.isUserRegistered) ??
             false;

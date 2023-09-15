@@ -4,7 +4,7 @@ import 'hex_color.dart';
 
 class AppColors {
   static Color primary = HexColor('#000000');
-  static Color secondary = HexColor('#F0B28E');
+  static Color secondary = HexColor('#FFFFFF');
   static Color hint = HexColor('#FFFFFF');
 
   static Color error = HexColor('#900C3F');

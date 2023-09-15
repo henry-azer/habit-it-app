@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:habit_it/features/app-navigator/presentation/screens/app_navigator_screen.dart';
+import 'package:habit_it/features/calendar-scheduler/presentation/screens/calendar_scheduler_screen.dart';
 import 'package:habit_it/features/calendar-tasker/screens/calendar_tasker_screen.dart';
 import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
 import 'package:habit_it/features/signin/biometric-signin/screens/signin_biometric_screen.dart';
 import 'package:habit_it/features/signin/pin-signin/screens/signin_pin_screen.dart';
 import 'package:habit_it/features/signup/base-signup/screens/signup_screen.dart';
@@ -14,18 +17,21 @@ import '../../features/home/presentation/screens/home_screen.dart';
 
 class Routes {
   static const String initial = '/';
-  static const String appOnboarding = '/app-onboarding';
+  static const String appOnboarding = '/app/onboarding';
 
-  static const String appSignup = '/app-signup';
-  static const String signupPIN = '/app-signup/pin';
-  static const String signupBiometric = '/app-signup/biometric';
-  static const String signupSuccess = '/app-signup/success';
+  static const String appSignup = '/app/signup';
+  static const String signupPIN = '/app/signup/pin';
+  static const String signupBiometric = '/app/signup/biometric';
+  static const String signupSuccess = '/app/signup/success';
 
-  static const String signinPIN = '/app-signin/pin';
-  static const String signinBiometric = '/app-signin/biometric';
+  static const String signinPIN = '/app/signin/pin';
+  static const String signinBiometric = '/app/signin/biometric';
 
-  static const String appHome = '/app-home';
-  static const String appCalendarTasker = '/app-calendar-tasker';
+  static const String app = '/app';
+  static const String appHome = '/app/home';
+  static const String appCalendarTasker = '/app/calendar/tasker';
+  static const String appCalendarScheduler = '/app/calendar/scheduler';
+  static const String appProfile = '/app/profile';
 }
 
 class AppRoutes {
@@ -87,6 +93,13 @@ class AppRoutes {
             },
             settings: routeSettings);
 
+      case Routes.app:
+        return MaterialPageRoute(
+            builder: (context) {
+              return const AppNavigatorScreen();
+            },
+            settings: routeSettings);
+
       case Routes.appHome:
         return MaterialPageRoute(
             builder: (context) {
@@ -98,6 +111,20 @@ class AppRoutes {
         return MaterialPageRoute(
             builder: (context) {
               return const CalendarTaskerScreen();
+            },
+            settings: routeSettings);
+
+      case Routes.appCalendarScheduler:
+        return MaterialPageRoute(
+            builder: (context) {
+              return const CalendarSchedulerScreen();
+            },
+            settings: routeSettings);
+
+      case Routes.appProfile:
+        return MaterialPageRoute(
+            builder: (context) {
+              return const ProfileScreen();
             },
             settings: routeSettings);
 

@@ -41,10 +41,12 @@ class _CalendarTaskerScreenState extends State<CalendarTaskerScreen> {
             accent: Colors.blue,
 
             // mark dotted
-            events: List.generate(10, (index) => DateTime.now().subtract(Duration(days: index * 2)))
-        ),
+            events: List.generate(10,
+                (index) => DateTime.now().subtract(Duration(days: index * 2)))),
         extendBody: true,
         resizeToAvoidBottomInset: true,
+        // bottomNavigationBar:
+        //     NavigationBarWidget(path: ModalRoute.of(context)?.settings.name),
         body: Center(
           child: _buildDayTasks(),
         ),

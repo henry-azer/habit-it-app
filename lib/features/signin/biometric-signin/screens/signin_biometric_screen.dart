@@ -49,7 +49,7 @@ class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
     }
 
     if (isAuthenticated) {
-      Navigator.pushReplacementNamed(context, Routes.appHome);
+      Navigator.pushReplacementNamed(context, Routes.app);
     }
   }
 

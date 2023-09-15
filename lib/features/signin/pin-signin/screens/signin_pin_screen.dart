@@ -38,7 +38,7 @@ class _SigninPINScreenState extends State<SigninPINScreen> {
 
   _authenticateUserPIN(String pin) {
     if (pin == _authenticatedPIN) {
-      Navigator.pushReplacementNamed(context, Routes.appHome);
+      Navigator.pushReplacementNamed(context, Routes.app);
     } else {
       AppNotifier.showSnackBar(
         context: context,

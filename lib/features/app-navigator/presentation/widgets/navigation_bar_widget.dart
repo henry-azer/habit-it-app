@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:habit_it/features/calendar-scheduler/presentation/screens/calendar_scheduler_screen.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
 
 import '../../../calendar-tasker/screens/calendar_tasker_screen.dart';
@@ -41,7 +40,6 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
             children: const [
               HomeScreen(),
               CalendarTaskerScreen(),
-              CalendarSchedulerScreen(),
               ProfileScreen()
             ],
           ),
@@ -73,7 +71,7 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.track_changes_sharp,
+                Icons.today_outlined,
                 size: _selectedItemPosition == 1
                     ? _selectedItemSize
                     : _defaultItemSize,
@@ -81,16 +79,8 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.today_outlined,
-                size: _selectedItemPosition == 2
-                    ? _selectedItemSize
-                    : _defaultItemSize,
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
                 Icons.person_sharp,
-                size: _selectedItemPosition == 3
+                size: _selectedItemPosition == 2
                     ? _selectedItemSize
                     : _defaultItemSize,
               ),

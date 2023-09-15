@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/features/app-navigator/presentation/screens/app_navigator_screen.dart';
-import 'package:habit_it/features/calendar-scheduler/presentation/screens/calendar_scheduler_screen.dart';
 import 'package:habit_it/features/calendar-tasker/screens/calendar_tasker_screen.dart';
 import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
@@ -30,7 +29,6 @@ class Routes {
   static const String app = '/app';
   static const String appHome = '/app/home';
   static const String appCalendarTasker = '/app/calendar/tasker';
-  static const String appCalendarScheduler = '/app/calendar/scheduler';
   static const String appProfile = '/app/profile';
 }
 
@@ -40,7 +38,7 @@ class AppRoutes {
       case Routes.initial:
         return MaterialPageRoute(
             builder: (context) {
-              return const SplashScreen();
+              return const AppNavigatorScreen();
             },
             settings: routeSettings);
 
@@ -111,13 +109,6 @@ class AppRoutes {
         return MaterialPageRoute(
             builder: (context) {
               return const CalendarTaskerScreen();
-            },
-            settings: routeSettings);
-
-      case Routes.appCalendarScheduler:
-        return MaterialPageRoute(
-            builder: (context) {
-              return const CalendarSchedulerScreen();
             },
             settings: routeSettings);
 

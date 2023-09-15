@@ -147,14 +147,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.1"
-  flutter_spinkit:
-    dependency: "direct main"
-    description:
-      name: flutter_spinkit
-      sha256: "77a2117c0517ff909221f3160b8eb20052ab5216107581168af574ac1f05dff8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -197,14 +189,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  im_animations:
-    dependency: "direct main"
-    description:
-      name: im_animations
-      sha256: f50d4c89b7a90deabfa1b685060c1ed846457f00394b854efefb75ca49598d54
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
   internet_connection_checker:
     dependency: "direct main"
     description:
@@ -214,7 +198,7 @@ packages:
     source: hosted
     version: "0.0.1+4"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
@@ -229,14 +213,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  loading_animation_widget:
-    dependency: "direct main"
-    description:
-      name: loading_animation_widget
-      sha256: "1901682600273a966c34cf44a85fc5355da92a8d08a8a43c11adc4e471993e3a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0+4"
   local_auth:
     dependency: "direct main"
     description:

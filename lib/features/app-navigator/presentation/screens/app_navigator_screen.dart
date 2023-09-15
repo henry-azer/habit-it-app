@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/navigation_bar_widget.dart';
+import '../widgets/navigation_bar_widget.dart';
 
 class AppNavigatorScreen extends StatefulWidget {
   const AppNavigatorScreen({Key? key}) : super(key: key);

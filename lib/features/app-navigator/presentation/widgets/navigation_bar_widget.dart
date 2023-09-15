@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:habit_it/features/signin/biometric-signin/screens/signin_biometric_screen.dart';
-import 'package:habit_it/features/signin/pin-signin/screens/signin_pin_screen.dart';
+import 'package:habit_it/features/calendar-scheduler/presentation/screens/calendar_scheduler_screen.dart';
+import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
 
-import '../../config/routes/app_routes.dart';
-import '../../features/calendar-tasker/screens/calendar_tasker_screen.dart';
-import '../../features/home/presentation/screens/home_screen.dart';
-import '../utils/app_colors.dart';
+import '../../../calendar-tasker/screens/calendar_tasker_screen.dart';
+import '../../../home/presentation/screens/home_screen.dart';
+import '../../../../core/utils/app_colors.dart';
 
 class NavigationBarWidget extends StatefulWidget {
   const NavigationBarWidget({Key? key}) : super(key: key);
@@ -16,12 +15,6 @@ class NavigationBarWidget extends StatefulWidget {
 }
 
 class NavigationBarWidgetState extends State<NavigationBarWidget> {
-  final List<String> routes = [
-    Routes.appHome,
-    Routes.appCalendarTasker,
-    Routes.signinPIN,
-    Routes.signinBiometric
-  ];
   final PageController _pageController = PageController();
   final double _selectedItemSize = 28.0;
   final double _defaultItemSize = 24.0;
@@ -48,8 +41,8 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
             children: const [
               HomeScreen(),
               CalendarTaskerScreen(),
-              SigninPINScreen(),
-              SigninBiometricScreen()
+              CalendarSchedulerScreen(),
+              ProfileScreen()
             ],
           ),
         ),

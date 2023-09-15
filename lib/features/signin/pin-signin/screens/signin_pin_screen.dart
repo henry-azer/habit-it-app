@@ -38,11 +38,6 @@ class _SigninPINScreenState extends State<SigninPINScreen> {
 
   _authenticateUserPIN(String pin) {
     if (pin == _authenticatedPIN) {
-      AppNotifier.showSnackBar(
-        context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.signinSuccess),
-      );
       Navigator.pushReplacementNamed(context, Routes.appHome);
     } else {
       AppNotifier.showSnackBar(

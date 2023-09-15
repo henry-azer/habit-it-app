@@ -49,11 +49,6 @@ class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
     }
 
     if (isAuthenticated) {
-      AppNotifier.showSnackBar(
-        context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.signinSuccess),
-      );
       Navigator.pushReplacementNamed(context, Routes.appHome);
     }
   }

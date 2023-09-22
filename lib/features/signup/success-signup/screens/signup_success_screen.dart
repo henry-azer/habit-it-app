@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:habit_it/core/widgets/buttons/button_widget.dart';
 import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 import 'package:habit_it/data/entities/user.dart';
@@ -14,7 +15,6 @@ import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/validation/validation_types.dart';
 import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
-import '../../../../core/widgets/buttons/button_form_widget.dart';
 import '../../../../core/widgets/forms/dropdown_field_widget.dart';
 import '../../../../core/widgets/forms/text_field_widget.dart';
 
@@ -39,9 +39,9 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
 
   _initLocalDataSources() async {
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _authenticationLocalDataSource =
+        GetIt.instance<AuthenticationLocalDataSource>();
   }
-
 
   _submitFrom() async {
     _formKey.currentState!.save();
@@ -218,16 +218,19 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
   }
 
   Widget _buildSubmitButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: ButtonFormWidget(
-        onPress: _submitFrom,
-        child: Text(
-          AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupSuccessButton),
-          textAlign: TextAlign.center,
-          style: AppTextStyles.signupSuccessButton,
-        ),
+    return ButtonWidget(
+      width: 320,
+      height: 50,
+      borderRadius: 0,
+      borderWidth: 1.0,
+      borderColor: AppColors.border,
+      backgroundColor: AppColors.secondary,
+      onPress: _submitFrom,
+      child: Text(
+        AppLocalizationHelper.translate(
+            context, AppLocalizationKeys.signupSuccessButton),
+        textAlign: TextAlign.center,
+        style: AppTextStyles.signupSuccessButton,
       ),
     );
   }

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../../config/locale/app_localization_helper.dart';
 import '../../utils/app_colors.dart';
-import '../../validation/text_field_validation.dart';
+import '../../validation/app_form_validator.dart';
 
 class TextFieldWidget extends StatefulWidget {
-  final TextEditingController controller;
   final String hintText;
   final TextStyle? hintTextStyle;
   final int? maxLines;
+  final int? maxLength;
   final TextStyle? style;
   final TextStyle? errorStyle;
   final double borderWidth;
@@ -25,7 +25,6 @@ class TextFieldWidget extends StatefulWidget {
 
   const TextFieldWidget({
     Key? key,
-    required this.controller,
     required this.hintText,
     required this.hintTextStyle,
     required this.errorStyle,
@@ -42,6 +41,7 @@ class TextFieldWidget extends StatefulWidget {
     required this.style,
     required this.cursorColor,
     required this.maxLines,
+    required this.maxLength,
   }) : super(key: key);
 
   @override
@@ -54,7 +54,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: widget.controller,
       enabled: widget.enabled,
       maxLines: widget.maxLines,
       keyboardType: widget.keyboardType,
@@ -64,6 +63,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       textAlign: widget.textAlign,
       enableSuggestions: false,
       style: widget.style,
+      maxLength: widget.maxLength,
       onSaved: widget.onSave,
       cursorColor: widget.cursorColor,
       decoration: widget.enabled
@@ -71,7 +71,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           : _buildDisabledDecoration(),
       onChanged: (value) {
         setState(() {
-          validation = ValidateTextFiled.validate(value, widget.validateType)!;
+          validation = AppFormValidator.validate(value, widget.validateType)!;
         });
       },
       validator: (value) {

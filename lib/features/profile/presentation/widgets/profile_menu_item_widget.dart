@@ -3,6 +3,12 @@ import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class ProfileMenuItemWidget extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final VoidCallback onPress;
+  final bool endIcon;
+  final Color? textColor;
+
   const ProfileMenuItemWidget({
     Key? key,
     required this.title,
@@ -11,12 +17,6 @@ class ProfileMenuItemWidget extends StatelessWidget {
     this.endIcon = true,
     this.textColor,
   }) : super(key: key);
-
-  final String title;
-  final IconData icon;
-  final VoidCallback onPress;
-  final bool endIcon;
-  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {

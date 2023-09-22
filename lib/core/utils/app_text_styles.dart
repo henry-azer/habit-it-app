@@ -137,6 +137,27 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle? profileUpdateTitle = TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? profileUpdateButtonText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? profileCancelButtonText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// APPBAR
   static TextStyle? appbarTitle = TextStyle(
     fontSize: 20,

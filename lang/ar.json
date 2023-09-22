@@ -6,6 +6,7 @@
   "welcome": "أهلًا بك",
   "ok": "موافق",
   "cancel": "إلغاء",
+  "update": "تحديث",
   "something_wrong": "حدث خطأ ما",
   "reload_screen": "إعادة تحميل الصفحة",
   "want_to_logout": "هل تريد تسجيل الخروج؟",
@@ -67,6 +68,10 @@
   "signin_biometric_description": "Please place your finger on the sensor.",
   "signin_biometric_invalid": "Invalid biometric, please try again!",
 
-  "signin_success": "Signin successfully."
+  "signin_success": "Signin successfully.",
+
+  "profile_update_title": "Update Profile",
+  "profile_update_failed": "Profile update failed, please try again!",
+  "profile_update_success": "Profile updated successfully."
 
 }

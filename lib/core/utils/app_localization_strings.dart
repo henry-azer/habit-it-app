@@ -1,4 +1,8 @@
 class AppLocalizationKeys {
+  /// GLOBAL
+  static const String cancel = 'cancel';
+  static const String update = 'update';
+
   /// SPLASH
   static const String splashTitle = 'splash_title';
 
@@ -53,5 +57,9 @@ class AppLocalizationKeys {
 
   static const String signinSuccess = 'signin_success';
 
+  /// PROFILE
+  static const String profileUpdateTitle = 'profile_update_title';
+  static const String profileUpdateFailed = 'profile_update_failed';
+  static const String profileUpdateSuccess = 'profile_update_success';
 
 }

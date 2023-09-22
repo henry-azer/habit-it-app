@@ -1,22 +1,22 @@
 import 'dart:developer';
 
-import 'package:habit_it/core/managers/storage-manager/i_storage_manager.dart';
+import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
 import 'package:local_auth/local_auth.dart';
 
-import '../../utils/app_local_storage_strings.dart';
 import 'i_biometric_auth_manager.dart';
 
 class BiometricAuthenticationManager extends IBiometricAuthenticationManager {
   final LocalAuthentication localAuthentication;
-  final IStorageManager storageManager;
+  final AuthenticationLocalDataSource authenticationLocalDataSource;
 
   BiometricAuthenticationManager(
-      {required this.localAuthentication, required this.storageManager});
+      {required this.localAuthentication,
+      required this.authenticationLocalDataSource});
 
   @override
   Future<void> enableBiometricAuthentication() async {
-    await storageManager.setValue(
-        AppLocalStorageKeys.isUserBiometricAuthenticated, true);
+    return await authenticationLocalDataSource
+        .setIsUserBiometricAuthenticated(true);
   }
 
   @override

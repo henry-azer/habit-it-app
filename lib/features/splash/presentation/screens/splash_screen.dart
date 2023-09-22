@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/config/locale/app_localization_helper.dart';
-import 'package:habit_it/core/managers/storage-manager/i_storage_manager.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'package:habit_it/core/utils/app_localization_strings.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
+import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../core/utils/app_local_storage_strings.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../data/datasources/authentication/authentication_local_datasource.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -19,9 +19,9 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late IStorageManager _storageManager;
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late UserLocalDataSource _userLocalDataSource;
   bool _isUserBiometricAuthenticated = false;
   bool _isUserRegistered = false;
   bool _isUserGetStarted = false;
@@ -32,7 +32,8 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _startDelay();
-    _initUserCachedSession();
+    _initLocalDataSources();
+    _initCurrentUserData();
   }
 
   @override
@@ -63,17 +64,15 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  Future _initUserCachedSession() async {
-    _storageManager = GetIt.instance<IStorageManager>();
-    _isUserGetStarted =
-        await _storageManager.getValue(AppLocalStorageKeys.isUserGetStarted) ??
-            false;
-    _isUserRegistered =
-        await _storageManager.getValue(AppLocalStorageKeys.isUserRegistered) ??
-            false;
-    _isUserBiometricAuthenticated = await _storageManager
-            .getValue(AppLocalStorageKeys.isUserBiometricAuthenticated) ??
-        false;
+  _initLocalDataSources() async {
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+  }
+
+  _initCurrentUserData() async {
+    _isUserGetStarted = await _userLocalDataSource.getIsUserGetStarted();
+    _isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
+    _isUserBiometricAuthenticated = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
   }
 
   @override

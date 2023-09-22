@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:habit_it/core/managers/storage-manager/i_storage_manager.dart';
+import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
+import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 import 'package:habit_it/data/entities/user.dart';
 
 import '../../../../config/locale/app_localization_helper.dart';
@@ -10,7 +11,6 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_assets_manager.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
-import '../../../../core/utils/app_local_storage_strings.dart';
 import '../../../../core/utils/app_localization_strings.dart';
 import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
@@ -29,10 +29,23 @@ class SignupSuccessScreen extends StatefulWidget {
 
 class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late IStorageManager _storageManager;
+  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late UserLocalDataSource _userLocalDataSource;
   late final User _user = User();
 
-  void _submitFrom() async {
+  @override
+  void initState() {
+    super.initState();
+    _initLocalDataSources();
+  }
+
+  _initLocalDataSources() async {
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+  }
+
+
+  _submitFrom() async {
     _formKey.currentState!.save();
     if (_formKey.currentState!.validate()) {
       if (_user.username.isEmpty) {
@@ -56,16 +69,12 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
     }
   }
 
-  void _saveUserData() async {
+  _saveUserData() async {
     bool isSaved = false;
     try {
-      _storageManager = GetIt.instance<IStorageManager>();
-      await _storageManager.setValue(
-          AppLocalStorageKeys.currentUsername, _user.username);
-      await _storageManager.setValue(
-          AppLocalStorageKeys.currentUserGender, _user.gender);
-      await _storageManager.setValue(
-          AppLocalStorageKeys.isUserRegistered, true);
+      await _userLocalDataSource.setUsername(_user.username);
+      await _userLocalDataSource.setUserGender(_user.gender);
+      await _authenticationLocalDataSource.setIsUserRegistered(true);
       isSaved = true;
     } catch (exception) {
       log(exception.toString());

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/features/app-navigator/presentation/screens/app_navigator_screen.dart';
-import 'package:habit_it/features/calendar-tasker/screens/calendar_tasker_screen.dart';
 import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
 import 'package:habit_it/features/signin/biometric-signin/screens/signin_biometric_screen.dart';
@@ -28,7 +27,6 @@ class Routes {
 
   static const String app = '/app';
   static const String appHome = '/app/home';
-  static const String appCalendarTasker = '/app/calendar/tasker';
   static const String appProfile = '/app/profile';
 }
 
@@ -38,7 +36,7 @@ class AppRoutes {
       case Routes.initial:
         return MaterialPageRoute(
             builder: (context) {
-              return const AppNavigatorScreen();
+              return const SplashScreen();
             },
             settings: routeSettings);
 
@@ -102,13 +100,6 @@ class AppRoutes {
         return MaterialPageRoute(
             builder: (context) {
               return const HomeScreen();
-            },
-            settings: routeSettings);
-
-      case Routes.appCalendarTasker:
-        return MaterialPageRoute(
-            builder: (context) {
-              return const CalendarTaskerScreen();
             },
             settings: routeSettings);
 

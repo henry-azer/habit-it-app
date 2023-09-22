@@ -1,30 +1,50 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:habit_it/config/locale/app_localization_helper.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_localization_strings.dart';
 import 'package:habit_it/core/utils/app_text_styles.dart';
-import 'package:habit_it/features/onboarding/domain/cubit/app_get_started_cubit.dart';
 import 'package:habit_it/features/onboarding/presentation/widgets/onboarding_item_widget.dart';
 
 import '../../../../config/routes/app_routes.dart';
+import '../../../../data/datasources/user/user_local_datasource.dart';
 import '../widgets/background_final_button_widget.dart';
 import '../widgets/onboarding_slider_widget.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({Key? key}) : super(key: key);
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  late UserLocalDataSource _userLocalDataSource;
+
+  @override
+  void initState() {
+    super.initState();
+    _initUserLocalDataSource();
+  }
+
+  _initUserLocalDataSource() async {
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
+  }
+
+  _onFinishOnboarding(BuildContext context) {
+    _userLocalDataSource.setIsUserGetStarted(true);
+    Navigator.pushReplacementNamed(context, Routes.appSignup);
+  }
 
   @override
   Widget build(BuildContext context) {
     return OnBoardingSlider(
       finishButtonText: AppLocalizationHelper.translate(
           context, AppLocalizationKeys.onboardingGettingStarted),
-      onFinish: () {
-        BlocProvider.of<AppGetStartedCubit>(context).setAppGetStarted();
-        Navigator.pushReplacementNamed(context, Routes.appSignup);
-      },
+      onFinish: () => _onFinishOnboarding(context),
+      // Corrected the onFinish function call
       finishButtonStyle: FinishButtonStyle(
         backgroundColor: AppColors.white,
       ),

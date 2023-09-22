@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:habit_it/core/managers/storage-manager/i_storage_manager.dart';
+import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
 
 import '../../../../config/locale/app_localization_helper.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_assets_manager.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_local_storage_strings.dart';
 import '../../../../core/utils/app_localization_strings.dart';
 import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
@@ -21,19 +20,23 @@ class SigninPINScreen extends StatefulWidget {
 }
 
 class _SigninPINScreenState extends State<SigninPINScreen> {
-  late IStorageManager _storageManager;
+  late AuthenticationLocalDataSource _authenticationLocalDataSource;
   late String _authenticatedPIN;
+
 
   @override
   void initState() {
     super.initState();
-    _initUserCachedAuthenticationSession();
+    _initLocalDataSources();
+    _initCurrentUserData();
   }
 
-  Future _initUserCachedAuthenticationSession() async {
-    _storageManager = GetIt.instance<IStorageManager>();
-    _authenticatedPIN = await _storageManager
-        .getValue(AppLocalStorageKeys.currentUserPIN) as String;
+  _initLocalDataSources() {
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+  }
+
+  _initCurrentUserData() async {
+    _authenticatedPIN = await _authenticationLocalDataSource.getUserPIN();
   }
 
   _authenticateUserPIN(String pin) {

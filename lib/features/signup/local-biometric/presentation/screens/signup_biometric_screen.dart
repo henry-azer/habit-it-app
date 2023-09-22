@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/config/routes/app_routes.dart';
-import 'package:habit_it/core/managers/storage-manager/i_storage_manager.dart';
+import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
 
 import '../../../../../config/locale/app_localization_helper.dart';
 import '../../../../../core/managers/biometric-authentication/i_biometric_auth_manager.dart';
 import '../../../../../core/utils/app_assets_manager.dart';
 import '../../../../../core/utils/app_colors.dart';
-import '../../../../../core/utils/app_local_storage_strings.dart';
 import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/utils/app_notifier.dart';
@@ -23,25 +22,26 @@ class SignupBiometricScreen extends StatefulWidget {
 
 class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
   late IBiometricAuthenticationManager _biometricAuthenticationManager;
-  late IStorageManager _storageManager;
+  late AuthenticationLocalDataSource _authenticationLocalDataSource;
 
   @override
   void initState() {
     super.initState();
+    _initLocalDataSourcesAndManagers();
     _authenticateUserBiometric();
   }
 
-  _authenticateUserBiometric() async {
-    _biometricAuthenticationManager =
-        GetIt.instance<IBiometricAuthenticationManager>();
-    _storageManager = GetIt.instance<IStorageManager>();
-    bool isAuthenticated = false;
+  _initLocalDataSourcesAndManagers() {
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
+  }
 
+
+  _authenticateUserBiometric() async {
+    bool isAuthenticated = false;
     try {
-      isAuthenticated = await _biometricAuthenticationManager
-          .requestBiometricAuthentication();
-      await _storageManager.setValue(
-          AppLocalStorageKeys.isUserBiometricAuthenticated, true);
+      isAuthenticated = await _biometricAuthenticationManager.requestBiometricAuthentication();
+      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
     } catch (exception) {
       AppNotifier.showSnackBar(
         context: context,

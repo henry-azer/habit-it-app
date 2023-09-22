@@ -5,9 +5,15 @@ import '../../../core/managers/storage-manager/i_storage_manager.dart';
 abstract class UserLocalDataSource {
   Future<String> getUsername();
 
-  Future<bool> getIsUserBiometricAuthenticated();
+  Future<bool> getIsUserGetStarted();
 
-  Future<void> cacheIsApGetStarted();
+  Future<void> setIsUserGetStarted(bool value);
+
+  Future<void> setUsername(String username);
+
+  Future<void> setUserGender(String gender);
+
+  Future<void> clearAllUserData();
 }
 
 class UserLocalDataSourceImpl implements UserLocalDataSource {
@@ -16,21 +22,35 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   UserLocalDataSourceImpl({required this.storageManager});
 
   @override
-  Future<void> cacheIsApGetStarted() async {
-    storageManager.setValue(AppLocalStorageKeys.isUserGetStarted, true);
-  }
-
-  @override
-  Future<bool> getIsUserBiometricAuthenticated() async {
-    return await storageManager
-            .getValue(AppLocalStorageKeys.isUserBiometricAuthenticated) ??
-        false;
-  }
-
-  @override
   Future<String> getUsername() async {
-    return await storageManager
-        .getValue(AppLocalStorageKeys.currentUsername) ??
+    return await storageManager.getValue(AppLocalStorageKeys.currentUsername) ??
         false;
+  }
+
+  @override
+  Future<bool> getIsUserGetStarted() async {
+    return await storageManager
+            .getValue(AppLocalStorageKeys.isUserGetStarted) ??
+        false;
+  }
+
+  @override
+  Future<void> setIsUserGetStarted(bool value) async {
+    return storageManager.setValue(AppLocalStorageKeys.isUserGetStarted, value);
+  }
+
+  @override
+  Future<void> setUsername(String username) async {
+    return storageManager.setValue(AppLocalStorageKeys.currentUsername, username);
+  }
+
+  @override
+  Future<void> setUserGender(String gender) async {
+    return storageManager.setValue(AppLocalStorageKeys.currentUserGender, gender);
+  }
+
+  @override
+  Future<void> clearAllUserData() async {
+    return storageManager.clearAll();
   }
 }

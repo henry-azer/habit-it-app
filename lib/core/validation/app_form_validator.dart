@@ -1,13 +1,13 @@
 import 'package:habit_it/core/validation/validation_types.dart';
 
-class ValidateTextFiled {
+class AppFormValidator {
   final String value;
-  final String label;
+  final String type;
 
-  ValidateTextFiled({required this.value, required this.label});
+  AppFormValidator({required this.value, required this.type});
 
-  static String? validate(String? value, label) {
-    switch (label) {
+  static String? validate(String? value, type) {
+    switch (type) {
       case (ValidationTypes.signinEmail):
         {
           return _validateEmail(value!);
@@ -27,6 +27,10 @@ class ValidateTextFiled {
       case (ValidationTypes.signupLastName):
         {
           return _validateSignupLastName(value!);
+        }
+      case (ValidationTypes.signupGender):
+        {
+          return _validateSignupGender(value!);
         }
       case (ValidationTypes.signupPhoneNumber):
         {
@@ -97,6 +101,14 @@ String? _validateSignupLastName(String value) {
     return "required";
   } else if (value.length < 2) {
     return "at_least_3_chars";
+  } else {
+    return "";
+  }
+}
+
+String? _validateSignupGender(String value) {
+  if (value.isEmpty) {
+    return "required";
   } else {
     return "";
   }

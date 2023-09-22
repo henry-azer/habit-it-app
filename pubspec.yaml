@@ -24,6 +24,7 @@ dependencies:
   flutter_snake_navigationbar: ^0.6.1
   local_auth: ^2.1.7
   provider: ^6.0.5
+  line_awesome_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -37,7 +38,8 @@ flutter:
   assets:
     - lang/ar.json
     - lang/en.json
-    - assets/images/user.png
+    - assets/images/male.png
+    - assets/images/female.png
     - assets/images/logo.png
     - assets/images/onboarding_1.png
     - assets/images/onboarding_2.png

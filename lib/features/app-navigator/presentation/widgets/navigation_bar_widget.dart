@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
 
-import '../../../calendar-tasker/screens/calendar_tasker_screen.dart';
 import '../../../home/presentation/screens/home_screen.dart';
 import '../../../../core/utils/app_colors.dart';
 
@@ -21,11 +20,6 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
   int _selectedItemPosition = 0;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -37,11 +31,7 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
                 _selectedItemPosition = index;
               });
             },
-            children: const [
-              HomeScreen(),
-              CalendarTaskerScreen(),
-              ProfileScreen()
-            ],
+            children: const [HomeScreen(), ProfileScreen()],
           ),
         ),
         SnakeNavigationBar.color(
@@ -51,7 +41,7 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
           snakeShape: SnakeShape.rectangle,
           selectedItemColor: AppColors.white,
           unselectedItemColor: AppColors.grey,
-          snakeViewColor: AppColors.primary.withOpacity(0.93),
+          snakeViewColor: AppColors.accent,
           currentIndex: _selectedItemPosition,
           onTap: (index) {
             _pageController.animateToPage(
@@ -65,14 +55,6 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
               icon: Icon(
                 Icons.home_sharp,
                 size: _selectedItemPosition == 0
-                    ? _selectedItemSize
-                    : _defaultItemSize,
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.today_outlined,
-                size: _selectedItemPosition == 1
                     ? _selectedItemSize
                     : _defaultItemSize,
               ),

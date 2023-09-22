@@ -11,11 +11,6 @@ class AppNavigatorScreen extends StatefulWidget {
 
 class _AppNavigatorScreenState extends State<AppNavigatorScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return const Material(
       child: Scaffold(

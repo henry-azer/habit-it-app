@@ -5,6 +5,8 @@ import '../../../core/managers/storage-manager/i_storage_manager.dart';
 abstract class UserLocalDataSource {
   Future<String> getUsername();
 
+  Future<String> getUserGender();
+
   Future<bool> getIsUserGetStarted();
 
   Future<void> setIsUserGetStarted(bool value);
@@ -24,7 +26,14 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   @override
   Future<String> getUsername() async {
     return await storageManager.getValue(AppLocalStorageKeys.currentUsername) ??
-        false;
+        "";
+  }
+
+  @override
+  Future<String> getUserGender() async {
+    return await storageManager
+            .getValue(AppLocalStorageKeys.currentUserGender) ??
+        "";
   }
 
   @override
@@ -41,12 +50,14 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   @override
   Future<void> setUsername(String username) async {
-    return storageManager.setValue(AppLocalStorageKeys.currentUsername, username);
+    return storageManager.setValue(
+        AppLocalStorageKeys.currentUsername, username);
   }
 
   @override
   Future<void> setUserGender(String gender) async {
-    return storageManager.setValue(AppLocalStorageKeys.currentUserGender, gender);
+    return storageManager.setValue(
+        AppLocalStorageKeys.currentUserGender, gender);
   }
 
   @override

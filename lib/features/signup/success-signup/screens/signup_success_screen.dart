@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
@@ -77,7 +75,6 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
       await _authenticationLocalDataSource.setIsUserRegistered(true);
       isSaved = true;
     } catch (exception) {
-      log(exception.toString());
       AppNotifier.showSnackBar(
         context: context,
         message: AppLocalizationHelper.translate(

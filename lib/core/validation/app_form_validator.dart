@@ -79,8 +79,8 @@ String? _validateSignupName(String value) {
     return "required";
   } else if (value.length < 2) {
     return "at_least_3_chars";
-  } else if (value.length > 15) {
-    return "max_15_chars";
+  } else if (value.length > 16) {
+    return "max_16_chars";
   } else {
     return "";
   }

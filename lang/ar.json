@@ -25,6 +25,7 @@
   "invalid_email": " * بريد إلكتروني خاطئ",
   "at_least_8_chars": "* علي الاقل 8 حروف",
   "max_15_chars": " * Maximum 15 characters",
+  "max_16_chars": " * Maximum 16 characters",
 
   "splash_title": "HABIT IT",
 

@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late AuthenticationLocalDataSource _authenticationLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
+  late final User _updatedUser = User();
   late final User _user = User();
   bool isUpdatingProfile = false;
 
@@ -49,7 +50,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _initCurrentUserData() async {
     final username = await _userLocalDataSource.getUsername();
     final userGender = await _userLocalDataSource.getUserGender();
-    final userAuthMethod = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
+    final userAuthMethod =
+        await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
     setState(() {
       _user.username = username;
       _user.gender = userGender;
@@ -65,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _submitFrom() async {
     _formKey.currentState!.save();
     if (_formKey.currentState!.validate()) {
-      if (_user.username.isEmpty) {
+      if (_updatedUser.username.isEmpty) {
         AppNotifier.showSnackBar(
           context: context,
           message: AppLocalizationHelper.translate(
@@ -74,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return;
       }
 
-      if (_user.gender.isEmpty) {
+      if (_updatedUser.gender.isEmpty) {
         AppNotifier.showSnackBar(
           context: context,
           message: AppLocalizationHelper.translate(
@@ -89,25 +91,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _saveUserData() async {
     bool isSaved = false;
     try {
-      await _userLocalDataSource.setUsername(_user.username);
-      await _userLocalDataSource.setUserGender(_user.gender);
+      await _userLocalDataSource.setUsername(_updatedUser.username);
+      await _userLocalDataSource.setUserGender(_updatedUser.gender);
       isSaved = true;
     } catch (exception) {
-      AppNotifier.showSnackBar(
-        context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.profileUpdateFailed),
-      );
       return;
     }
 
     if (isSaved) {
-      AppNotifier.showSnackBar(
-        context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.profileUpdateSuccess),
-      );
       setState(() {
+        _user.username = _updatedUser.username;
+        _user.gender = _updatedUser.gender;
         isUpdatingProfile = false;
       });
     }
@@ -293,7 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     secureText: false,
                     onSave: (value) {
                       setState(() {
-                        _user.username = value;
+                        _updatedUser.username = value;
                       });
                     },
                     contentPadding: const EdgeInsets.only(
@@ -322,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onSave: (value) {
                       if (value != null) {
                         setState(() {
-                          _user.gender = value;
+                          _updatedUser.gender = value;
                         });
                       }
                     },

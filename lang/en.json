@@ -76,11 +76,13 @@
   "signup_biometric_failed": "Failed to register your biometric, please try again!",
   "signup_biometric_success": "Biometric registered successfully.",
 
-  "signup_name_failed": "Failed to register your name, please try again!",
+  "signup_failed": "Failed to register, please try again!",
+  "signup_name_error": "Username is required, please fill it!",
+  "signup_gender_error": "Gender is required, please fill it!",
 
   "signup_success": "Welcome to your world!",
   "signup_success_title": "WELCOME TO HABIT IT",
-  "signup_success_description": "Please tell us your name.",
+  "signup_success_description": "Let us know more about you",
   "signup_success_button": "Let's Goooooo",
 
   "signin_pin_title": "PIN SIGN IN",

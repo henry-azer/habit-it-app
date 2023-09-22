@@ -86,6 +86,34 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle? signupGenderFieldItem = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? signupGenderSelectedFieldItem = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? signupGenderFieldHint = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: AppColors.grey,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? signupGenderFieldError = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.error,
+    fontFamily: AppFonts.roboto,
+  );
+
   static TextStyle? signupSuccessButton = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
@@ -97,6 +125,14 @@ class AppTextStyles with Diagnosticable {
   static TextStyle? signinDescription = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w300,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  /// PROFILE
+  static TextStyle? profileUsername = TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );

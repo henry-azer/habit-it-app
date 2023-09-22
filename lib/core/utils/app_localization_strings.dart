@@ -33,7 +33,9 @@ class AppLocalizationKeys {
   static const String signupBiometricSuccess = 'signup_biometric_success';
   static const String signupBiometricFailed = 'signup_biometric_failed';
 
-  static const String signupNameFailed = 'signup_name_failed';
+  static const String signupFailed = 'signup_failed';
+  static const String signupNameError = 'signup_name_error';
+  static const String signupGenderError = 'signup_gender_error';
 
   static const String signupSuccess = 'signup_success';
   static const String signupSuccessTitle = 'signup_success_title';

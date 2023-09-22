@@ -9,4 +9,5 @@ class AppLocalStorageKeys {
   static const String currentUserBiometric = "CURRENT_USER/BIOMETRIC";
   static const String currentUserPIN = "CURRENT_USER/PIN";
   static const String currentUsername = "CURRENT_USER/USERNAME";
+  static const String currentUserGender = "CURRENT_USER/GENDER";
 }

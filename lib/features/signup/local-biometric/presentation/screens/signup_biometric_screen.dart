@@ -41,9 +41,9 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
   _authenticateUserBiometric() async {
     bool isAuthenticated = false;
     try {
-      isAuthenticated = await _biometricAuthenticationManager
-          .requestBiometricAuthentication();
-      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
+      isAuthenticated = await _biometricAuthenticationManager.requestBiometricAuthentication();
+      await _authenticationLocalDataSource.setIsUserAuthenticated(isAuthenticated);
+      await _authenticationLocalDataSource.setIsUserBiometricAuthenticated(isAuthenticated);
     } catch (exception) {
       AppNotifier.showSnackBar(
         context: context,

@@ -90,6 +90,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     IconTextButton(
                       height: 50,
                       width: MediaQuery.of(context).size.width * 0.55,
+                      backgroundColor: AppColors.secondary,
+                      iconColor: AppColors.primary,
                       icon: Icons.fingerprint,
                       text: AppLocalizationHelper.translate(
                           context, AppLocalizationKeys.signupBiometricButton),
@@ -105,6 +107,8 @@ class _SignupScreenState extends State<SignupScreen> {
               IconTextButton(
                 height: 50,
                 width: MediaQuery.of(context).size.width * 0.45,
+                backgroundColor: AppColors.secondary,
+                iconColor: AppColors.primary,
                 icon: Icons.pin,
                 text: AppLocalizationHelper.translate(
                     context, AppLocalizationKeys.signupPINButton),

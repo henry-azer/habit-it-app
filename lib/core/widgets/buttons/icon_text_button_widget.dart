@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:habit_it/core/utils/app_colors.dart';
 
 class IconTextButton extends StatelessWidget {
   final String text;
   final TextStyle? textStyle;
+  final Color backgroundColor;
+  final Color iconColor;
   final IconData icon;
   final double width;
   final double height;
@@ -15,7 +16,10 @@ class IconTextButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.width,
-    required this.height, required this.textStyle,
+    required this.height,
+    required this.textStyle,
+    required this.backgroundColor,
+    required this.iconColor,
   });
 
   @override
@@ -26,7 +30,7 @@ class IconTextButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.white,
+          backgroundColor: backgroundColor,
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
         ),
         child: Row(
@@ -38,7 +42,7 @@ class IconTextButton extends StatelessWidget {
               textAlign: TextAlign.center,
               style: textStyle,
             ),
-            Icon(icon, color: AppColors.fontSecondary),
+            Icon(icon, color: iconColor),
           ],
         ),
       ),

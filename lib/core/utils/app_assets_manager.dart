@@ -1,6 +1,7 @@
 const String imgPath = 'assets/images';
 
 class AppImageAssets {
+  static const String henry = '$imgPath/henry.jpg';
   static const String male = '$imgPath/male.png';
   static const String female = '$imgPath/female.png';
   static const String logo = '$imgPath/logo.png';

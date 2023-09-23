@@ -1,4 +1,8 @@
 class AppLocalizationKeys {
+  /// APP
+  static const String appName = 'app_name';
+  static const String appCreator = 'app_creator';
+
   /// GLOBAL
   static const String cancel = 'cancel';
   static const String update = 'update';

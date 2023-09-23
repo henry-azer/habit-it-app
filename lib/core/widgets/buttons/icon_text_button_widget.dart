@@ -27,10 +27,11 @@ class IconTextButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               text,

@@ -8,6 +8,7 @@
   "ok": "Ok",
   "next": "Next",
   "cancel": "Cancel",
+  "back" : "Back",
   "update": "Update",
   "something_wrong": "Something wrong happened!",
   "reload_screen": "Reload Screen",
@@ -52,6 +53,17 @@
   "at_least_3_chars": " * At least 3 characters",
   "max_15_chars": " * Maximum 15 characters",
   "max_16_chars": " * Maximum 16 characters",
+
+  "linkedin_name" : "Henry Azer",
+  "linkedin_link" : "https://www.linkedin.com/in/henry-azer",
+  "github_name" : "Henry Azer",
+  "github_link" : "https://github.com/henry-azer",
+  "mail_name" : "Henry Azer",
+  "mail_link" : "mailto:henryazer@outlook.com",
+  "facebook_name" : "Henry Azer",
+  "facebook_link" : "https://www.facebook.com/henry.azer0",
+  "whatsapp_name" : "Henry Azer",
+  "whatsapp_link" : "https://wa.me/201207885279",
 
   "splash_title": "HABIT IT",
 

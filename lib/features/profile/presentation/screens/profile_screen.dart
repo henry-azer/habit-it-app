@@ -4,20 +4,17 @@ import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_notifier.dart';
 import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
+import 'package:habit_it/features/profile/presentation/widgets/base/profile_header_widget.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../config/locale/app_localization_helper.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_assets_manager.dart';
-import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_localization_strings.dart';
-import '../../../../core/utils/app_text_styles.dart';
-import '../../../../core/validation/validation_types.dart';
-import '../../../../core/widgets/buttons/button_widget.dart';
-import '../../../../core/widgets/forms/dropdown_field_widget.dart';
-import '../../../../core/widgets/forms/text_field_widget.dart';
 import '../../../../data/entities/user.dart';
-import '../widgets/profile_menu_item_widget.dart';
+import '../widgets/about-us/about_us_widget.dart';
+import '../widgets/profile/profile_menu_item_widget.dart';
+import '../widgets/profile/update_profile_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -33,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late final User _updatedUser = User();
   late final User _user = User();
   bool isUpdatingProfile = false;
+  bool isAboutUs = false;
 
   @override
   void initState() {
@@ -43,8 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _initLocalDataSources() async {
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource =
-        GetIt.instance<AuthenticationLocalDataSource>();
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
   }
 
   _initCurrentUserData() async {
@@ -114,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              _buildHeader(),
+              _buildHeaderSwitcher(),
               _buildBodySwitcher(),
             ],
           ),
@@ -123,53 +120,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildHeader() {
-    return Stack(
-      children: [
-        Container(
-          height: 280,
-          decoration: BoxDecoration(
-            color: AppColors.accent,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(60),
-              bottomRight: Radius.circular(60),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 75,
-              ),
-              SizedBox(
-                width: 120,
-                height: 120,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image(
-                        image: AssetImage(_user.gender == "Male"
-                            ? AppImageAssets.male
-                            : AppImageAssets.female))),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 40.0),
-                child: Text(
-                  _user.username,
-                  style: AppTextStyles.profileUsername,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+  Widget _buildHeaderSwitcher() {
+    if (isUpdatingProfile) {
+      return ProfileHeaderWidget(
+        image: _user.gender == "Male"
+            ? AppImageAssets.male
+            : AppImageAssets.female,
+        title: AppLocalizationHelper.translate(
+            context, AppLocalizationKeys.profileUpdateTitle),
+      );
+    } else if (isAboutUs) {
+      return ProfileHeaderWidget(
+        image: AppImageAssets.henry,
+        title: AppLocalizationHelper.translate(
+            context, AppLocalizationKeys.appCreator),
+      );
+    } else {
+      return ProfileHeaderWidget(
+        image: _user.gender == "Male"
+            ? AppImageAssets.male
+            : AppImageAssets.female,
+        title: _user.username,
+      );
+    }
   }
 
   Widget _buildBodySwitcher() {
     if (isUpdatingProfile) {
-      return _buildUpdateProfile();
+      return UpdateProfileWidget(
+        updatedUser: _updatedUser,
+        formKey: _formKey,
+        onCancel: () {
+          setState(() {
+            isUpdatingProfile = false;
+          });
+        },
+        onSubmit: _submitFrom,
+      );
+    } else if (isAboutUs) {
+      return AboutUsWidget(
+        onBackPressed: () {
+          setState(() {
+            isAboutUs = false;
+          });
+        },
+      );
     } else {
       return _buildBody();
     }
@@ -202,7 +197,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ProfileMenuItemWidget(
                   title: "About Us",
                   icon: LineAwesomeIcons.info,
-                  onPress: () {}),
+                  onPress: () {
+                    setState(() {
+                      isAboutUs = true;
+                    });
+                  }),
               const SizedBox(height: 10),
             ],
           ),
@@ -242,131 +241,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildUpdateProfile() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        children: [
-          const SizedBox(height: 25),
-          Text(
-            AppLocalizationHelper.translate(
-                context, AppLocalizationKeys.profileUpdateTitle),
-            style: AppTextStyles.profileUpdateTitle,
-          ),
-          const SizedBox(height: 15),
-          Divider(
-            color: AppColors.white.withOpacity(0.7),
-          ),
-          const SizedBox(height: 30),
-          Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: TextFieldWidget(
-                    enabled: true,
-                    hintText: 'Username',
-                    hintTextStyle: AppTextStyles.signupNameTextFieldHint,
-                    keyboardType: TextInputType.emailAddress,
-                    validateType: ValidationTypes.signupName,
-                    errorStyle: AppTextStyles.signupNameTextFieldError,
-                    errorBorderColor: AppColors.error,
-                    borderColor: AppColors.border,
-                    borderWidth: 1,
-                    maxLines: 1,
-                    maxLength: 16,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.signupNameTextField,
-                    cursorColor: AppColors.fontSecondary,
-                    secureText: false,
-                    onSave: (value) {
-                      setState(() {
-                        _updatedUser.username = value;
-                      });
-                    },
-                    contentPadding: const EdgeInsets.only(
-                      top: 12,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  height: 55,
-                  padding: const EdgeInsets.symmetric(horizontal: 80.0),
-                  child: DropdownFieldWidget<String>(
-                    borderWidth: 1,
-                    hintText: 'Gender',
-                    items: AppConstants.genders,
-                    borderColor: AppColors.border,
-                    hintTextStyle: AppTextStyles.signupGenderFieldHint,
-                    errorStyle: AppTextStyles.signupGenderFieldError,
-                    errorBorderColor: AppColors.error,
-                    itemTextStyle: AppTextStyles.signupGenderFieldItem,
-                    selectedItemTextStyle:
-                        AppTextStyles.signupGenderSelectedFieldItem,
-                    validateType: ValidationTypes.signupGender,
-                    onSave: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _updatedUser.gender = value;
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 60),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ButtonWidget(
-                onPress: () {
-                  setState(() {
-                    isUpdatingProfile = false;
-                  });
-                },
-                backgroundColor: Colors.transparent,
-                width: 120,
-                height: 40,
-                borderRadius: 0,
-                borderColor: AppColors.border,
-                borderWidth: 0.7,
-                child: Text(
-                  AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.cancel),
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.profileCancelButtonText,
-                ),
-              ),
-              ButtonWidget(
-                onPress: _submitFrom,
-                backgroundColor: AppColors.secondary,
-                width: 120,
-                height: 40,
-                borderRadius: 0,
-                borderWidth: 0.7,
-                borderColor: AppColors.border,
-                child: Text(
-                  AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.update),
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.profileUpdateButtonText,
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
     );
   }
 }

@@ -121,6 +121,13 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle? signupIconTextButton = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// SIGNIN
   static TextStyle? signinDescription = TextStyle(
     fontSize: 16,
@@ -129,15 +136,15 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
-  /// PROFILE
-  static TextStyle? profileUsername = TextStyle(
-    fontSize: 28,
+  static TextStyle? signinIconTextButton = TextStyle(
+    fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: AppColors.fontPrimary,
+    color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? profileUpdateTitle = TextStyle(
+  /// PROFILE
+  static TextStyle? profileTitle = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
@@ -158,20 +165,26 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle? profileBackButtonText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? profileIconTextButton = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// APPBAR
   static TextStyle? appbarTitle = TextStyle(
     fontSize: 20,
     letterSpacing: 1.4,
     fontWeight: FontWeight.w300,
     color: AppColors.fontPrimary,
-    fontFamily: AppFonts.roboto,
-  );
-
-  /// BUTTONS
-  static TextStyle? iconTextButton = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-    color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 

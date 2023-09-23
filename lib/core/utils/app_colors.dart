@@ -22,4 +22,10 @@ class AppColors {
   static Color white = HexColor('#FFFFFF');
   static Color grey = HexColor('#808080');
   static Color red = HexColor('#F44336');
+
+  static Color facebook = HexColor('#3B5998');
+  static Color github = HexColor('#000000');
+  static Color linkedin = HexColor('#0072B1');
+  static Color whatsapp = HexColor('#075E54');
+  static Color outlook = HexColor('#127CD6');
 }

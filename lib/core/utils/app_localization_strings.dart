@@ -3,8 +3,21 @@ class AppLocalizationKeys {
   static const String appName = 'app_name';
   static const String appCreator = 'app_creator';
 
+  /// ACCOUNTS
+  static const String linkedinName = 'linkedin_name';
+  static const String linkedinLink = 'linkedin_link';
+  static const String githubName = 'github_name';
+  static const String githubLink = 'github_link';
+  static const String facebookName = 'facebook_name';
+  static const String facebookLink = 'facebook_link';
+  static const String whatsappName = 'whatsapp_name';
+  static const String whatsappLink = 'whatsapp_link';
+  static const String mailName = 'mail_name';
+  static const String mailLink = 'mail_link';
+
   /// GLOBAL
   static const String cancel = 'cancel';
+  static const String back = 'back';
   static const String update = 'update';
 
   /// SPLASH

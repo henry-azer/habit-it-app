@@ -32,15 +32,17 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
   }
 
   _initLocalDataSourcesAndManagers() {
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
-    _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
+    _authenticationLocalDataSource =
+        GetIt.instance<AuthenticationLocalDataSource>();
+    _biometricAuthenticationManager =
+        GetIt.instance<IBiometricAuthenticationManager>();
   }
-
 
   _authenticateUserBiometric() async {
     bool isAuthenticated = false;
     try {
-      isAuthenticated = await _biometricAuthenticationManager.requestBiometricAuthentication();
+      isAuthenticated = await _biometricAuthenticationManager
+          .requestBiometricAuthentication();
       await _authenticationLocalDataSource.setIsUserAuthenticated(true);
     } catch (exception) {
       AppNotifier.showSnackBar(
@@ -100,6 +102,7 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
                 text: AppLocalizationHelper.translate(
                     context, AppLocalizationKeys.signupBiometricButton),
                 onPressed: _authenticateUserBiometric,
+                textStyle: AppTextStyles.signupIconTextButton,
               ),
             ],
           ),

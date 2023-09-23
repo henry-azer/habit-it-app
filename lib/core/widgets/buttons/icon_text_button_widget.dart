@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 
-import '../../utils/app_text_styles.dart';
-
 class IconTextButton extends StatelessWidget {
   final String text;
+  final TextStyle? textStyle;
   final IconData icon;
   final double width;
   final double height;
@@ -16,7 +15,7 @@ class IconTextButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.width,
-    required this.height,
+    required this.height, required this.textStyle,
   });
 
   @override
@@ -36,7 +35,7 @@ class IconTextButton extends StatelessWidget {
             Text(
               text,
               textAlign: TextAlign.center,
-              style: AppTextStyles.iconTextButton,
+              style: textStyle,
             ),
             Icon(icon, color: AppColors.fontSecondary),
           ],

@@ -97,6 +97,7 @@ class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
                 text: AppLocalizationHelper.translate(
                     context, AppLocalizationKeys.signupBiometricButton),
                 onPressed: _authenticateUserBiometric,
+                textStyle: AppTextStyles.signinIconTextButton,
               ),
             ],
           ),

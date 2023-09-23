@@ -94,9 +94,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       text: AppLocalizationHelper.translate(
                           context, AppLocalizationKeys.signupBiometricButton),
                       onPressed: () {
-                        Navigator.pushNamed(
-                            context, Routes.signupBiometric);
+                        Navigator.pushNamed(context, Routes.signupBiometric);
                       },
+                      textStyle: AppTextStyles.signupIconTextButton,
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   ],
@@ -111,6 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, Routes.signupPIN);
                 },
+                textStyle: AppTextStyles.signupIconTextButton,
               ),
             ],
           ),

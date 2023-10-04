@@ -56,7 +56,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  _clearAllUserDataAction() {
+  _clearMonthData() {
+    // TODO : implement clear month data
+  }
+
+  _resetAppData() {
     _userLocalDataSource.clearAllUserData();
     Navigator.pushReplacementNamed(context, Routes.initial);
   }
@@ -195,12 +199,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     });
                   }),
               ProfileMenuItemWidget(
-                  title: "About Us",
-                  icon: LineAwesomeIcons.info,
+                  title: "Clear Month Data",
+                  icon: Icons.auto_delete_outlined,
                   onPress: () {
-                    setState(() {
-                      isAboutUs = true;
-                    });
+                    AppNotifier.showActionDialog(
+                        context: context,
+                        message: "Are you sure?",
+                        onClickYes: _clearMonthData);
+                  }),
+              ProfileMenuItemWidget(
+                  title: "Reset App Data",
+                  icon: Icons.lock_reset_outlined,
+                  onPress: () {
+                    AppNotifier.showActionDialog(
+                        context: context,
+                        message: "Are you sure?",
+                        onClickYes: _resetAppData);
                   }),
               const SizedBox(height: 10),
             ],
@@ -215,13 +229,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 10),
               ProfileMenuItemWidget(
-                  title: "Clear All User Data",
-                  icon: Icons.delete_outline,
+                  title: "About Us",
+                  icon: LineAwesomeIcons.info,
                   onPress: () {
-                    AppNotifier.showActionDialog(
-                        context: context,
-                        message: "Are you sure?",
-                        onClickYes: _clearAllUserDataAction);
+                    setState(() {
+                      isAboutUs = true;
+                    });
                   }),
               ProfileMenuItemWidget(
                   title: "Logout",

@@ -22,12 +22,14 @@ class SigninPINScreen extends StatefulWidget {
 class _SigninPINScreenState extends State<SigninPINScreen> {
   late AuthenticationLocalDataSource _authenticationLocalDataSource;
   late String _authenticatedPIN;
+  late bool _isUserRegistered;
 
 
   @override
   void initState() {
     super.initState();
     _initLocalDataSources();
+    _checkIfUserRegistered();
     _initCurrentUserData();
   }
 
@@ -35,12 +37,20 @@ class _SigninPINScreenState extends State<SigninPINScreen> {
     _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
   }
 
+  _checkIfUserRegistered() async {
+    _isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
+    if (!_isUserRegistered) {
+      Navigator.pushReplacementNamed(context, Routes.appSignup);
+    }
+  }
+
   _initCurrentUserData() async {
     _authenticatedPIN = await _authenticationLocalDataSource.getUserPIN();
   }
 
-  _authenticateUserPIN(String pin) {
+  _authenticateUserPIN(String pin) async {
     if (pin == _authenticatedPIN) {
+      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
       Navigator.pushReplacementNamed(context, Routes.app);
     } else {
       AppNotifier.showSnackBar(

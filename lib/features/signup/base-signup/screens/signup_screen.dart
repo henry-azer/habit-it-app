@@ -10,6 +10,7 @@ import '../../../../core/utils/app_localization_strings.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../core/widgets/buttons/icon_text_button_widget.dart';
+import '../../../../data/datasources/user/user_local_datasource.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -20,17 +21,31 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   late IBiometricAuthenticationManager _biometricAuthenticationManager;
+  late UserLocalDataSource _userLocalDataSource;
   late bool _isBiometricAvailable = false;
+  late bool _isUserGetStarted;
 
   @override
   void initState() {
     super.initState();
-    _initBiometricAuthentication();
+    _initManagers();
+    _checkIsUserGetStarted();
+    _checkIsBiometricAuthenticationAvailable();
   }
 
-  _initBiometricAuthentication() async {
-    _biometricAuthenticationManager =
-        GetIt.instance<IBiometricAuthenticationManager>();
+  _initManagers() async {
+    _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
+  }
+
+  _checkIsUserGetStarted() async {
+    _isUserGetStarted = await _userLocalDataSource.getIsUserGetStarted();
+    if (!_isUserGetStarted) {
+      Navigator.pushReplacementNamed(context, Routes.appOnboarding);
+    }
+  }
+
+  _checkIsBiometricAuthenticationAvailable() async {
     bool isBiometricAvailable = await _biometricAuthenticationManager
         .isBiometricAuthenticationAvailable();
     setState(() {

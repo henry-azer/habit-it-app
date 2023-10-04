@@ -11,6 +11,7 @@ import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../core/widgets/buttons/icon_text_button_widget.dart';
+import '../../../../data/datasources/authentication/authentication_local_datasource.dart';
 
 class SigninBiometricScreen extends StatefulWidget {
   const SigninBiometricScreen({Key? key}) : super(key: key);
@@ -21,25 +22,34 @@ class SigninBiometricScreen extends StatefulWidget {
 
 class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
   late IBiometricAuthenticationManager _biometricAuthenticationManager;
+  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late bool _isUserRegistered;
 
   @override
   void initState() {
     super.initState();
-    _initBiometricAuthenticationManager();
+    _initAuthenticationManagers();
+    _checkIfUserRegistered();
     _authenticateUserBiometric();
   }
 
-  _initBiometricAuthenticationManager() async {
-    _biometricAuthenticationManager =
-        GetIt.instance<IBiometricAuthenticationManager>();
+  _initAuthenticationManagers() async {
+    _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+  }
+
+  _checkIfUserRegistered() async {
+    _isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
+    if (!_isUserRegistered) {
+      Navigator.pushReplacementNamed(context, Routes.initial);
+    }
   }
 
   _authenticateUserBiometric() async {
     bool isAuthenticated = false;
 
     try {
-      isAuthenticated =
-          await _biometricAuthenticationManager.verifyBiometricAuthentication();
+      isAuthenticated = await _biometricAuthenticationManager.verifyBiometricAuthentication();
     } catch (exception) {
       AppNotifier.showSnackBar(
         context: context,
@@ -49,6 +59,7 @@ class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
     }
 
     if (isAuthenticated) {
+      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
       Navigator.pushReplacementNamed(context, Routes.app);
     }
   }

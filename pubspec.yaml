@@ -8,18 +8,13 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.2
-  dartz: ^0.10.1
   dio: ^4.0.6
-  equatable: ^2.0.3
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_bloc: ^8.0.1
   fluttertoast: ^8.0.9
   get_it: ^7.2.0
-  http: ^0.13.4
-  internet_connection_checker: ^0.0.1+4
   shared_preferences: ^2.0.15
   flutter_snake_navigationbar: ^0.6.1
   local_auth: ^2.1.7

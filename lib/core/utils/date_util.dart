@@ -1,14 +1,12 @@
+/// AUTHOR: Henry Azer
+/// DATE: 23-10-2023
+/// UTIL: DATE UTIL
 class DateUtil {
+
+  /// Now Date
   static DateTime now = DateTime.now();
 
-  static String getCurrentMonthString() {
-    return "${now.year}-${now.month}";
-  }
-
-  static String getCurrentDayString() {
-    return "${now.year}-${now.month}-${now.day}";
-  }
-
+  /// Getters
   static DateTime getTodayDate() {
     return DateTime(now.year, now.month, now.day + 5, 0);
   }
@@ -31,4 +29,38 @@ class DateUtil {
     return monthDaysList.reversed.toList();
   }
 
+  /// Convert Date to String
+  static String convertDateToDayString(DateTime date) {
+    return "${date.year}-${date.month}-${date.day}";
+  }
+
+  static String convertDateToMonthString(DateTime date) {
+    return "${date.year}-${date.month}";
+  }
+
+  /// Convert String to Date
+  static DateTime convertDayStringToDate(String date) {
+    List<String> parts = date.split("-");
+    if (parts.length == 3) {
+      int? year = int.tryParse(parts[0]);
+      int? month = int.tryParse(parts[1]);
+      int? day = int.tryParse(parts[2]);
+      if (year != null && month != null && day != null) {
+        return DateTime(year, month, day, 0);
+      }
+    }
+    return now;
+  }
+
+  static DateTime convertMonthStringToDate(String date) {
+    List<String> parts = date.split("-");
+    if (parts.length == 2) {
+      int? year = int.tryParse(parts[0]);
+      int? month = int.tryParse(parts[1]);
+      if (year != null && month != null) {
+        return DateTime(year, month, 0, 0);
+      }
+    }
+    return now;
+  }
 }

@@ -13,39 +13,16 @@ import 'core/api/dio_consumer.dart';
 import 'core/network/network_info.dart';
 import 'data/datasources/authentication/authentication_local_datasource.dart';
 import 'data/datasources/user/user_local_datasource.dart';
-import 'data/datasources/localization/localization_local_data_source.dart';
-import 'data/repositories/localization/localization_repository.dart';
-import 'data/repositories/localization/localization_repository_impl.dart';
-import 'features/splash/domain/cubit/localization_cubit.dart';
-import 'features/splash/domain/usecases/change_lang_usecase.dart';
-import 'features/splash/domain/usecases/get_saved_lang_usecase.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
-
-  // !---- Cubits ----!
-  // splash
-  sl.registerFactory<LocalizationCubit>(() => LocalizationCubit(getSavedLangUseCase: sl(), changeLangUseCase: sl()));
-
-
-  // !---- Use cases ----!
-  // splash
-  sl.registerLazySingleton<ChangeLangUseCase>(() => ChangeLangUseCase(langRepository: sl()));
-  sl.registerLazySingleton<GetSavedLangUseCase>(() => GetSavedLangUseCase(langRepository: sl()));
-
-  // !---- Repository ----!
-  // localization
-  sl.registerLazySingleton<LocalizationRepository>(() => LocalizationRepositoryImpl(localizationLocalDataSource: sl()));
-
 
   // !---- Data Sources ----!
   // authentication
   sl.registerLazySingleton<AuthenticationLocalDataSource>(() => AuthenticationLocalDataSourceImpl(storageManager: sl()));
   // user
   sl.registerLazySingleton<UserLocalDataSource>(() => UserLocalDataSourceImpl(storageManager: sl()));
-  // localization
-  sl.registerLazySingleton<LocalizationLocalDataSource>(() => LocalizationLocalDataSourceImpl(sharedPreferences: sl()));
 
 
   // !---- Core ----!

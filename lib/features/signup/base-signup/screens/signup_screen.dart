@@ -46,8 +46,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   _checkIsBiometricAuthenticationAvailable() async {
-    bool isBiometricAvailable = await _biometricAuthenticationManager
-        .isBiometricAuthenticationAvailable();
+    bool isBiometricAvailable = await _biometricAuthenticationManager.isBiometricAuthenticationAvailable();
     setState(() {
       _isBiometricAvailable = isBiometricAvailable;
     });

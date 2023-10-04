@@ -36,8 +36,8 @@ class _SignupPINScreenState extends State<SignupPINScreen> {
     bool isAuthenticated = false;
 
     try {
-      _authenticationLocalDataSource.setUserPIN(pin);
-      _authenticationLocalDataSource.setIsUserAuthenticated(true);
+      await _authenticationLocalDataSource.setUserPIN(pin);
+      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
       isAuthenticated = true;
     } catch (exception) {
       AppNotifier.showSnackBar(

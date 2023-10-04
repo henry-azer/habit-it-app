@@ -32,10 +32,8 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
   }
 
   _initLocalDataSourcesAndManagers() {
-    _authenticationLocalDataSource =
-        GetIt.instance<AuthenticationLocalDataSource>();
-    _biometricAuthenticationManager =
-        GetIt.instance<IBiometricAuthenticationManager>();
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
   }
 
   _authenticateUserBiometric() async {

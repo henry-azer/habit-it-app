@@ -33,8 +33,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
   }
 
-  _onFinishOnboarding(BuildContext context) {
-    _userLocalDataSource.setIsUserGetStarted(true);
+  _onFinishOnboarding(BuildContext context) async {
+    await _userLocalDataSource.setIsUserGetStarted(true);
     Navigator.pushReplacementNamed(context, Routes.appSignup);
   }
 

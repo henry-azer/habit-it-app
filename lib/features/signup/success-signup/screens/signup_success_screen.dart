@@ -39,8 +39,7 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
 
   _initLocalDataSources() async {
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource =
-        GetIt.instance<AuthenticationLocalDataSource>();
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
   }
 
   _submitFrom() async {

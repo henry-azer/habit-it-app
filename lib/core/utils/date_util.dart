@@ -8,7 +8,7 @@ class DateUtil {
 
   /// Getters
   static DateTime getTodayDate() {
-    return DateTime(now.year, now.month, now.day + 5, 0);
+    return DateTime(now.year, now.month, now.day, 0);
   }
 
   static DateTime getFirstDayOfCurrentMonth() {
@@ -21,7 +21,7 @@ class DateUtil {
     DateTime firstDayOfCurrentMonth = DateTime(now.year, now.month, 1, 0);
     DateTime todayDate = DateTime(now.year, now.month, now.day, 0);
 
-    for (int i = 0; i < todayDate.day + 5; i++) {
+    for (int i = 0; i < todayDate.day; i++) {
       DateTime currentDay = firstDayOfCurrentMonth.add(Duration(days: i));
       monthDaysList.add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
     }
@@ -29,8 +29,16 @@ class DateUtil {
     return monthDaysList.reversed.toList();
   }
 
+  static String getCurrentMonthDateString() {
+    return "${now.year}-${now.month}";
+  }
+
+  static String getCurrentDateString() {
+    return "${now.year}-${now.month}-${now.day}";
+  }
+
   /// Convert Date to String
-  static String convertDateToDayString(DateTime date) {
+  static String convertDateToString(DateTime date) {
     return "${date.year}-${date.month}-${date.day}";
   }
 
@@ -39,7 +47,7 @@ class DateUtil {
   }
 
   /// Convert String to Date
-  static DateTime convertDayStringToDate(String date) {
+  static DateTime convertStringToDate(String date) {
     List<String> parts = date.split("-");
     if (parts.length == 3) {
       int? year = int.tryParse(parts[0]);

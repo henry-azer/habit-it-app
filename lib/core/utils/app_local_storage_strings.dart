@@ -1,3 +1,5 @@
+import 'date_util.dart';
+
 class AppLocalStorageKeys {
   /// AUTHENTICATION
   static const String isUserRegistered = "AUTHENTICATION/IS_REGISTERED";
@@ -10,4 +12,13 @@ class AppLocalStorageKeys {
   static const String currentUserPIN = "CURRENT_USER/PIN";
   static const String currentUsername = "CURRENT_USER/USERNAME";
   static const String currentUserGender = "CURRENT_USER/GENDER";
+
+  /// HABIT
+  static const String habit = "HABIT/";
+  static const String habitMonths = "HABIT/MONTHS";
+  static const String isMonthInitialized = "/IS_INITIALIZED";
+
+  static getCurrentMonthIsInitializedKey() {
+    return habit + DateUtil.getCurrentMonthDateString() + isMonthInitialized;
+  }
 }

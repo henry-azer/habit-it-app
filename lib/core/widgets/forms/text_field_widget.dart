@@ -19,9 +19,11 @@ class TextFieldWidget extends StatefulWidget {
   final bool enabled;
   final String validateType;
   final TextInputType keyboardType;
-  final FormFieldSetter onSave;
+  final FormFieldSetter? onSave;
   final TextAlign textAlign;
   final EdgeInsets contentPadding;
+  final ValueChanged<String>? onChange;
+  final TextStyle? counterStyle;
 
   const TextFieldWidget({
     Key? key,
@@ -35,13 +37,15 @@ class TextFieldWidget extends StatefulWidget {
     required this.enabled,
     required this.validateType,
     required this.keyboardType,
-    required this.onSave,
     required this.textAlign,
     required this.contentPadding,
     required this.style,
     required this.cursorColor,
     required this.maxLines,
     required this.maxLength,
+    this.onSave,
+    this.onChange,
+    this.counterStyle,
   }) : super(key: key);
 
   @override
@@ -69,11 +73,13 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       decoration: widget.enabled
           ? _buildEnabledDecoration()
           : _buildDisabledDecoration(),
-      onChanged: (value) {
-        setState(() {
-          validation = AppFormValidator.validate(value, widget.validateType)!;
-        });
-      },
+      onChanged: widget.onChange ??
+          (value) {
+            setState(() {
+              validation =
+                  AppFormValidator.validate(value, widget.validateType)!;
+            });
+          },
       validator: (value) {
         return validation == ""
             ? null
@@ -86,6 +92,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     return InputDecoration(
       hintText: widget.hintText,
       hintStyle: widget.hintTextStyle,
+      counterStyle: widget.counterStyle ?? TextStyle(color: AppColors.white),
       floatingLabelStyle: TextStyle(color: AppColors.fontPrimary),
       contentPadding: widget.contentPadding,
       enabledBorder: OutlineInputBorder(

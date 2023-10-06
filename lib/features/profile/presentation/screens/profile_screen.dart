@@ -47,8 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
   _initCurrentUserData() async {
     final username = await _userLocalDataSource.getUsername();
     final userGender = await _userLocalDataSource.getUserGender();
-    final userAuthMethod =
-        await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
+    final userAuthMethod = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
     setState(() {
       _user.username = username;
       _user.gender = userGender;
@@ -56,12 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
     });
   }
 
-  _clearMonthData() {
-    // TODO : implement clear month data
-  }
-
-  _resetAppData() {
-    _userLocalDataSource.clearAllUserData();
+  _resetAppData() async {
+    await _userLocalDataSource.clearAllUserData();
     Navigator.pushReplacementNamed(context, Routes.initial);
   }
 
@@ -71,8 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
       if (_updatedUser.username.isEmpty) {
         AppNotifier.showSnackBar(
           context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupNameError),
+          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupNameError),
         );
         return;
       }
@@ -80,8 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
       if (_updatedUser.gender.isEmpty) {
         AppNotifier.showSnackBar(
           context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupGenderError),
+          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupGenderError),
         );
         return;
       }
@@ -197,15 +190,6 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                     setState(() {
                       isUpdatingProfile = true;
                     });
-                  }),
-              ProfileMenuItemWidget(
-                  title: "Clear Month Data",
-                  icon: Icons.auto_delete_outlined,
-                  onPress: () {
-                    AppNotifier.showActionDialog(
-                        context: context,
-                        message: "Are you sure?",
-                        onClickYes: _clearMonthData);
                   }),
               ProfileMenuItemWidget(
                   title: "Reset App Data",

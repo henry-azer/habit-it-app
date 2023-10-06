@@ -180,11 +180,11 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
               ),
               const SizedBox(height: 10),
               ProfileMenuItemWidget(
-                  title: "Month Progress",
+                  title: "Month Progress Report",
                   icon: LineAwesomeIcons.calendar,
                   onPress: () {}),
               ProfileMenuItemWidget(
-                  title: "Update Profile",
+                  title: "Update User Profile",
                   icon: LineAwesomeIcons.user_edit,
                   onPress: () {
                     setState(() {

@@ -7,7 +7,7 @@ import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/date_util.dart';
-import '../widgets/calendar_app_bar_widget.dart';
+import '../widgets/app-bar/calendar_app_bar_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _buildDayTasks() {
     return Text(
-      "Day Page - ${_selectedDate.toLocal()} \nfirst - ${DateUtil.getFirstDayOfCurrentMonth()} \n ${_months.toString()}",
+      "Day Page - ${_selectedDate.toLocal()} \nfirst - ${DateUtil.getFirstDayOfCurrentMonth()} \n${_months.toString()}",
       style: AppTextStyles.homeText,
     );
   }

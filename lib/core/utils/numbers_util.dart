@@ -1,14 +1,15 @@
 import 'dart:math';
 
 class NumbersUtil {
-  static List<int> getRandomCode() {
+  static String getRandomCode() {
     Random random = Random();
-    List<int> randomNumbers = [];
+    String result = '';
 
     for (int i = 0; i < 5; i++) {
-      randomNumbers.add(random.nextInt(100));
+      int randomNumber = random.nextInt(10);
+      result += randomNumber.toString();
     }
 
-    return randomNumbers;
+    return result;
   }
 }

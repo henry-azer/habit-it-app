@@ -40,7 +40,7 @@ class HabitItemWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 20),
-          Text(title, style: AppTextStyles.habitNameText),
+          Text(title.substring(0, title.length - 5), style: AppTextStyles.habitNameText),
           const Expanded(child: SizedBox()),
           InkWell(
             onTap: onPressAction,

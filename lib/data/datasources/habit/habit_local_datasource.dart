@@ -1,5 +1,6 @@
 import 'package:habit_it/core/utils/app_local_storage_strings.dart';
 import 'package:habit_it/core/utils/date_util.dart';
+import 'package:habit_it/core/utils/numbers_util.dart';
 
 import '../../../core/managers/storage-manager/i_storage_manager.dart';
 
@@ -86,7 +87,7 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   Future<void> addHabitToCurrentMonth(String name, String day) async {
     String month = DateUtil.getCurrentMonthDateString();
     List<String> monthHabitsList = await _getAllMonthHabitsList(month);
-    monthHabitsList.add(name);
+    monthHabitsList.add(name + NumbersUtil.getRandomCode());
     return await storageManager.setValue(
         AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
   }
@@ -105,8 +106,9 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
     String month = DateUtil.getCurrentMonthDateString();
     List<String> monthHabitsList = await _getAllMonthHabitsList(month);
     monthHabitsList.remove(name);
-    return await storageManager.setValue(
-        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
+    await storageManager.setValue(AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
+    await _removeHabitRelatedData(name, month);
+    return;
   }
 
   Future<List<String>> _getAllMonthHabitsList(String month) async {
@@ -114,5 +116,16 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
         .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
         [];
     return habitsList.map((item) => item.toString()).toList();
+  }
+
+  Future<void> _removeHabitRelatedData(String name, String month) async {
+    DateTime firstDate = DateUtil.getFirstDayOfCurrentMonth();
+    DateTime lastDate = DateUtil.getTodayDate();
+    while (firstDate.isBefore(lastDate) || firstDate.isAtSameMomentAs(lastDate)) {
+      String day = DateUtil.convertDateToString(firstDate);
+      storageManager.removeValue(AppLocalStorageKeys.getHabitKey(name, month, day));
+      firstDate = DateTime(firstDate.year, firstDate.month, firstDate.day + 1, 0);
+    }
+    return;
   }
 }

@@ -15,10 +15,15 @@ class AppLocalStorageKeys {
 
   /// HABIT
   static const String habit = "HABIT/";
+  static const String habits = "/HABIT/";
   static const String habitMonths = "HABIT/MONTHS";
   static const String isMonthInitialized = "/IS_INITIALIZED";
 
   static getCurrentMonthIsInitializedKey() {
     return habit + DateUtil.getCurrentMonthDateString() + isMonthInitialized;
+  }
+
+  static getMonthHabitsKey(String month) {
+    return habit + month + habits;
   }
 }

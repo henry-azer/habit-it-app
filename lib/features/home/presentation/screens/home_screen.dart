@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
@@ -9,6 +8,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/date_util.dart';
+import '../widgets/add-habit/add_habit_dialog.dart';
 import '../widgets/app-bar/calendar_app_bar_widget.dart';
 import '../widgets/floating-action-button/floating_speed_dial.dart';
 
@@ -20,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  final String _currentMonthString = DateUtil.getCurrentMonthDateString();
+
   final DateTime _firstDate = DateUtil.getFirstDayOfCurrentMonth();
   final DateTime _todayDate = DateUtil.getTodayDate();
   late DateTime _selectedDate = DateUtil.getTodayDate();
@@ -27,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late HabitLocalDataSource _habitLocalDataSource;
   late bool _isCurrentMonthInitialized;
   List<String> _months = [];
+  List<String> _habits = [];
 
   @override
   void initState() {
@@ -46,10 +49,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       await _habitLocalDataSource.prepareMonthData();
     }
 
-    List<String> months = await _habitLocalDataSource.getHabitMonths();
-    log(months.toString());
+    List<String> months = await _habitLocalDataSource.getAllHabitMonths();
+    List<String> habits =
+        await _habitLocalDataSource.getAllMonthHabits(_currentMonthString);
     setState(() {
       _months = months;
+      _habits = habits;
     });
   }
 
@@ -57,6 +62,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     setState(() {
       _selectedDate = newDate;
     });
+  }
+
+  _addHabit() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AddHabitDialog(
+          onAddHabit: (habitName) async {
+            await _habitLocalDataSource.addHabitToCurrentMonth(habitName);
+            List<String> habits = await _habitLocalDataSource
+                .getAllMonthHabits(_currentMonthString);
+            setState(() {
+              _habits = habits;
+            });
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -89,10 +112,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               foregroundColor: AppColors.black,
               backgroundColor: AppColors.secondary.withOpacity(0.9),
               label: 'Add Habit',
-              onPressed: () {},
+              onPressed: _addHabit,
             ),
             FloatingSpeedDialChild(
-              child: const Icon(LineAwesomeIcons.rocket                                                                                                                                                                                                                                                   ),
+              child: const Icon(LineAwesomeIcons.rocket),
               foregroundColor: AppColors.black,
               backgroundColor: AppColors.secondary.withOpacity(0.9),
               label: 'Month Stats',
@@ -111,7 +134,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _buildDayTasks() {
     return Text(
-      "Day Page - ${_selectedDate.toLocal()} \nfirst - ${DateUtil.getFirstDayOfCurrentMonth()} \n${_months.toString()}",
+      "Day Page - ${_selectedDate.toLocal()} \n"
+      "first - ${DateUtil.getFirstDayOfCurrentMonth()}\n"
+      "Months - ${_months.toString()}\n"
+      "Habits - ${_habits.toString()}",
       style: AppTextStyles.homeText,
     );
   }

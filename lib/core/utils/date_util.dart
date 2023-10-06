@@ -12,7 +12,7 @@ class DateUtil {
   }
 
   static DateTime getFirstDayOfCurrentMonth() {
-    return DateTime(now.year, now.month, 1);
+    return DateTime(now.year, now.month, 1, 0);
   }
 
   static List<DateTime> getCurrentMonthDays() {

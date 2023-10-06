@@ -179,6 +179,14 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  /// HOME
+  static TextStyle? habitNameText = TextStyle(
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// APPBAR
   static TextStyle? appbarTitle = TextStyle(
     fontSize: 20,
@@ -223,15 +231,6 @@ class AppTextStyles with Diagnosticable {
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
-    fontFamily: AppFonts.roboto,
-  );
-
-
-
-  static TextStyle? homeText = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w400,
-    color: AppColors.white,
     fontFamily: AppFonts.roboto,
   );
 }

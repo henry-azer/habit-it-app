@@ -26,11 +26,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   final DateTime _firstDate = DateUtil.getFirstDayOfCurrentMonth();
   final DateTime _todayDate = DateUtil.getTodayDate();
-  late DateTime _selectedDate = DateUtil.getTodayDate();
+
+  late String _selectedDateString = DateUtil.convertDateToString(DateUtil.getTodayDate());
 
   late HabitLocalDataSource _habitLocalDataSource;
   late bool _isCurrentMonthInitialized;
-  List<String> _habits = [];
+  Map<String, bool> _habits = {};
 
   @override
   void initState() {
@@ -49,19 +50,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (!_isCurrentMonthInitialized) {
       await _habitLocalDataSource.prepareMonthData();
     }
-
-    List<String> months = await _habitLocalDataSource.getAllHabitMonths();
-    List<String> habits =
-        await _habitLocalDataSource.getAllMonthHabits(_currentMonthString);
-    setState(() {
-      _habits = habits;
-    });
+    await _reloadHabits();
   }
 
-  _onDateChanged(DateTime newDate) {
+  _onDateChanged(DateTime newDate) async {
     setState(() {
-      _selectedDate = newDate;
+      _selectedDateString = DateUtil.convertDateToString(newDate);
     });
+    await _reloadHabits();
   }
 
   _addHabit() {
@@ -70,12 +66,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       builder: (BuildContext context) {
         return AddHabitDialog(
           onAddHabit: (habitName) async {
-            await _habitLocalDataSource.addHabitToCurrentMonth(habitName);
-            List<String> habits = await _habitLocalDataSource
-                .getAllMonthHabits(_currentMonthString);
-            setState(() {
-              _habits = habits;
-            });
+            await _habitLocalDataSource.addHabitToCurrentMonth(habitName, _selectedDateString);
+            await _reloadHabits();
             Navigator.of(context).pop();
           },
         );
@@ -83,44 +75,51 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  _markHabit() {}
+  _markHabit(String habitName) {}
 
   _removeHabit(String habitName) {
     AppNotifier.showActionDialog(
         context: context,
         message: "Are you sure?",
         onClickYes: () async {
-          await _habitLocalDataSource.removeHabit(habitName);
-          List<String> habits = await _habitLocalDataSource
-              .getAllMonthHabits(_currentMonthString);
-          setState(() {
-            _habits = habits;
-          });
+          await _habitLocalDataSource.removeHabit(habitName, _currentMonthString, _selectedDateString);
+          await _reloadHabits();
           Navigator.of(context).pop();
         });
   }
 
-  _buildHabitList() {
+  _reloadHabits() async {
+    Map<String, bool> habits = await _habitLocalDataSource.getAllMonthHabits(
+        _currentMonthString, _selectedDateString);
+    setState(() {
+      _habits = habits;
+    });
+  }
+
+  Widget _buildHabitList() {
     if (_habits.isEmpty) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "No habits added for this month.",
-            style: TextStyle(fontSize: 18, color: AppColors.fontPrimary),
-          ),
-          const SizedBox(height: 10,),
-          Text(
-            "Try to add some.",
-            style: TextStyle(fontSize: 16, color: AppColors.fontPrimary),
-          ),
-        ],
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "No habits added for this month.",
+              style: AppTextStyles.noHabitsTextTitle,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Try to add some.",
+              style: AppTextStyles.noHabitsTextSubtitle,
+            ),
+          ],
+        ),
       );
     }
 
     List<Widget> habitWidgets = [];
-    for (String habit in _habits) {
+    for (MapEntry<String, bool> habit in _habits.entries) {
       habitWidgets.add(
         Column(
           children: [
@@ -131,13 +130,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
             ),
             HabitItemWidget(
-              title: habit,
-              isDone: false,
+              title: habit.key,
+              isDone: habit.value,
               onPressRemove: () {
-                _removeHabit(habit);
+                _removeHabit(habit.key);
               },
               onPressAction: () {
-                // Implement the action for each habit if needed
+                _markHabit(habit.key);
               },
             ),
           ],
@@ -159,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+      padding: const EdgeInsets.all(5.0),
       child: ListView(children: habitWidgets),
     );
   }
@@ -182,9 +181,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           white: AppColors.secondary.withOpacity(0.9),
           events: [_todayDate],
         ),
-        body: Center(
-          child: _buildHabitList(),
-        ),
+        body: _buildHabitList(),
         floatingActionButton: FloatingSpeedDial(
           labelsBackgroundColor: AppColors.accent,
           labelsStyle: AppTextStyles.floatingSpeedDialChild,

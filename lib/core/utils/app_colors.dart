@@ -16,6 +16,7 @@ class AppColors {
 
   static Color button = HexColor('#FFFFFF');
   static Color border = HexColor('#FFFFFF');
+  static Color borderSecondary = HexColor('#000000');
   static Color snackbar = HexColor('#FFFFFF');
 
   static Color black = HexColor('#000000');

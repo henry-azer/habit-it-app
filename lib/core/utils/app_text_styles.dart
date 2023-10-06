@@ -188,6 +188,14 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  /// FLOATING ACTION BUTTON
+  static TextStyle? floatingSpeedDialChild = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w300,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// SNACKBAR
   static TextStyle? snackbar = TextStyle(
     fontSize: 16,

@@ -50,24 +50,32 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (!_isCurrentMonthInitialized) {
       await _habitLocalDataSource.prepareMonthData();
     }
-    await _reloadHabits();
+    await _loadHabits();
   }
 
   _onDateChanged(DateTime newDate) async {
     setState(() {
       _selectedDateString = DateUtil.convertDateToString(newDate);
     });
-    await _reloadHabits();
+    await _loadHabits();
   }
 
-  _addHabit() {
+  _loadHabits() async {
+    Map<String, bool> habits = await _habitLocalDataSource.getAllMonthHabits(
+        _currentMonthString, _selectedDateString);
+    setState(() {
+      _habits = habits;
+    });
+  }
+
+  _addHabit() async {
     showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
         return AddHabitDialog(
           onAddHabit: (habitName) async {
             await _habitLocalDataSource.addHabitToCurrentMonth(habitName, _selectedDateString);
-            await _reloadHabits();
+            await _loadHabits();
             Navigator.of(context).pop();
           },
         );
@@ -75,7 +83,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  _markHabit(String habitName) {}
+  _markHabit(String habitName) async {
+    await _habitLocalDataSource.toggleHabitStatus(habitName, _currentMonthString, _selectedDateString);
+    await _loadHabits();
+  }
 
   _removeHabit(String habitName) {
     AppNotifier.showActionDialog(
@@ -83,17 +94,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         message: "Are you sure?",
         onClickYes: () async {
           await _habitLocalDataSource.removeHabit(habitName, _currentMonthString, _selectedDateString);
-          await _reloadHabits();
+          await _loadHabits();
           Navigator.of(context).pop();
         });
-  }
-
-  _reloadHabits() async {
-    Map<String, bool> habits = await _habitLocalDataSource.getAllMonthHabits(
-        _currentMonthString, _selectedDateString);
-    setState(() {
-      _habits = habits;
-    });
   }
 
   Widget _buildHabitList() {

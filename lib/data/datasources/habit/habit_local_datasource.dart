@@ -20,6 +20,8 @@ abstract class HabitLocalDataSource {
 
   Future<void> setIsCurrentMonthInitialized(bool value);
 
+  Future<void> toggleHabitStatus(String name, String month, String day);
+
   Future<void> removeHabit(String name, String month, String day);
 }
 
@@ -87,6 +89,15 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
     monthHabitsList.add(name);
     return await storageManager.setValue(
         AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
+  }
+
+
+  @override
+  Future<void> toggleHabitStatus(String name, String month, String day) async {
+    bool isDone = await getIsHabitDone(name, month, day);
+    return await storageManager
+        .setValue(AppLocalStorageKeys.getHabitKey(name, month, day), !isDone) ??
+        false;
   }
 
   @override

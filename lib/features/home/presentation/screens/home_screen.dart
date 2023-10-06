@@ -4,8 +4,10 @@ import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/features/home/presentation/widgets/floating-action-button/floating_speed_dial_child.dart';
+import 'package:habit_it/features/home/presentation/widgets/habit-item/habit_item_widget.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/date_util.dart';
 import '../widgets/add-habit/add_habit_dialog.dart';
@@ -28,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   late HabitLocalDataSource _habitLocalDataSource;
   late bool _isCurrentMonthInitialized;
-  List<String> _months = [];
   List<String> _habits = [];
 
   @override
@@ -53,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     List<String> habits =
         await _habitLocalDataSource.getAllMonthHabits(_currentMonthString);
     setState(() {
-      _months = months;
       _habits = habits;
     });
   }
@@ -76,9 +76,91 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             setState(() {
               _habits = habits;
             });
+            Navigator.of(context).pop();
           },
         );
       },
+    );
+  }
+
+  _markHabit() {}
+
+  _removeHabit(String habitName) {
+    AppNotifier.showActionDialog(
+        context: context,
+        message: "Are you sure?",
+        onClickYes: () async {
+          await _habitLocalDataSource.removeHabit(habitName);
+          List<String> habits = await _habitLocalDataSource
+              .getAllMonthHabits(_currentMonthString);
+          setState(() {
+            _habits = habits;
+          });
+          Navigator.of(context).pop();
+        });
+  }
+
+  _buildHabitList() {
+    if (_habits.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "No habits added for this month.",
+            style: TextStyle(fontSize: 18, color: AppColors.fontPrimary),
+          ),
+          const SizedBox(height: 10,),
+          Text(
+            "Try to add some.",
+            style: TextStyle(fontSize: 16, color: AppColors.fontPrimary),
+          ),
+        ],
+      );
+    }
+
+    List<Widget> habitWidgets = [];
+    for (String habit in _habits) {
+      habitWidgets.add(
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Divider(
+                color: AppColors.white.withOpacity(0.7),
+              ),
+            ),
+            HabitItemWidget(
+              title: habit,
+              isDone: false,
+              onPressRemove: () {
+                _removeHabit(habit);
+              },
+              onPressAction: () {
+                // Implement the action for each habit if needed
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
+    habitWidgets.add(
+      Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Divider(
+              color: AppColors.white.withOpacity(0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+      child: ListView(children: habitWidgets),
     );
   }
 
@@ -101,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           events: [_todayDate],
         ),
         body: Center(
-          child: _buildDayTasks(),
+          child: _buildHabitList(),
         ),
         floatingActionButton: FloatingSpeedDial(
           labelsBackgroundColor: AppColors.accent,
@@ -129,16 +211,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           child: const Icon(LineAwesomeIcons.list),
         ),
       ),
-    );
-  }
-
-  Widget _buildDayTasks() {
-    return Text(
-      "Day Page - ${_selectedDate.toLocal()} \n"
-      "first - ${DateUtil.getFirstDayOfCurrentMonth()}\n"
-      "Months - ${_months.toString()}\n"
-      "Habits - ${_habits.toString()}",
-      style: AppTextStyles.homeText,
     );
   }
 }

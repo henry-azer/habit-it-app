@@ -17,6 +17,8 @@ abstract class HabitLocalDataSource {
   Future<void> prepareMonthData();
 
   Future<void> setIsCurrentMonthInitialized(bool value);
+
+  Future<void> removeHabit(String habitName);
 }
 
 class HabitLocalDataSourceImpl implements HabitLocalDataSource {
@@ -72,6 +74,15 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
     String month = DateUtil.getCurrentMonthDateString();
     List<String> monthHabits = await getAllMonthHabits(month);
     monthHabits.add(habitName);
+    return await storageManager.setValue(
+        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabits);
+  }
+
+  @override
+  Future<void> removeHabit(String habitName) async {
+    String month = DateUtil.getCurrentMonthDateString();
+    List<String> monthHabits = await getAllMonthHabits(month);
+    monthHabits.remove(habitName);
     return await storageManager.setValue(
         AppLocalStorageKeys.getMonthHabitsKey(month), monthHabits);
   }

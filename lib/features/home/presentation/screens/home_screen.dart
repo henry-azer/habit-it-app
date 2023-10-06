@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
+import 'package:habit_it/features/home/presentation/widgets/floating-action-button/floating_speed_dial_child.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/date_util.dart';
 import '../widgets/app-bar/calendar_app_bar_widget.dart';
+import '../widgets/floating-action-button/floating_speed_dial.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -33,11 +36,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   _initHabitLocalDataSource() async {
-    _habitLocalDataSource =  GetIt.instance<HabitLocalDataSource>();
+    _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
   }
 
   _initHabitLocalData() async {
-    _isCurrentMonthInitialized = await _habitLocalDataSource.getIsCurrentMonthInitialized();
+    _isCurrentMonthInitialized =
+        await _habitLocalDataSource.getIsCurrentMonthInitialized();
     if (!_isCurrentMonthInitialized) {
       await _habitLocalDataSource.prepareMonthData();
     }
@@ -47,10 +51,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     setState(() {
       _months = months;
     });
-
   }
 
-  void onDateChanged(DateTime newDate) {
+  _onDateChanged(DateTime newDate) {
     setState(() {
       _selectedDate = newDate;
     });
@@ -67,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           selectedDate: _todayDate,
           firstDate: _firstDate,
           lastDate: _todayDate,
-          onDateChanged: onDateChanged,
+          onDateChanged: _onDateChanged,
           black: AppColors.black,
           accent: AppColors.accent,
           fontColor: AppColors.fontPrimary,
@@ -76,6 +79,31 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
         body: Center(
           child: _buildDayTasks(),
+        ),
+        floatingActionButton: FloatingSpeedDial(
+          labelsBackgroundColor: AppColors.accent,
+          labelsStyle: AppTextStyles.floatingSpeedDialChild,
+          speedDialChildren: <FloatingSpeedDialChild>[
+            FloatingSpeedDialChild(
+              child: const Icon(LineAwesomeIcons.pushed),
+              foregroundColor: AppColors.black,
+              backgroundColor: AppColors.secondary.withOpacity(0.9),
+              label: 'Add Habit',
+              onPressed: () {},
+            ),
+            FloatingSpeedDialChild(
+              child: const Icon(LineAwesomeIcons.rocket                                                                                                                                                                                                                                                   ),
+              foregroundColor: AppColors.black,
+              backgroundColor: AppColors.secondary.withOpacity(0.9),
+              label: 'Month Stats',
+              onPressed: () {},
+            ),
+          ],
+          openForegroundColor: AppColors.secondary.withOpacity(0.9),
+          openBackgroundColor: AppColors.accent,
+          closedBackgroundColor: AppColors.secondary.withOpacity(0.9),
+          closedForegroundColor: AppColors.black,
+          child: const Icon(LineAwesomeIcons.list),
         ),
       ),
     );

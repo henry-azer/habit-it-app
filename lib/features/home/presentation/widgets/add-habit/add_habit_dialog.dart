@@ -45,7 +45,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
               borderColor: AppColors.borderSecondary,
               borderWidth: 1,
               maxLines: 1,
-              maxLength: 16,
+              maxLength: 20,
               textAlign: TextAlign.center,
               style: AppTextStyles.alertDialogActionTextField,
               cursorColor: AppColors.fontSecondary,
@@ -67,7 +67,6 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
             onPressed: () async {
               if (habitName.isNotEmpty) {
                 widget.onAddHabit(habitName);
-                Navigator.of(context).pop();
               }
             },
             child: const Text("Submit"),

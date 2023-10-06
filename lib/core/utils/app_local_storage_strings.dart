@@ -14,10 +14,14 @@ class AppLocalStorageKeys {
   static const String currentUserGender = "CURRENT_USER/GENDER";
 
   /// HABIT
-  static const String habit = "HABIT/";
+  static const String habit = "HABITS/";
   static const String habits = "/HABIT/";
-  static const String habitMonths = "HABIT/MONTHS";
+  static const String habitMonths = "HABITS/MONTHS";
   static const String isMonthInitialized = "/IS_INITIALIZED";
+
+  static getHabitKey(String name, String month, String day) {
+    return "$habit$month$habit$day/$name";
+  }
 
   static getCurrentMonthIsInitializedKey() {
     return habit + DateUtil.getCurrentMonthDateString() + isMonthInitialized;

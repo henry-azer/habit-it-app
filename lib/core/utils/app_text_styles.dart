@@ -187,6 +187,20 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle? noHabitsTextTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? noHabitsTextSubtitle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// APPBAR
   static TextStyle? appbarTitle = TextStyle(
     fontSize: 20,

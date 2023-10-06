@@ -196,6 +196,28 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  /// ALERT DIALOG
+  static TextStyle? alertDialogTitle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? alertDialogActionTextField = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle? alertDialogActionButton = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// SNACKBAR
   static TextStyle? snackbar = TextStyle(
     fontSize: 16,

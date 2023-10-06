@@ -95,21 +95,6 @@ class UpdateProfileWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ButtonWidget(
-                onPress: onCancel,
-                backgroundColor: Colors.transparent,
-                width: 120,
-                height: 40,
-                borderRadius: 0,
-                borderColor: AppColors.border,
-                borderWidth: 0.7,
-                child: Text(
-                  AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.cancel),
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.profileCancelButtonText,
-                ),
-              ),
-              ButtonWidget(
                 onPress: onSubmit,
                 backgroundColor: AppColors.secondary,
                 width: 120,
@@ -122,6 +107,21 @@ class UpdateProfileWidget extends StatelessWidget {
                       context, AppLocalizationKeys.update),
                   textAlign: TextAlign.center,
                   style: AppTextStyles.profileUpdateButtonText,
+                ),
+              ),
+              ButtonWidget(
+                onPress: onCancel,
+                backgroundColor: Colors.transparent,
+                width: 120,
+                height: 40,
+                borderRadius: 0,
+                borderColor: AppColors.border,
+                borderWidth: 0.7,
+                child: Text(
+                  AppLocalizationHelper.translate(
+                      context, AppLocalizationKeys.cancel),
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.profileCancelButtonText,
                 ),
               ),
             ],

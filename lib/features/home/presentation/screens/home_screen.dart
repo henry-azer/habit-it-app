@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   _loadHabits() async {
-    Map<String, bool> habits = await _habitLocalDataSource.getAllMonthHabits(
+    Map<String, bool> habits = await _habitLocalDataSource.getAllMonthHabitsForDay(
         _currentMonthString, _selectedDateString);
     setState(() {
       _habits = habits;

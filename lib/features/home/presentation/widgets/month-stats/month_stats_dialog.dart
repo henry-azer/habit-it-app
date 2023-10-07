@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/features/home/presentation/widgets/month-stats/month_stats_item_widget.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
@@ -29,7 +31,7 @@ class _MonthStatsDialogState extends State<MonthStatsDialog> {
       ),
       child: CupertinoAlertDialog(
         title: Text(
-          "Month Habits Progress",
+          "${DateFormat.yMMMM().format(DateUtil.getFirstDayOfCurrentMonth()).toString()} Stats",
           style: AppTextStyles.alertDialogTitle,
         ),
         content: Padding(

@@ -7,7 +7,9 @@ import '../../../core/managers/storage-manager/i_storage_manager.dart';
 abstract class HabitLocalDataSource {
   Future<List<String>> getAllHabitMonths();
 
-  Future<Map<String, bool>> getAllMonthHabits(String month, String day);
+  Future<List<String>> getAllMonthHabitsForMonth(String month);
+
+  Future<Map<String, bool>> getAllMonthHabitsForDay(String month, String day);
 
   Future<bool> getIsCurrentMonthInitialized();
 
@@ -43,9 +45,17 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   }
 
   @override
-  Future<Map<String, bool>> getAllMonthHabits(String month, String day) async {
+  Future<List<String>> getAllMonthHabitsForMonth(String month) async {
+    List<dynamic> habitsList = await storageManager
+        .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
+        [];
+    return habitsList.map((item) => item.toString()).toList();
+  }
+
+  @override
+  Future<Map<String, bool>> getAllMonthHabitsForDay(String month, String day) async {
     Map<String, bool> habits = {};
-    List<String> habitsList = await _getAllMonthHabitsList(month);
+    List<String> habitsList = await getAllMonthHabitsForMonth(month);
     for (var habit in habitsList) {
       habits[habit] = await getIsHabitDone(habit, month, day);
     }
@@ -103,7 +113,7 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   @override
   Future<void> addHabitToCurrentMonth(String name, String day) async {
     String month = DateUtil.getCurrentMonthDateString();
-    List<String> monthHabitsList = await _getAllMonthHabitsList(month);
+    List<String> monthHabitsList = await getAllMonthHabitsForMonth(month);
     monthHabitsList.add(name + NumbersUtil.getRandomCode());
     return await storageManager.setValue(
         AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
@@ -120,19 +130,12 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   @override
   Future<void> removeHabit(String name, String month, String day) async {
     String month = DateUtil.getCurrentMonthDateString();
-    List<String> monthHabitsList = await _getAllMonthHabitsList(month);
+    List<String> monthHabitsList = await getAllMonthHabitsForMonth(month);
     monthHabitsList.remove(name);
     await storageManager.setValue(
         AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
     await _removeHabitRelatedData(name, month);
     return;
-  }
-
-  Future<List<String>> _getAllMonthHabitsList(String month) async {
-    List<dynamic> habitsList = await storageManager
-            .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
-        [];
-    return habitsList.map((item) => item.toString()).toList();
   }
 
   Future<void> _removeHabitRelatedData(String name, String month) async {

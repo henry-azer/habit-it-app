@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/managers/biometric-authentication/biometric_auth_manager.dart';
 import 'package:habit_it/core/managers/biometric-authentication/i_biometric_auth_manager.dart';
@@ -21,7 +20,6 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthenticationLocalDataSource>(() => AuthenticationLocalDataSourceImpl(storageManager: sl()));
 
   // !---- External ----!
-  sl.registerLazySingleton(() => Dio());
   sl.registerLazySingleton(() => SharedPreferences.getInstance());
   sl.registerLazySingleton<IStorageManager>(() => LocalStorageManager());
   sl.registerLazySingleton<LocalAuthentication>(() => LocalAuthentication());

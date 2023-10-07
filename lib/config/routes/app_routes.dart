@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/features/app-navigator/presentation/screens/app_navigator_screen.dart';
+import 'package:habit_it/features/month-progress/presentation/screens/month_progress.dart';
 import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
 import 'package:habit_it/features/signin/biometric-signin/screens/signin_biometric_screen.dart';
@@ -28,6 +29,7 @@ class Routes {
   static const String app = '/app';
   static const String appHome = '/app/home';
   static const String appProfile = '/app/profile';
+  static const String monthProgress = '/app/profile/month-progress';
 }
 
 class AppRoutes {
@@ -107,6 +109,13 @@ class AppRoutes {
         return MaterialPageRoute(
             builder: (context) {
               return const ProfileScreen();
+            },
+            settings: routeSettings);
+
+      case Routes.monthProgress:
+        return MaterialPageRoute(
+            builder: (context) {
+              return const MonthProgressScreen();
             },
             settings: routeSettings);
 

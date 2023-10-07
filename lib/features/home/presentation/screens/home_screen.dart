@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -9,6 +11,7 @@ import 'package:habit_it/features/home/presentation/widgets/floating-action-butt
 import 'package:habit_it/features/home/presentation/widgets/habit-item/habit_item_widget.dart';
 import 'package:habit_it/features/home/presentation/widgets/month-stats/month_stats_dialog.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:swipe_to/swipe_to.dart';
 
 import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
@@ -142,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
 
     List<Widget> habitWidgets = [];
+    log("Habits: " + habitWidgets.toString());
     habitWidgets.add(
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -152,15 +156,26 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
     for (MapEntry<String, bool> habit in _habits.entries) {
       habitWidgets.add(
-        HabitItemWidget(
-          title: habit.key,
-          isDone: habit.value,
-          onPressRemove: () {
-            _removeHabit(habit.key);
+        SwipeTo(
+          key: Key(habit.key),
+          onRightSwipe: () async {
+            await _habitLocalDataSource.moveHabitToNextIndex(habit.key, _currentMonthString);
+            await _loadHabits();
           },
-          onPressAction: () {
-            _markHabit(habit.key);
+          onLeftSwipe: () async {
+            await _habitLocalDataSource.moveHabitToPreviousIndex(habit.key, _currentMonthString);
+            await _loadHabits();
           },
+          child: HabitItemWidget(
+            title: habit.key,
+            isDone: habit.value,
+            onPressRemove: () {
+              _removeHabit(habit.key);
+            },
+            onPressAction: () {
+              _markHabit(habit.key);
+            },
+          ),
         ),
       );
       habitWidgets.add(

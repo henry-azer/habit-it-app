@@ -34,12 +34,12 @@ class HabitItemWidget extends StatelessWidget {
               color: AppColors.grey.withOpacity(0.09),
             ),
             child: Icon(
-              LineAwesomeIcons.arrow_right,
-              color: AppColors.white,
+              LineAwesomeIcons.minus,
+              color: AppColors.white.withOpacity(0.9),
               size: 18,
             ),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 15),
           Text(title.substring(0, title.length - 5), style: AppTextStyles.habitNameText),
           const Expanded(child: SizedBox()),
           InkWell(
@@ -56,7 +56,7 @@ class HabitItemWidget extends StatelessWidget {
                   color: isDone ? AppColors.green : AppColors.red),
             ),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 15),
           InkWell(
             onTap: onPressRemove,
             child: Container(

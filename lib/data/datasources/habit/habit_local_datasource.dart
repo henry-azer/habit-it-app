@@ -27,6 +27,10 @@ abstract class HabitLocalDataSource {
 
   Future<void> setHabitInitializedMonth(String month);
 
+  Future<void> moveHabitToNextIndex(String habit, String month);
+
+  Future<void> moveHabitToPreviousIndex(String habit, String month);
+
   Future<void> toggleHabitStatus(String name, String month, String day);
 
   Future<void> removeHabit(String name, String month, String day);
@@ -47,13 +51,14 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   @override
   Future<List<String>> getAllMonthHabitsForMonth(String month) async {
     List<dynamic> habitsList = await storageManager
-        .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
+            .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
         [];
     return habitsList.map((item) => item.toString()).toList();
   }
 
   @override
-  Future<Map<String, bool>> getAllMonthHabitsForDay(String month, String day) async {
+  Future<Map<String, bool>> getAllMonthHabitsForDay(
+      String month, String day) async {
     Map<String, bool> habits = {};
     List<String> habitsList = await getAllMonthHabitsForMonth(month);
     for (var habit in habitsList) {
@@ -71,7 +76,9 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
 
   @override
   Future<DateTime> getHabitInitializedMonth() async {
-    String initMonth = await storageManager.getValue(AppLocalStorageKeys.getHabitInitializedMonthKey()) ?? "";
+    String initMonth = await storageManager
+            .getValue(AppLocalStorageKeys.getHabitInitializedMonthKey()) ??
+        "";
     return DateUtil.convertMonthStringToDate(initMonth);
   }
 
@@ -125,6 +132,30 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
     return await storageManager.setValue(
             AppLocalStorageKeys.getHabitKey(name, month, day), !isDone) ??
         false;
+  }
+
+  @override
+  Future<void> moveHabitToNextIndex(String habit, String month) async {
+    List<String> monthHabits = await getAllMonthHabitsForMonth(month);
+    int index = monthHabits.indexOf(habit);
+    if (index != -1 && index < monthHabits.length - 1) {
+      monthHabits.remove(habit);
+      monthHabits.insert(index + 1, habit);
+    }
+    await storageManager.setValue(
+        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabits);
+  }
+
+  @override
+  Future<void> moveHabitToPreviousIndex(String habit, String month) async {
+    List<String> monthHabits = await getAllMonthHabitsForMonth(month);
+    int index = monthHabits.indexOf(habit);
+    if (index != -1 && index > 0) {
+      monthHabits.remove(habit);
+      monthHabits.insert(index - 1, habit);
+    }
+    await storageManager.setValue(
+        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabits);
   }
 
   @override

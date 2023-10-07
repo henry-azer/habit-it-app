@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
+import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
+import 'package:habit_it/data/entities/habit_stats.dart';
 import 'package:habit_it/features/home/presentation/widgets/floating-action-button/floating_speed_dial_child.dart';
 import 'package:habit_it/features/home/presentation/widgets/habit-item/habit_item_widget.dart';
+import 'package:habit_it/features/home/presentation/widgets/month-stats/month_stats_dialog.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../core/utils/app_notifier.dart';
@@ -22,26 +25,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  late String _selectedDateString =
+      DateUtil.convertDateToString(DateUtil.getTodayDate());
   final String _currentMonthString = DateUtil.getCurrentMonthDateString();
-
   final DateTime _firstDate = DateUtil.getFirstDayOfCurrentMonth();
   final DateTime _todayDate = DateUtil.getTodayDate();
+  Map<String, bool> _habits = {};
 
-  late String _selectedDateString = DateUtil.convertDateToString(DateUtil.getTodayDate());
-
+  late HabitStatsLocalDataSource _habitStatsLocalDataSource;
   late HabitLocalDataSource _habitLocalDataSource;
   late bool _isCurrentMonthInitialized;
-  Map<String, bool> _habits = {};
 
   @override
   void initState() {
     super.initState();
-    _initHabitLocalDataSource();
+    _initLocalDataSources();
     _initHabitLocalData();
   }
 
-  _initHabitLocalDataSource() async {
+  _initLocalDataSources() async {
     _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
+    _habitStatsLocalDataSource = GetIt.instance<HabitStatsLocalDataSource>();
   }
 
   _initHabitLocalData() async {
@@ -61,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   _loadHabits() async {
-    Map<String, bool> habits = await _habitLocalDataSource.getAllMonthHabitsForDay(
-        _currentMonthString, _selectedDateString);
+    Map<String, bool> habits = await _habitLocalDataSource
+        .getAllMonthHabitsForDay(_currentMonthString, _selectedDateString);
     setState(() {
       _habits = habits;
     });
@@ -74,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       builder: (BuildContext context) {
         return AddHabitDialog(
           onAddHabit: (habitName) async {
-            await _habitLocalDataSource.addHabitToCurrentMonth(habitName, _selectedDateString);
+            await _habitLocalDataSource.addHabitToCurrentMonth(
+                habitName, _selectedDateString);
             await _loadHabits();
             Navigator.of(context).pop();
           },
@@ -84,7 +89,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   _markHabit(String habitName) async {
-    await _habitLocalDataSource.toggleHabitStatus(habitName, _currentMonthString, _selectedDateString);
+    await _habitLocalDataSource.toggleHabitStatus(
+        habitName, _currentMonthString, _selectedDateString);
     await _loadHabits();
   }
 
@@ -93,10 +99,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         context: context,
         message: "Are you sure?",
         onClickYes: () async {
-          await _habitLocalDataSource.removeHabit(habitName, _currentMonthString, _selectedDateString);
+          await _habitLocalDataSource.removeHabit(
+              habitName, _currentMonthString, _selectedDateString);
           await _loadHabits();
           Navigator.of(context).pop();
         });
+  }
+
+  _monthStats() async {
+    List<HabitStats> monthHabits = await _habitStatsLocalDataSource
+        .getCurrentMonthHabitsStats();
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MonthStatsDialog(
+          monthHabits: monthHabits,
+        );
+      },
+    );
   }
 
   Widget _buildHabitList() {
@@ -201,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               foregroundColor: AppColors.black,
               backgroundColor: AppColors.secondary.withOpacity(0.9),
               label: 'Month Stats',
-              onPressed: () {},
+              onPressed: _monthStats,
             ),
           ],
           openForegroundColor: AppColors.secondary.withOpacity(0.9),

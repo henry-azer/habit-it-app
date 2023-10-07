@@ -220,7 +220,7 @@ class AppTextStyles with Diagnosticable {
 
   /// ALERT DIALOG
   static TextStyle? alertDialogTitle = TextStyle(
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: FontWeight.w500,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,

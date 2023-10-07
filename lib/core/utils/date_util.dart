@@ -86,4 +86,8 @@ class DateUtil {
     final lastDayOfCurrentMonth = nextMonth.subtract(const Duration(days: 1));
     return lastDayOfCurrentMonth.day;
   }
+
+  static int countDaysOfMonthUntilToday(DateTime date) {
+    return DateTime.now().add(const Duration(days: 1)).difference(date).inDays;
+  }
 }

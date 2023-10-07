@@ -26,14 +26,15 @@ class HabitStatsLocalDataSourceImpl implements HabitStatsLocalDataSource {
 
     DateTime monthDate = DateUtil.convertMonthStringToDate(currentMonth);
     int monthDaysCount = DateUtil.countDaysOfMonthUntilToday(monthDate);
-    DateTime firstDayOfMonth = DateUtil.getFirstDayOfMonth(monthDate);
-    DateTime today = DateUtil.getTodayDate();
 
     for (String habit in monthHabits) {
       Map<int, bool> habitValues = {};
+      DateTime firstDayOfMonth = DateUtil.getFirstDayOfMonth(monthDate);
+      DateTime today = DateUtil.getTodayDate();
       while (firstDayOfMonth.isBefore(today) || firstDayOfMonth.isAtSameMomentAs(today)) {
         String currentDay = DateUtil.convertDateToString(firstDayOfMonth);
-        habitValues[firstDayOfMonth.day] = await habitLocalDataSource.getIsHabitDone(habit, currentMonth, currentDay);
+        bool isDone = await habitLocalDataSource.getIsHabitDone(habit, currentMonth, currentDay);
+        habitValues[firstDayOfMonth.day] = isDone;
         firstDayOfMonth = firstDayOfMonth.add(const Duration(days: 1));
       }
       int doneCount = 0;
@@ -55,14 +56,15 @@ class HabitStatsLocalDataSourceImpl implements HabitStatsLocalDataSource {
 
     DateTime monthDate = DateUtil.convertMonthStringToDate(month);
     int monthDaysCount = DateUtil.countDaysOfMonth(monthDate);
-    DateTime firstDayOfMonth = DateUtil.getFirstDayOfMonth(monthDate);
-    DateTime lastDayOfMonth = DateUtil.getLastDayOfMonth(monthDate);
 
     for (String habit in monthHabits) {
       Map<int, bool> habitValues = {};
+      DateTime firstDayOfMonth = DateUtil.getFirstDayOfMonth(monthDate);
+      DateTime lastDayOfMonth = DateUtil.getLastDayOfMonth(monthDate);
       while (firstDayOfMonth.isBefore(lastDayOfMonth) || firstDayOfMonth.isAtSameMomentAs(lastDayOfMonth)) {
         String currentDay = DateUtil.convertDateToString(firstDayOfMonth);
-        habitValues[firstDayOfMonth.day] = await habitLocalDataSource.getIsHabitDone(habit, month, currentDay);
+        bool isDone = await habitLocalDataSource.getIsHabitDone(habit, month, currentDay);
+        habitValues[firstDayOfMonth.day] = isDone;
         firstDayOfMonth = firstDayOfMonth.add(const Duration(days: 1));
       }
       int doneCount = 0;

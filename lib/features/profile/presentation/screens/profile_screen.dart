@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_notifier.dart';
 import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
+import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 import 'package:habit_it/features/profile/presentation/widgets/base/profile_header_widget.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -13,6 +14,7 @@ import '../../../../core/utils/app_assets_manager.dart';
 import '../../../../core/utils/app_localization_strings.dart';
 import '../../../../data/entities/user.dart';
 import '../widgets/about-us/about_us_widget.dart';
+import '../widgets/month-picker/month_picker.dart';
 import '../widgets/profile/profile_menu_item_widget.dart';
 import '../widgets/profile/update_profile_widget.dart';
 
@@ -23,9 +25,12 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserver {
+class _ProfileScreenState extends State<ProfileScreen>
+    with WidgetsBindingObserver {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late DateTime _habitInitializedDate = DateTime.now();
   late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late HabitLocalDataSource _habitLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
   late final User _updatedUser = User();
   late final User _user = User();
@@ -36,22 +41,28 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
   void initState() {
     super.initState();
     _initLocalDataSources();
-    _initCurrentUserData();
+    _initLocalData();
   }
 
   _initLocalDataSources() async {
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
+    _authenticationLocalDataSource =
+        GetIt.instance<AuthenticationLocalDataSource>();
   }
 
-  _initCurrentUserData() async {
+  _initLocalData() async {
     final username = await _userLocalDataSource.getUsername();
     final userGender = await _userLocalDataSource.getUserGender();
-    final userAuthMethod = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
+    final userAuthMethod =
+        await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
+    final habitInitMonth =
+        await _habitLocalDataSource.getHabitInitializedMonth();
     setState(() {
       _user.username = username;
       _user.gender = userGender;
       _user.isUserBiometricAuthenticated = userAuthMethod;
+      _habitInitializedDate = habitInitMonth;
     });
   }
 
@@ -66,7 +77,8 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
       if (_updatedUser.username.isEmpty) {
         AppNotifier.showSnackBar(
           context: context,
-          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupNameError),
+          message: AppLocalizationHelper.translate(
+              context, AppLocalizationKeys.signupNameError),
         );
         return;
       }
@@ -74,7 +86,8 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
       if (_updatedUser.gender.isEmpty) {
         AppNotifier.showSnackBar(
           context: context,
-          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupGenderError),
+          message: AppLocalizationHelper.translate(
+              context, AppLocalizationKeys.signupGenderError),
         );
         return;
       }
@@ -98,6 +111,18 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
         _user.gender = _updatedUser.gender;
         isUpdatingProfile = false;
       });
+    }
+  }
+
+  _navigateToMonthProgress() async {
+    DateTime? selectedDate = await showMonthPicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: _habitInitializedDate,
+      lastDate: DateTime.now(),
+    );
+    if (selectedDate != null) {
+      Navigator.pushNamed(context, Routes.monthProgress, arguments: selectedDate);
     }
   }
 
@@ -182,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
               ProfileMenuItemWidget(
                   title: "Month Progress Report",
                   icon: LineAwesomeIcons.calendar,
-                  onPress: () {}),
+                  onPress: _navigateToMonthProgress),
               ProfileMenuItemWidget(
                   title: "Update User Profile",
                   icon: LineAwesomeIcons.user_edit,

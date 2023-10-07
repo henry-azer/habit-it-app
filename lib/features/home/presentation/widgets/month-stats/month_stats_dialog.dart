@@ -22,8 +22,10 @@ class _MonthStatsDialogState extends State<MonthStatsDialog> {
     List<HabitStats> habits = widget.monthHabits;
 
     return CupertinoTheme(
-      data: const CupertinoThemeData(
-        scaffoldBackgroundColor: Colors.black,
+      data:  CupertinoThemeData(
+        brightness: Brightness.light,
+        primaryColor: AppColors.background,
+        scaffoldBackgroundColor: AppColors.background,
       ),
       child: CupertinoAlertDialog(
         title: Text(

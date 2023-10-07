@@ -21,8 +21,10 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTheme(
-      data: const CupertinoThemeData(
-        scaffoldBackgroundColor: Colors.black,
+      data: CupertinoThemeData(
+        brightness: Brightness.light,
+        primaryColor: AppColors.background,
+        scaffoldBackgroundColor: AppColors.background,
       ),
       child: CupertinoAlertDialog(
         title: Text(

@@ -21,6 +21,7 @@ class HabitStatsLocalDataSourceImpl implements HabitStatsLocalDataSource {
     List<HabitProgress> monthHabitsProgress = [];
 
     DateTime monthDate = DateUtil.convertMonthStringToDate(month);
+    int monthDaysCount = DateUtil.countDaysOfMonth(monthDate);
     DateTime firstDayOfMonth = DateUtil.getFirstDayOfMonth(monthDate);
     DateTime lastDayOfMonth = DateUtil.getLastDayOfMonth(monthDate);
 
@@ -31,7 +32,13 @@ class HabitStatsLocalDataSourceImpl implements HabitStatsLocalDataSource {
         habitValues[firstDayOfMonth.day] = await habitLocalDataSource.getIsHabitDone(habit, month, currentDay);
         firstDayOfMonth = firstDayOfMonth.add(const Duration(days: 1));
       }
-      monthHabitsProgress.add(HabitProgress(habit, habitValues));
+      int doneCount = 0;
+      for (var value in habitValues.values) {
+        if (value == true) {
+          doneCount++;
+        }
+      }
+      monthHabitsProgress.add(HabitProgress(habit, monthDaysCount, doneCount, habitValues));
     }
 
     return monthHabitsProgress;

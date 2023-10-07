@@ -22,7 +22,6 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
   late HabitStatsLocalDataSource _habitStatsLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
   late List<HabitProgress> _monthHabits = [];
-  late List<int> _habitsTotalValues = [];
   late DateTime _month = DateTime.now();
   late int _monthDaysCount = 0;
   late String _username = '';
@@ -62,21 +61,6 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
     setState(() {
       _username = username;
       _monthHabits = monthHabits;
-    });
-
-    List<int> habitsTotalValues = [];
-    for (var habit in _monthHabits) {
-      int total = 0;
-      for (var value in habit.values.values) {
-        if (value) {
-          total++;
-        }
-      }
-      habitsTotalValues.add(total);
-    }
-
-    setState(() {
-      _habitsTotalValues = habitsTotalValues;
     });
   }
 
@@ -185,7 +169,6 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
                         ),
                       ],
                       rows: _monthHabits.asMap().entries.map((entry) {
-                        int index = entry.key;
                         HabitProgress habit = entry.value;
                         return DataRow(
                           cells: [
@@ -196,7 +179,7 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
                                       fontSize: 12,
                                       color: AppColors.fontPrimary)),
                             ),
-                            for (int day = 1; day <= _monthDaysCount; day++)
+                            for (int day = 1; day <= habit.total; day++)
                               DataCell(
                                 habit.values[day] == true
                                     ? Padding(
@@ -216,7 +199,7 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
                               ),
                             DataCell(
                               Text(
-                                "   ${_habitsTotalValues[index]}/$_monthDaysCount",
+                                "   ${habit.totalDone}/${habit.total}",
                                 style: TextStyle(
                                     fontSize: 12, color: AppColors.fontPrimary),
                               ),

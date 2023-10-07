@@ -66,7 +66,7 @@ class DateUtil {
       int? year = int.tryParse(parts[0]);
       int? month = int.tryParse(parts[1]);
       if (year != null && month != null) {
-        return DateTime(year, month, 0, 0);
+        return DateTime(year, month, 1, 0);
       }
     }
     return now;

@@ -11,6 +11,8 @@ abstract class HabitLocalDataSource {
 
   Future<bool> getIsCurrentMonthInitialized();
 
+  Future<DateTime> getHabitInitializedMonth();
+
   Future<bool> getIsHabitDone(String name, String month, String day);
 
   Future<void> addCurrentMonthToHabitMonths();
@@ -20,6 +22,8 @@ abstract class HabitLocalDataSource {
   Future<void> prepareMonthData();
 
   Future<void> setIsCurrentMonthInitialized(bool value);
+
+  Future<void> setHabitInitializedMonth(String month);
 
   Future<void> toggleHabitStatus(String name, String month, String day);
 
@@ -56,6 +60,12 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   }
 
   @override
+  Future<DateTime> getHabitInitializedMonth() async {
+    String initMonth = await storageManager.getValue(AppLocalStorageKeys.getHabitInitializedMonthKey()) ?? "";
+    return DateUtil.convertMonthStringToDate(initMonth);
+  }
+
+  @override
   Future<bool> getIsHabitDone(String habit, String month, String day) async {
     return await storageManager
             .getValue(AppLocalStorageKeys.getHabitKey(habit, month, day)) ??
@@ -66,6 +76,7 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   Future<void> prepareMonthData() async {
     await addCurrentMonthToHabitMonths();
     await setIsCurrentMonthInitialized(true);
+    await setHabitInitializedMonth(DateUtil.getCurrentMonthDateString());
     return;
   }
 
@@ -84,6 +95,12 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   }
 
   @override
+  Future<void> setHabitInitializedMonth(String month) async {
+    return await storageManager.setValue(
+        AppLocalStorageKeys.getHabitInitializedMonthKey(), month);
+  }
+
+  @override
   Future<void> addHabitToCurrentMonth(String name, String day) async {
     String month = DateUtil.getCurrentMonthDateString();
     List<String> monthHabitsList = await _getAllMonthHabitsList(month);
@@ -92,12 +109,11 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
         AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
   }
 
-
   @override
   Future<void> toggleHabitStatus(String name, String month, String day) async {
     bool isDone = await getIsHabitDone(name, month, day);
-    return await storageManager
-        .setValue(AppLocalStorageKeys.getHabitKey(name, month, day), !isDone) ??
+    return await storageManager.setValue(
+            AppLocalStorageKeys.getHabitKey(name, month, day), !isDone) ??
         false;
   }
 
@@ -106,14 +122,15 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
     String month = DateUtil.getCurrentMonthDateString();
     List<String> monthHabitsList = await _getAllMonthHabitsList(month);
     monthHabitsList.remove(name);
-    await storageManager.setValue(AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
+    await storageManager.setValue(
+        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
     await _removeHabitRelatedData(name, month);
     return;
   }
 
   Future<List<String>> _getAllMonthHabitsList(String month) async {
     List<dynamic> habitsList = await storageManager
-        .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
+            .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
         [];
     return habitsList.map((item) => item.toString()).toList();
   }
@@ -121,10 +138,13 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   Future<void> _removeHabitRelatedData(String name, String month) async {
     DateTime firstDate = DateUtil.getFirstDayOfCurrentMonth();
     DateTime lastDate = DateUtil.getTodayDate();
-    while (firstDate.isBefore(lastDate) || firstDate.isAtSameMomentAs(lastDate)) {
+    while (
+        firstDate.isBefore(lastDate) || firstDate.isAtSameMomentAs(lastDate)) {
       String day = DateUtil.convertDateToString(firstDate);
-      storageManager.removeValue(AppLocalStorageKeys.getHabitKey(name, month, day));
-      firstDate = DateTime(firstDate.year, firstDate.month, firstDate.day + 1, 0);
+      storageManager
+          .removeValue(AppLocalStorageKeys.getHabitKey(name, month, day));
+      firstDate =
+          DateTime(firstDate.year, firstDate.month, firstDate.day + 1, 0);
     }
     return;
   }

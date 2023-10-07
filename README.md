@@ -8,38 +8,41 @@ https://drive.google.com/file/d/1xrdBOlZF_Sst2c2ujLtJrmp2hbwa2B0L/view?usp=shari
 
 ## App Screenshots
 ### Splash and Onboarding
-<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/splash_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/onboarding_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/onboarding_2.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/onboarding_3.png?raw=true" alt="Image description" width="220"/>
+<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/splash_1.png?raw=true" alt="Image description" width="220"/>   <br/><img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/onboarding_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/onboarding_2.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/onboarding_3.png?raw=true" alt="Image description" width="220"/>
 
 ### Signup Journey
-<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_2.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_3.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_4.png?raw=true" alt="Image description" width="220"/>
+<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_2.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_3.png?raw=true" alt="Image description" width="220"/>   
+
+### Welcome to our wolrd
+<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signup_4.png?raw=true" alt="Image description" width="220"/>
 
 ### Signin Journey
 <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signin_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/signin_2.png?raw=true" alt="Image description" width="220"/>
 
 ### Habit It Home
-<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_2.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_3.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_4.png?raw=true" alt="Image description" width="220"/>
+<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_2.png?raw=true" alt="Image description" width="220"/>   <br/><img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_5.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/home_4.png?raw=true" alt="Image description" width="220"/>
 
 ### Habit It Profile
-<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/profile_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/update_profile_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/abouts_us_1.png?raw=true" alt="Image description" width="220"/>
+<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/profile_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/update_profile_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/about_us_1.png?raw=true" alt="Image description" width="220"/>
 
 ### Habits Progress and Stats
-<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/progress_1.png?raw=true" alt="Image description" width="220"/>   <img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/progress_2.png?raw=true" alt="Image description" width="220"/>
+<img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/progress_1.png?raw=true" alt="Image description" width="220"/>   <br/><img src="https://github.com/henry-azer/habit-it-app/blob/master/assets/images/github/progress_2.png?raw=true" alt="Image description"/>
 
 
 ## Getting Started
-Habit It is your go-to mobile companion for cultivating a healthier and more productive lifestyle. This innovative Flutter-based application empowers you to take control of your daily routines, monitor your progress, and make positive changes in your life. With a seamless user experience, local authentication options, and robust user profile management, HabitIt is your trusted partner on your journey towards self-improvement.
+Habit It is your go-to mobile companion for cultivating a healthier and more productive lifestyle. This innovative Flutter-based application empowers you to take control of your daily routines, monitor your progress, and make positive changes in your life. With a seamless user experience, local authentication options, and robust user profile management, Habit It is your trusted partner on your journey towards self-improvement.
 
 
 ## How to Use
 Certainly! To run the Habit It app, you will need to follow a few steps:
 - Download and install Android Studio on your computer.
-- Download or clone [Habit It app](https://github.com/henry-azer/habit-it-app) repository by using the link below:
+- Download or clone [Habit It App](https://github.com/henry-azer/habit-it-app) repository by using the link below:
 ```
 git clone https://github.com/henry-azer/habit-it-app
 ```
 - Open Android Studio and select "Open an existing Android Studio project" from the welcome screen.
 - Navigate to the directory where you cloned the Habit It app repository and select the project folder.
-- Go to project root and execute the following command in console to get the required dependencies:
+- Go to the project root and execute the following command in the console to get the required dependencies:
 ```
 flutter pub get
 ```
@@ -61,7 +64,7 @@ By following these steps, you should be able to run the Habit It app on your And
 |    └── gradle/wrapper/
 │    
 │
-├──  assets/f- This folder contains the rseources used in the app.
+├──  assets/f- This folder contains the resources used in the app.
 │    
 │
 ├──  ios - This folder contains the Flutter engine code for the app on iOS.
@@ -75,7 +78,6 @@ By following these steps, you should be able to run the Habit It app on your And
 |    └── data/
 |    └── features/
 |    └── app.dart
-|    └── bloc_observer.dart
 |    └── injection_container.dart
 |    └── main.dart
 │
@@ -90,10 +92,10 @@ Here is a summary of the features Habit It provides:
 - Habit Tracking: Create and track your daily, weekly, or custom habits effortlessly.
 - Progress Monitoring: Visualize your habit streaks and progress over time with charts and statistics.
 - Local Authentication: Secure your personal habit data with biometric fingerprint or PIN-based authentication.
-- User Profiles: Personalize your experience with user profiles, including profile setting.
+- User Profiles: Personalize your experience with user profiles, including profile settings.
 - Flexible Habit Types: Define various habit types to suit your needs, whether it's daily routines or weekly goals.
 - Customizable Habit Descriptions: Add detailed descriptions and notes to each habit for better tracking and understanding.
-- Offline Access: Use HabitIt even without an internet connection, ensuring you can track your habits anytime, anywhere.
+- Offline Access: Use Habit It even without an internet connection, ensuring you can track your habits anytime, anywhere.
 - Data Insights: Gain insights into your habits and patterns to identify areas for improvement.
 - Dark Mode: Enjoy a comfortable viewing experience in low-light conditions with a dark mode option.
 - Intuitive User Interface: Navigate the app effortlessly with a user-friendly and aesthetically pleasing interface.
@@ -110,6 +112,6 @@ Here is a summary of the features Habit It provides:
 - AppBar Calendar
 - localization
 - Permission Handler
-- Shared Perefences
+- Shared Preferences
 
 Developed by [@henry-azer](https://github.com/henry-azer)

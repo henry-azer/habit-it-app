@@ -49,7 +49,7 @@ class HabitItemWidget extends StatelessWidget {
               height: 30,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: AppColors.grey.withOpacity(0.09),
+                color: AppColors.grey.withOpacity(0.12),
               ),
               child: Icon(isDone ? Icons.check : Icons.close,
                   size: 18.0,
@@ -64,7 +64,7 @@ class HabitItemWidget extends StatelessWidget {
               height: 30,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: AppColors.grey.withOpacity(0.09),
+                color: AppColors.grey.withOpacity(0.12),
               ),
               child: Icon(Icons.delete_outline, size: 18.0, color: AppColors.grey),
             ),

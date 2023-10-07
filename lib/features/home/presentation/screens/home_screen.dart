@@ -107,8 +107,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   _monthStats() async {
-    List<HabitStats> monthHabits = await _habitStatsLocalDataSource
-        .getCurrentMonthHabitsStats();
+    List<HabitStats> monthHabits =
+        await _habitStatsLocalDataSource.getCurrentMonthHabitsStats();
     showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
@@ -142,43 +142,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
 
     List<Widget> habitWidgets = [];
+    habitWidgets.add(
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Divider(
+          color: AppColors.white.withOpacity(0.7),
+        ),
+      ),
+    );
     for (MapEntry<String, bool> habit in _habits.entries) {
       habitWidgets.add(
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Divider(
-                color: AppColors.white.withOpacity(0.7),
-              ),
-            ),
-            HabitItemWidget(
-              title: habit.key,
-              isDone: habit.value,
-              onPressRemove: () {
-                _removeHabit(habit.key);
-              },
-              onPressAction: () {
-                _markHabit(habit.key);
-              },
-            ),
-          ],
+        HabitItemWidget(
+          title: habit.key,
+          isDone: habit.value,
+          onPressRemove: () {
+            _removeHabit(habit.key);
+          },
+          onPressAction: () {
+            _markHabit(habit.key);
+          },
+        ),
+      );
+      habitWidgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Divider(
+            color: AppColors.white.withOpacity(0.7),
+          ),
         ),
       );
     }
-
-    habitWidgets.add(
-      Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Divider(
-              color: AppColors.white.withOpacity(0.7),
-            ),
-          ),
-        ],
-      ),
-    );
 
     return Padding(
       padding: const EdgeInsets.all(5.0),

@@ -31,7 +31,7 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
         ),
         content: Padding(
           padding: const EdgeInsets.only(
-              left: 00.0, right: 10.0, top: 25.0, bottom: 4.0),
+              left: 10.0, right: 10.0, top: 25.0, bottom: 4.0),
           child: Material(
             color: Colors.transparent,
             child: TextFieldWidget(

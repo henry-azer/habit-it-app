@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
+import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:intl/intl.dart';
 
 Future<DateTime?> showMonthPicker({
@@ -280,7 +281,7 @@ class __MonthPickerState extends State<_MonthPicker> {
 
   _buildButtonBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5.0),
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: context.width * 0.06),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

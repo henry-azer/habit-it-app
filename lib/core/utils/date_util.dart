@@ -15,6 +15,14 @@ class DateUtil {
     return DateTime(now.year, now.month, 1, 0);
   }
 
+  static DateTime getFirstDayOfMonth(DateTime date) {
+    return DateTime(date.year, date.month, 1, 0);
+  }
+
+  static DateTime getLastDayOfMonth(DateTime date) {
+    return DateTime(date.year, date.month + 1, 0, 0);
+  }
+
   static List<DateTime> getCurrentMonthDays() {
     DateTime now = DateTime.now();
     List<DateTime> monthDaysList = [];
@@ -70,5 +78,12 @@ class DateUtil {
       }
     }
     return now;
+  }
+
+  /// Calculations
+  static int countDaysOfMonth(DateTime date) {
+    final nextMonth = DateTime(date.year, date.month + 1, 1);
+    final lastDayOfCurrentMonth = nextMonth.subtract(const Duration(days: 1));
+    return lastDayOfCurrentMonth.day;
   }
 }

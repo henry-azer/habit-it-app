@@ -22,18 +22,19 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
   late AuthenticationLocalDataSource _authenticationLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
-  bool _isUserBiometricAuthenticated = false;
-  bool _isUserRegistered = false;
-  bool _isUserGetStarted = false;
+
+  late bool _isUserBiometricAuthenticated = false;
+  late bool _isUserRegistered = false;
+  late bool _isUserGetStarted = false;
 
   late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    _startDelay();
     _initLocalDataSources();
     _initCurrentUserData();
+    _navigatorHandler();
   }
 
   @override
@@ -42,11 +43,33 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     super.dispose();
   }
 
-  _startDelay() {
-    _timer = Timer(const Duration(seconds: 4), () => _goNext());
+  _initLocalDataSources() async {
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
+    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
   }
 
-  _goNext() {
+  _initCurrentUserData() async {
+    bool isUserGetStarted = await _userLocalDataSource.getIsUserGetStarted();
+    bool isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
+    bool isUserBiometricAuthenticated = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
+    setState(() {
+      _isUserGetStarted = isUserGetStarted;
+      _isUserRegistered = isUserRegistered;
+      _isUserBiometricAuthenticated = isUserBiometricAuthenticated;
+    });
+  }
+
+  _navigatorHandler() {
+    _timer = Timer(const Duration(seconds: 1), () {
+      if (_isUserRegistered) {
+        _timer = Timer(const Duration(seconds: 0), () => _navigateNext());
+      } else {
+        _timer = Timer(const Duration(seconds: 5), () => _navigateNext());
+      }
+    });
+  }
+
+  _navigateNext() {
     if (!_isUserGetStarted) {
       Navigator.pushReplacementNamed(context, Routes.appOnboarding);
       return;
@@ -62,17 +85,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     } else {
       Navigator.pushReplacementNamed(context, Routes.signinPIN);
     }
-  }
-
-  _initLocalDataSources() async {
-    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
-  }
-
-  _initCurrentUserData() async {
-    _isUserGetStarted = await _userLocalDataSource.getIsUserGetStarted();
-    _isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
-    _isUserBiometricAuthenticated = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
   }
 
   @override

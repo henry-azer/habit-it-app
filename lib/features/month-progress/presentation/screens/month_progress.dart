@@ -125,91 +125,96 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
                   ),
                 ],
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      dataRowHeight: 20,
-                      border: TableBorder.all(
-                        width: 0.5,
-                        color: AppColors.secondary,
-                      ),
-                      columnSpacing: 0,
-                      columns: [
-                        DataColumn(
-                          label: Padding(
-                            padding: const EdgeInsets.only(right: 15.0),
-                            child: Text(
-                              'Habit',
-                              style: TextStyle(
-                                  fontSize: 12, color: AppColors.fontPrimary),
-                            ),
-                          ),
+            : SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        dataRowHeight: 20,
+                        border: TableBorder.all(
+                          width: 0.5,
+                          color: AppColors.secondary,
                         ),
-                        for (int day = 1; day <= _monthDaysCount; day++)
+                        columnSpacing: 0,
+                        columns: [
                           DataColumn(
-                            label: Text(
-                              day < 10 ? '  $day ' : ' $day ',
-                              style: TextStyle(
-                                  fontSize: 12, color: AppColors.fontPrimary),
-                            ),
-                          ),
-                        DataColumn(
-                          numeric: true,
-                          label: Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              'Total',
-                              style: TextStyle(
-                                  fontSize: 12, color: AppColors.fontPrimary),
-                            ),
-                          ),
-                        ),
-                      ],
-                      rows: _monthHabits.asMap().entries.map((entry) {
-                        HabitProgress habit = entry.value;
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              Text(
-                                  "${habit.name.substring(0, habit.name.length - 5)}   ",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.fontPrimary)),
-                            ),
-                            for (int day = 1; day <= habit.total; day++)
-                              DataCell(
-                                habit.values[day] == true
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 4.0),
-                                        child: Icon(Icons.check,
-                                            size: 12.0, color: AppColors.green),
-                                      )
-                                    : Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 4.0),
-                                        child: Icon(Icons.close,
-                                            size: 12.0, color: AppColors.red),
-                                      ),
-                                placeholder: false,
-                                showEditIcon: false,
-                              ),
-                            DataCell(
-                              Text(
-                                "   ${habit.totalDone}/${habit.total}",
+                            label: Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: Text(
+                                'Habit',
                                 style: TextStyle(
                                     fontSize: 12, color: AppColors.fontPrimary),
                               ),
                             ),
-                          ],
-                        );
-                      }).toList(),
+                          ),
+                          for (int day = 1; day <= _monthDaysCount; day++)
+                            DataColumn(
+                              label: Text(
+                                day < 10 ? '  $day ' : ' $day ',
+                                style: TextStyle(
+                                    fontSize: 12, color: AppColors.fontPrimary),
+                              ),
+                            ),
+                          DataColumn(
+                            numeric: true,
+                            label: Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Text(
+                                'Total',
+                                style: TextStyle(
+                                    fontSize: 12, color: AppColors.fontPrimary),
+                              ),
+                            ),
+                          ),
+                        ],
+                        rows: _monthHabits.asMap().entries.map((entry) {
+                          HabitProgress habit = entry.value;
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Text(
+                                    "${habit.name.substring(0, habit.name.length - 5)}   ",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.fontPrimary)),
+                              ),
+                              for (int day = 1; day <= habit.total; day++)
+                                DataCell(
+                                  habit.values[day] == true
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 4.0),
+                                          child: Icon(Icons.check,
+                                              size: 12.0,
+                                              color: AppColors.green),
+                                        )
+                                      : Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 4.0),
+                                          child: Icon(Icons.close,
+                                              size: 12.0, color: AppColors.red),
+                                        ),
+                                  placeholder: false,
+                                  showEditIcon: false,
+                                ),
+                              DataCell(
+                                Text(
+                                  "   ${habit.totalDone}/${habit.total}",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.fontPrimary),
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
       ),
     );

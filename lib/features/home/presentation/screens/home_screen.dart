@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         return AddHabitDialog(
           onAddHabit: (habitName) async {
             await _habitLocalDataSource.addHabitToCurrentMonth(
-                habitName, _selectedDateString);
+                habitName, _currentMonthString);
             await _loadHabits();
             Navigator.of(context).pop();
           },
@@ -96,13 +96,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     await _loadHabits();
   }
 
+  _updateHabitName(String oldName, String newName) async {
+    await _habitLocalDataSource.updateHabitName(
+        oldName, newName, _currentMonthString);
+    await _loadHabits();
+  }
+
   _removeHabit(String habitName) {
     AppNotifier.showActionDialog(
         context: context,
         message: "Are you sure?",
         onClickYes: () async {
           await _habitLocalDataSource.removeHabit(
-              habitName, _currentMonthString, _selectedDateString);
+              habitName, _currentMonthString);
           await _loadHabits();
           Navigator.of(context).pop();
         });
@@ -169,6 +175,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           child: HabitItemWidget(
             title: habit.key,
             isDone: habit.value,
+            onPressSave: (oldName, newName) {
+              _updateHabitName(oldName, newName);
+            },
             onPressRemove: () {
               _removeHabit(habit.key);
             },

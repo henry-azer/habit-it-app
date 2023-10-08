@@ -64,7 +64,7 @@ By following these steps, you should be able to run the Habit It app on your And
 |    └── gradle/wrapper/
 │    
 │
-├──  assets/f- This folder contains the resources used in the app.
+├──  assets - This folder contains the resources used in the app.
 │    
 │
 ├──  ios - This folder contains the Flutter engine code for the app on iOS.

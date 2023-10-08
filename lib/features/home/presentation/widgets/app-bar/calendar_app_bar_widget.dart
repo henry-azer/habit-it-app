@@ -99,7 +99,7 @@ class CalendarAppBarState extends State<CalendarAppBar> {
             ),
           ),
           Positioned(
-            top: 60.0,
+            top: 55.0,
             child: Padding(
               padding: EdgeInsets.only(left: padding, right: padding, top: 17.0),
               child: SizedBox(

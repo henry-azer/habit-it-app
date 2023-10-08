@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
+import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
 import 'package:habit_it/data/entities/habit_stats.dart';
@@ -145,7 +144,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
 
     List<Widget> habitWidgets = [];
-    log("Habits: " + habitWidgets.toString());
     habitWidgets.add(
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -159,11 +157,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         SwipeTo(
           key: Key(habit.key),
           onRightSwipe: () async {
-            await _habitLocalDataSource.moveHabitToNextIndex(habit.key, _currentMonthString);
+            await _habitLocalDataSource.moveHabitToNextIndex(
+                habit.key, _currentMonthString);
             await _loadHabits();
           },
           onLeftSwipe: () async {
-            await _habitLocalDataSource.moveHabitToPreviousIndex(habit.key, _currentMonthString);
+            await _habitLocalDataSource.moveHabitToPreviousIndex(
+                habit.key, _currentMonthString);
             await _loadHabits();
           },
           child: HabitItemWidget(
@@ -187,6 +187,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       );
     }
+    habitWidgets.add(
+      SizedBox(
+        height: context.height * 0.09,
+      ),
+    );
 
     return Padding(
       padding: const EdgeInsets.all(5.0),

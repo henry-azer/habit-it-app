@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+ import 'package:flutter/rendering.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
 
@@ -25,6 +26,7 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
       children: [
         Expanded(
           child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
             controller: _pageController,
             onPageChanged: (index) {
               setState(() {

@@ -24,7 +24,7 @@ class _MonthStatsDialogState extends State<MonthStatsDialog> {
     List<HabitStats> habits = widget.monthHabits;
 
     return CupertinoTheme(
-      data:  CupertinoThemeData(
+      data: CupertinoThemeData(
         brightness: Brightness.light,
         primaryColor: AppColors.background,
         scaffoldBackgroundColor: AppColors.background,
@@ -36,15 +36,19 @@ class _MonthStatsDialogState extends State<MonthStatsDialog> {
         ),
         content: Padding(
           padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
-          child: Column(
-            children: habits
-                .map((habit) => MonthStatsItemWidget(
-                      name: habit.name,
-                      total: habit.total,
-                      totalDone: habit.totalDone,
-                    ))
-                .toList(),
-          ),
+          child: habits.isNotEmpty
+              ? Column(
+                  children: habits
+                      .map((habit) => MonthStatsItemWidget(
+                            name: habit.name,
+                            total: habit.total,
+                            totalDone: habit.totalDone,
+                          ))
+                      .toList())
+              : Text(
+                  "No habits added for this month.",
+                  style: AppTextStyles.alertDialogText,
+                ),
         ),
         actions: <Widget>[
           TextButton(

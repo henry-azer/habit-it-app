@@ -226,6 +226,13 @@ class AppTextStyles with Diagnosticable {
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle? alertDialogText = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontSecondary,
+    fontFamily: AppFonts.roboto,
+  );
+
   static TextStyle? alertDialogActionTextField = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,

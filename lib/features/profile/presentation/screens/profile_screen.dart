@@ -71,28 +71,27 @@ class _ProfileScreenState extends State<ProfileScreen>
     Navigator.pushReplacementNamed(context, Routes.initial);
   }
 
-  _submitFrom() async {
+  _submitUpdateUserFrom() async {
     _formKey.currentState!.save();
-    if (_formKey.currentState!.validate()) {
-      if (_updatedUser.username.isEmpty) {
-        AppNotifier.showSnackBar(
+
+    if (_updatedUser.username.isEmpty) {
+      AppNotifier.showActionDialog(
           context: context,
           message: AppLocalizationHelper.translate(
               context, AppLocalizationKeys.signupNameError),
-        );
-        return;
-      }
-
-      if (_updatedUser.gender.isEmpty) {
-        AppNotifier.showSnackBar(
+          onClickYes: () => Navigator.pop(context));
+      return;
+    }
+    if (_updatedUser.gender.isEmpty) {
+      AppNotifier.showActionDialog(
           context: context,
           message: AppLocalizationHelper.translate(
               context, AppLocalizationKeys.signupGenderError),
-        );
-        return;
-      }
-      _saveUserData();
+          onClickYes: () => Navigator.pop(context));
+      return;
     }
+
+    _saveUserData();
   }
 
   _saveUserData() async {
@@ -122,7 +121,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       lastDate: DateTime.now(),
     );
     if (selectedDate != null) {
-      Navigator.pushNamed(context, Routes.monthProgress, arguments: selectedDate);
+      Navigator.pushNamed(context, Routes.monthProgress,
+          arguments: selectedDate);
     }
   }
 
@@ -177,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             isUpdatingProfile = false;
           });
         },
-        onSubmit: _submitFrom,
+        onSubmit: _submitUpdateUserFrom,
       );
     } else if (isAboutUs) {
       return AboutUsWidget(

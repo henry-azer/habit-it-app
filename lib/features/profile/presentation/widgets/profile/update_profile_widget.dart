@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_text_styles.dart';
 import 'package:habit_it/core/widgets/buttons/button_widget.dart';
-import 'package:habit_it/core/widgets/forms/dropdown_field_widget.dart';
 import 'package:habit_it/core/widgets/forms/text_field_widget.dart';
 import '../../../../../config/locale/app_localization_helper.dart';
 import '../../../../../core/utils/app_constants.dart';
 import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/validation/validation_types.dart';
+import '../../../../../core/widgets/dropdown/custom_dropdown.dart';
 import '../../../../../data/entities/user.dart';
 
 class UpdateProfileWidget extends StatelessWidget {
@@ -20,17 +20,21 @@ class UpdateProfileWidget extends StatelessWidget {
     super.key,
     required this.updatedUser,
     required this.onCancel,
-    required this.onSubmit, required this.formKey,
+    required this.onSubmit,
+    required this.formKey,
   });
 
   @override
   Widget build(BuildContext context) {
+    final genderTextController = TextEditingController();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
           const SizedBox(height: 15),
-          Divider(color: AppColors.white.withOpacity(0.7),),
+          Divider(
+            color: AppColors.white.withOpacity(0.7),
+          ),
           const SizedBox(height: 35),
           Form(
             key: formKey,
@@ -64,33 +68,30 @@ class UpdateProfileWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30,),
-                Container(
-                  height: 55,
-                  padding: const EdgeInsets.symmetric(horizontal: 80.0),
-                  child: DropdownFieldWidget<String>(
-                    borderWidth: 1,
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 70),
+                  child: CustomDropdown(
+                    fillColor: Colors.transparent,
+                    selectedStyle: AppTextStyles.signupGenderSelectedFieldItem,
+                    hintStyle: AppTextStyles.signupGenderFieldHint,
                     hintText: 'Gender',
                     items: AppConstants.genders,
-                    borderColor: AppColors.border,
-                    hintTextStyle: AppTextStyles.signupGenderFieldHint,
+                    borderRadius: BorderRadius.zero,
                     errorStyle: AppTextStyles.signupGenderFieldError,
-                    errorBorderColor: AppColors.error,
-                    itemTextStyle: AppTextStyles.signupGenderFieldItem,
-                    selectedItemTextStyle:
-                        AppTextStyles.signupGenderSelectedFieldItem,
-                    validateType: ValidationTypes.signupGender,
-                    onSave: (value) {
-                      if (value != null) {
-                        updatedUser.gender = value;
-                      }
+                    onChanged: (value) {
+                      genderTextController.text = value;
+                      updatedUser.gender = value;
                     },
+                    controller: genderTextController,
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 60),
+          const SizedBox(height: 100),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

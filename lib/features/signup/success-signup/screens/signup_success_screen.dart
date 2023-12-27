@@ -15,7 +15,7 @@ import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/validation/validation_types.dart';
 import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
-import '../../../../core/widgets/forms/dropdown_field_widget.dart';
+import '../../../../core/widgets/dropdown/custom_dropdown.dart';
 import '../../../../core/widgets/forms/text_field_widget.dart';
 
 class SignupSuccessScreen extends StatefulWidget {
@@ -27,6 +27,7 @@ class SignupSuccessScreen extends StatefulWidget {
 
 class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _genderTextController = TextEditingController();
   late AuthenticationLocalDataSource _authenticationLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
   late final User _user = User();
@@ -39,31 +40,29 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
 
   _initLocalDataSources() async {
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _authenticationLocalDataSource =
+        GetIt.instance<AuthenticationLocalDataSource>();
   }
 
   _submitFrom() async {
     _formKey.currentState!.save();
-    if (_formKey.currentState!.validate()) {
-      if (_user.username.isEmpty) {
-        AppNotifier.showSnackBar(
-          context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupNameError),
-        );
-        return;
-      }
 
-      if (_user.gender.isEmpty) {
-        AppNotifier.showSnackBar(
+    if (_user.username.isEmpty) {
+      AppNotifier.showErrorDialog(
           context: context,
           message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupGenderError),
-        );
-        return;
-      }
-      _saveUserData();
+              context, AppLocalizationKeys.signupNameError));
+      return;
     }
+    if (_user.gender.isEmpty) {
+      AppNotifier.showErrorDialog(
+          context: context,
+          message: AppLocalizationHelper.translate(
+              context, AppLocalizationKeys.signupGenderError));
+      return;
+    }
+
+    _saveUserData();
   }
 
   _saveUserData() async {
@@ -126,6 +125,7 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
             _buildForm(),
             SizedBox(height: MediaQuery.of(context).size.height * 0.15),
             _buildSubmitButton(),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           ],
         ),
       ),
@@ -187,28 +187,23 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
           const SizedBox(
             height: 30,
           ),
-          Container(
-            height: 55,
-            padding: const EdgeInsets.symmetric(horizontal: 60.0),
-            child: DropdownFieldWidget<String>(
-              borderWidth: 1,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            child: CustomDropdown(
+              fillColor: Colors.transparent,
+              selectedStyle: AppTextStyles.signupGenderSelectedFieldItem,
+              hintStyle: AppTextStyles.signupGenderFieldHint,
               hintText: 'Gender',
               items: AppConstants.genders,
-              borderColor: AppColors.border,
-              hintTextStyle: AppTextStyles.signupGenderFieldHint,
+              borderRadius: BorderRadius.zero,
               errorStyle: AppTextStyles.signupGenderFieldError,
-              errorBorderColor: AppColors.error,
-              itemTextStyle: AppTextStyles.signupGenderFieldItem,
-              selectedItemTextStyle:
-                  AppTextStyles.signupGenderSelectedFieldItem,
-              validateType: ValidationTypes.signupGender,
-              onSave: (value) {
-                if (value != null) {
-                  setState(() {
-                    _user.gender = value;
-                  });
-                }
+              onChanged: (value) {
+                _genderTextController.text = value;
+                setState(() {
+                  _user.gender = value;
+                });
               },
+              controller: _genderTextController,
             ),
           ),
         ],

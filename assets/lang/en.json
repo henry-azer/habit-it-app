@@ -92,8 +92,8 @@
   "signup_biometric_success": "Biometric registered successfully.",
 
   "signup_failed": "Failed to register, please try again!",
-  "signup_name_error": "Username is required, please fill it!",
-  "signup_gender_error": "Gender is required, please fill it!",
+  "signup_name_error": "Username is required!",
+  "signup_gender_error": "Gender is required!",
 
   "signup_success": "Welcome to your world!",
   "signup_success_title": "WELCOME TO HABIT IT",

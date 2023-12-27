@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   _navigateToMonthProgress() async {
     DateTime? selectedDate = await showMonthPicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _habitInitializedDate,
       firstDate: _habitInitializedDate,
       lastDate: DateTime.now(),
     );

@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       DateUtil.convertDateToString(DateUtil.getTodayDate());
   final String _currentMonthString = DateUtil.getCurrentMonthDateString();
   final DateTime _firstDate = DateUtil.getFirstDayOfCurrentMonth();
-  final DateTime _todayDate = DateUtil.getTodayDate();
+  final DateTime _todayDate = DateUtil.getTodayDate().add(Duration(days: 15));
   Map<String, bool> _habits = {};
 
   late HabitStatsLocalDataSource _habitStatsLocalDataSource;

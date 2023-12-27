@@ -15,7 +15,7 @@ class AppLocalStorageKeys {
 
   /// HABIT
   static const String habit = "HABITS/";
-   static const String habitInitializedMonth = "INIT_MONTH";
+  static const String habitInitializedMonth = "INIT_MONTH";
   static const String habits = "/HABIT/";
   static const String habitMonths = "HABITS/MONTHS";
   static const String isMonthInitialized = "/IS_INITIALIZED";

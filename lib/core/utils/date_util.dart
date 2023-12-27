@@ -37,6 +37,18 @@ class DateUtil {
     return monthDaysList.reversed.toList();
   }
 
+  static List<DateTime> getMonthDaysUntil(DateTime date) {
+    DateTime firstDayOfCurrentMonth = DateTime(date.year, date.month, 1, 0);
+    List<DateTime> monthDaysList = [];
+
+    for (int i = 0; i < date.day; i++) {
+      DateTime currentDay = firstDayOfCurrentMonth.add(Duration(days: i));
+      monthDaysList.add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
+    }
+
+    return monthDaysList.reversed.toList();
+  }
+
   static String getCurrentMonthDateString() {
     return "${now.year}-${now.month}";
   }

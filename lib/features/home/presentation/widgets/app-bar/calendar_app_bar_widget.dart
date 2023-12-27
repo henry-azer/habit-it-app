@@ -46,7 +46,8 @@ class CalendarAppBarState extends State<CalendarAppBar> {
   late DateTime lastDate;
   late int position;
   late DateTime referenceDate;
-  List<String> datesWithEntries = [];
+  late List<DateTime> days = [];
+  late List<String> datesWithEntries = [];
   late Color white;
   late Color accent;
   late Color black;
@@ -55,6 +56,7 @@ class CalendarAppBarState extends State<CalendarAppBar> {
   late bool fullCalendar;
 
   String get _locale => widget.locale ?? 'en';
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -70,6 +72,7 @@ class CalendarAppBarState extends State<CalendarAppBar> {
       referenceDate = widget.selectedDate;
       initializeDateFormatting(_locale);
       position = 1;
+     days = DateUtil.getMonthDaysUntil(lastDate);
     });
 
     if (widget.events != null) {
@@ -80,8 +83,6 @@ class CalendarAppBarState extends State<CalendarAppBar> {
     super.initState();
   }
 
-  ScrollController scrollController = ScrollController();
-  List<DateTime> days = DateUtil.getCurrentMonthDays();
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-import 'package:habit_it/data/entities/habit_progress.dart';
+import 'package:habit_it/data/entities/habit.dart';
 
 import '../../../core/managers/storage-manager/i_storage_manager.dart';
 import '../../../core/utils/date_util.dart';
@@ -8,7 +8,7 @@ import 'habit_local_datasource.dart';
 abstract class HabitStatsLocalDataSource {
   Future<List<HabitStats>> getCurrentMonthHabitsStats();
 
-  Future<List<HabitProgress>> getMonthHabitsProgress(String month);
+  Future<List<Habit>> getMonthHabitsProgress(String month);
 }
 
 class HabitStatsLocalDataSourceImpl implements HabitStatsLocalDataSource {
@@ -50,9 +50,9 @@ class HabitStatsLocalDataSourceImpl implements HabitStatsLocalDataSource {
   }
 
   @override
-  Future<List<HabitProgress>> getMonthHabitsProgress(String month) async {
+  Future<List<Habit>> getMonthHabitsProgress(String month) async {
     List<String> monthHabits = await habitLocalDataSource.getAllMonthHabitsForMonth(month);
-    List<HabitProgress> monthHabitsProgress = [];
+    List<Habit> monthHabitsProgress = [];
 
     DateTime monthDate = DateUtil.convertMonthStringToDate(month);
     int monthDaysCount = DateUtil.countDaysOfMonth(monthDate);
@@ -73,7 +73,8 @@ class HabitStatsLocalDataSourceImpl implements HabitStatsLocalDataSource {
           doneCount++;
         }
       }
-      monthHabitsProgress.add(HabitProgress(habit, monthDaysCount, doneCount, habitValues));
+      // todo
+      // monthHabitsProgress.add(Habit("s", habit, monthDaysCount, doneCount, habitValues));
     }
 
     return monthHabitsProgress;

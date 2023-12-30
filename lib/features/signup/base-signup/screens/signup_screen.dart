@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 
 import '../../../../config/locale/app_localization_helper.dart';
 import '../../../../config/routes/app_routes.dart';
@@ -10,7 +11,6 @@ import '../../../../core/utils/app_localization_strings.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../core/widgets/buttons/icon_text_button_widget.dart';
-import '../../../../data/datasources/user/user_local_datasource.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -21,26 +21,25 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   late IBiometricAuthenticationManager _biometricAuthenticationManager;
-  late UserLocalDataSource _userLocalDataSource;
+  late AppLocalDataSource _appLocalDataSource;
   late bool _isBiometricAvailable = false;
-  late bool _isUserGetStarted;
 
   @override
   void initState() {
     super.initState();
     _initManagers();
-    _checkIsUserGetStarted();
+    _checkIsAppInit();
     _checkIsBiometricAuthenticationAvailable();
   }
 
   _initManagers() async {
     _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
-    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
+    _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
   }
 
-  _checkIsUserGetStarted() async {
-    _isUserGetStarted = await _userLocalDataSource.getIsUserGetStarted();
-    if (!_isUserGetStarted) {
+  _checkIsAppInit() async {
+    final app = await _appLocalDataSource.getApp();
+    if (!app.init) {
       Navigator.pushReplacementNamed(context, Routes.appOnboarding);
     }
   }

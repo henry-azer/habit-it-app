@@ -1,21 +1,20 @@
 import 'package:habit_it/core/utils/app_local_storage_strings.dart';
 
 import '../../../core/managers/storage-manager/i_storage_manager.dart';
+import '../../entities/user.dart';
 
 abstract class UserLocalDataSource {
-  Future<String> getUsername();
+  Future<User> getUser();
 
-  Future<String> getUserGender();
+  Future<void> setUser(User user);
 
-  Future<bool> getIsUserGetStarted();
+  Future<void> setUsernameAndGender(String username, String gender);
 
-  Future<void> setIsUserGetStarted(bool value);
+  Future<void> setUserAuthentication(bool value);
 
-  Future<void> setUsername(String username);
+  Future<void> setUserPINAuthentication(String password);
 
-  Future<void> setUserGender(String gender);
-
-  Future<void> clearAllUserData();
+  Future<void> setUserBiometricAuthentication(bool value);
 }
 
 class UserLocalDataSourceImpl implements UserLocalDataSource {
@@ -24,44 +23,46 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   UserLocalDataSourceImpl({required this.storageManager});
 
   @override
-  Future<String> getUsername() async {
-    return await storageManager.getValue(AppLocalStorageKeys.currentUsername) ??
-        "";
+  Future<User> getUser() async {
+    final user = await storageManager.getValue<Map<String, dynamic>>(AppLocalStorageKeys.user);
+    return user != null ? User.fromJson(user) : User();
   }
 
   @override
-  Future<String> getUserGender() async {
-    return await storageManager
-            .getValue(AppLocalStorageKeys.currentUserGender) ??
-        "";
+  Future<void> setUser(User user) async {
+    return storageManager.setValue(AppLocalStorageKeys.user, user.toJson());
   }
 
   @override
-  Future<bool> getIsUserGetStarted() async {
-    return await storageManager
-            .getValue(AppLocalStorageKeys.isUserGetStarted) ??
-        false;
+  Future<void> setUserAuthentication(bool value) async {
+    final user = await getUser();
+    user.isAuthenticated = value;
+    return await setUser(user);
   }
 
   @override
-  Future<void> setIsUserGetStarted(bool value) async {
-    return storageManager.setValue(AppLocalStorageKeys.isUserGetStarted, value);
+  Future<void> setUsernameAndGender(String username, String gender) async {
+    final user = await getUser();
+    user.gender = gender;
+    user.username = username;
+    user.isRegistered = true;
+    return await setUser(user);
   }
 
   @override
-  Future<void> setUsername(String username) async {
-    return storageManager.setValue(
-        AppLocalStorageKeys.currentUsername, username);
+  Future<void> setUserPINAuthentication(String password) async {
+    final user = await getUser();
+    user.password = password;
+    user.isAuthenticated = true;
+    user.isPINAuthenticated = true;
+    return await setUser(user);
   }
 
   @override
-  Future<void> setUserGender(String gender) async {
-    return storageManager.setValue(
-        AppLocalStorageKeys.currentUserGender, gender);
-  }
-
-  @override
-  Future<void> clearAllUserData() async {
-    return storageManager.clearAll();
+  Future<void> setUserBiometricAuthentication(bool value) async {
+    final user = await getUser();
+    user.isAuthenticated = true;
+    user.isBiometricAuthenticated = value;
+    return await setUser(user);
   }
 }

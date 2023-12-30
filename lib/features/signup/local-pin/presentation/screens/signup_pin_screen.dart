@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
+import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 
 import '../../../../../config/locale/app_localization_helper.dart';
 import '../../../../../config/routes/app_routes.dart';
@@ -11,6 +11,7 @@ import '../../../../../core/utils/app_notifier.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../../core/widgets/otp/otp_text_field_widget.dart';
+import '../../../../../data/entities/user.dart';
 
 class SignupPINScreen extends StatefulWidget {
   const SignupPINScreen({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class SignupPINScreen extends StatefulWidget {
 }
 
 class _SignupPINScreenState extends State<SignupPINScreen> {
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late UserLocalDataSource _userLocalDataSource;
 
   @override
   void initState() {
@@ -29,29 +30,27 @@ class _SignupPINScreenState extends State<SignupPINScreen> {
   }
 
   _initLocalDataSources() {
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
   }
 
   _registerUserPIN(String pin) async {
     bool isAuthenticated = false;
 
     try {
-      await _authenticationLocalDataSource.setUserPIN(pin);
-      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
+      await _userLocalDataSource.setUserPINAuthentication(pin);
       isAuthenticated = true;
     } catch (exception) {
-      AppNotifier.showSnackBar(
+      AppNotifier.showErrorDialog(
         context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.signupPINFailed),
+        message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupPINFailed),
       );
     }
 
     if (isAuthenticated) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routes.signupSuccess, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, Routes.signupSuccess, (route) => false);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

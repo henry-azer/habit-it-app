@@ -9,7 +9,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
-import '../../../../data/entities/habit_progress.dart';
+import '../../../../data/entities/habit.dart';
 
 class MonthProgressScreen extends StatefulWidget {
   const MonthProgressScreen({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class MonthProgressScreen extends StatefulWidget {
 class _MonthProgressScreenState extends State<MonthProgressScreen> {
   late HabitStatsLocalDataSource _habitStatsLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
-  late List<HabitProgress> _monthHabits = [];
+  late List<Habit> _monthHabits = [];
   late DateTime _month = DateTime.now();
   late int _monthDaysCount = 0;
   late String _username = '';
@@ -54,12 +54,12 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
   }
 
   _initLocalData() async {
-    String username = await _userLocalDataSource.getUsername();
-    List<HabitProgress> monthHabits = await _habitStatsLocalDataSource
+    // String username = await _userLocalDataSource.getUsername();
+    List<Habit> monthHabits = await _habitStatsLocalDataSource
         .getMonthHabitsProgress(DateUtil.convertDateToMonthString(_month));
 
     setState(() {
-      _username = username;
+      // _username = username;
       _monthHabits = monthHabits;
     });
   }
@@ -171,7 +171,7 @@ class _MonthProgressScreenState extends State<MonthProgressScreen> {
                           ),
                         ],
                         rows: _monthHabits.asMap().entries.map((entry) {
-                          HabitProgress habit = entry.value;
+                          Habit habit = entry.value;
                           return DataRow(
                             cells: [
                               DataCell(

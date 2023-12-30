@@ -7,10 +7,12 @@ import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'package:habit_it/core/utils/app_localization_strings.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
+import 'package:habit_it/data/entities/app.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_text_styles.dart';
-import '../../../../data/datasources/authentication/authentication_local_datasource.dart';
+import '../../../../data/datasources/app/app_local_datasource.dart';
+import '../../../../data/entities/user.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -20,12 +22,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
+  late AppLocalDataSource _appLocalDataSource;
 
   late bool _isUserBiometricAuthenticated = false;
   late bool _isUserRegistered = false;
-  late bool _isUserGetStarted = false;
+  late bool _isInit = false;
 
   late Timer _timer;
 
@@ -44,18 +46,17 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   _initLocalDataSources() async {
+    _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
   }
 
   _initCurrentUserData() async {
-    bool isUserGetStarted = await _userLocalDataSource.getIsUserGetStarted();
-    bool isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
-    bool isUserBiometricAuthenticated = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
+    final App app = await _appLocalDataSource.getApp();
+    final User user =  await _userLocalDataSource.getUser();
     setState(() {
-      _isUserGetStarted = isUserGetStarted;
-      _isUserRegistered = isUserRegistered;
-      _isUserBiometricAuthenticated = isUserBiometricAuthenticated;
+      _isInit = app.init;
+      _isUserRegistered = user.isRegistered;
+      _isUserBiometricAuthenticated = user.isBiometricAuthenticated;
     });
   }
 
@@ -70,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   _navigateNext() {
-    if (!_isUserGetStarted) {
+    if (!_isInit) {
       Navigator.pushReplacementNamed(context, Routes.appOnboarding);
       return;
     }

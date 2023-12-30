@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_notifier.dart';
-import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
+import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
+import 'package:habit_it/data/enums/gender.dart';
 import 'package:habit_it/features/profile/presentation/widgets/base/profile_header_widget.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
@@ -25,15 +26,14 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen>
-    with WidgetsBindingObserver {
+class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserver {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late DateTime _habitInitializedDate = DateTime.now();
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late AppLocalDataSource _appLocalDataSource;
   late HabitLocalDataSource _habitLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
-  late final User _updatedUser = User();
-  late final User _user = User();
+  late User _updatedUser = User();
+  late User _user = User();
   bool isUpdatingProfile = false;
   bool isAboutUs = false;
 
@@ -45,29 +45,22 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   _initLocalDataSources() async {
+    _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
     _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
-    _authenticationLocalDataSource =
-        GetIt.instance<AuthenticationLocalDataSource>();
   }
 
   _initLocalData() async {
-    final username = await _userLocalDataSource.getUsername();
-    final userGender = await _userLocalDataSource.getUserGender();
-    final userAuthMethod =
-        await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
-    final habitInitMonth =
-        await _habitLocalDataSource.getHabitInitializedMonth();
+    final user = await _userLocalDataSource.getUser();
+    final habitInitMonth = await _habitLocalDataSource.getHabitInitializedMonth();
     setState(() {
-      _user.username = username;
-      _user.gender = userGender;
-      _user.isUserBiometricAuthenticated = userAuthMethod;
+      _user = user;
       _habitInitializedDate = habitInitMonth;
     });
   }
 
   _resetAppData() async {
-    await _userLocalDataSource.clearAllUserData();
+    await _appLocalDataSource.reset();
     Navigator.pushReplacementNamed(context, Routes.initial);
   }
 
@@ -77,28 +70,21 @@ class _ProfileScreenState extends State<ProfileScreen>
     if (_updatedUser.username.isEmpty) {
       AppNotifier.showActionDialog(
           context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupNameError),
+          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupNameError),
           onClickYes: () => Navigator.pop(context));
       return;
     }
     if (_updatedUser.gender.isEmpty) {
       AppNotifier.showActionDialog(
           context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupGenderError),
+          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupGenderError),
           onClickYes: () => Navigator.pop(context));
       return;
     }
 
-    _saveUserData();
-  }
-
-  _saveUserData() async {
     bool isSaved = false;
     try {
-      await _userLocalDataSource.setUsername(_updatedUser.username);
-      await _userLocalDataSource.setUserGender(_updatedUser.gender);
+      await _userLocalDataSource.setUsernameAndGender(_updatedUser.username, _updatedUser.gender);
       isSaved = true;
     } catch (exception) {
       return;
@@ -121,8 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       lastDate: DateTime.now(),
     );
     if (selectedDate != null) {
-      Navigator.pushNamed(context, Routes.monthProgress,
-          arguments: selectedDate);
+      Navigator.pushNamed(context, Routes.monthProgress, arguments: selectedDate);
     }
   }
 
@@ -145,21 +130,19 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget _buildHeaderSwitcher() {
     if (isUpdatingProfile) {
       return ProfileHeaderWidget(
-        image: _user.gender == "Male"
+        image: _user.gender == Gender.male.value
             ? AppImageAssets.male
             : AppImageAssets.female,
-        title: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.profileUpdateTitle),
+        title: AppLocalizationHelper.translate(context, AppLocalizationKeys.profileUpdateTitle),
       );
     } else if (isAboutUs) {
       return ProfileHeaderWidget(
         image: AppImageAssets.henry,
-        title: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.appCreator),
+        title: AppLocalizationHelper.translate(context, AppLocalizationKeys.appCreator),
       );
     } else {
       return ProfileHeaderWidget(
-        image: _user.gender == "Male"
+        image: _user.gender == Gender.male.value
             ? AppImageAssets.male
             : AppImageAssets.female,
         title: _user.username,
@@ -251,9 +234,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                   textColor: AppColors.red,
                   endIcon: false,
                   onPress: () async {
-                    if (_user.isUserBiometricAuthenticated) {
-                      Navigator.pushReplacementNamed(
-                          context, Routes.signinBiometric);
+                    if (_user.isBiometricAuthenticated) {
+                      Navigator.pushReplacementNamed(context, Routes.signinBiometric);
                     } else {
                       Navigator.pushReplacementNamed(context, Routes.signinPIN);
                     }

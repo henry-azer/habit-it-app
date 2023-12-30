@@ -6,6 +6,7 @@ import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_localization_strings.dart';
 import 'package:habit_it/core/utils/app_text_styles.dart';
+import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/features/onboarding/presentation/widgets/onboarding_item_widget.dart';
 
 import '../../../../config/routes/app_routes.dart';
@@ -21,7 +22,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  late UserLocalDataSource _userLocalDataSource;
+  late AppLocalDataSource _appLocalDataSource;
 
   @override
   void initState() {
@@ -30,11 +31,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   _initUserLocalDataSource() async {
-    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
+    _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
   }
 
   _onFinishOnboarding(BuildContext context) async {
-    await _userLocalDataSource.setIsUserGetStarted(true);
+    await _appLocalDataSource.setInit(true);
     Navigator.pushReplacementNamed(context, Routes.appSignup);
   }
 

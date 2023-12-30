@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../data/datasources/authentication/authentication_local_datasource.dart';
+import '../../../../data/entities/user.dart';
 import '../widgets/navigation_bar_widget.dart';
 
 class AppNavigatorScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class AppNavigatorScreen extends StatefulWidget {
 }
 
 class _AppNavigatorScreenState extends State<AppNavigatorScreen> with WidgetsBindingObserver {
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late UserLocalDataSource _userLocalDataSource;
   late bool _isUserBiometricAuthenticated;
   late bool _isUserAuthenticated;
 
@@ -34,19 +35,18 @@ class _AppNavigatorScreenState extends State<AppNavigatorScreen> with WidgetsBin
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
-      _setUserAuthenticatedFalse();
+      updateUser();
     }
   }
 
   _initLocalDataSources() {
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
   }
 
   _checkIfUserAuthenticated() async {
-    _isUserAuthenticated = await _authenticationLocalDataSource.getIsUserAuthenticated();
-    if (!_isUserAuthenticated) {
-      _isUserBiometricAuthenticated = await _authenticationLocalDataSource.getIsUserBiometricAuthenticated();
-      if (_isUserBiometricAuthenticated) {
+    final User user = await _userLocalDataSource.getUser();
+    if (!user.isAuthenticated) {
+      if (user.isBiometricAuthenticated) {
         Navigator.pushReplacementNamed(context, Routes.signinBiometric);
       } else {
         Navigator.pushReplacementNamed(context, Routes.signinPIN);
@@ -54,8 +54,10 @@ class _AppNavigatorScreenState extends State<AppNavigatorScreen> with WidgetsBin
     }
   }
 
-  _setUserAuthenticatedFalse() async {
-    await _authenticationLocalDataSource.setIsUserAuthenticated(false);
+  Future<void> updateUser() async {
+    final User user = await _userLocalDataSource.getUser();
+    user.isAuthenticated = false;
+    await _userLocalDataSource.setUser(user);
   }
 
   @override

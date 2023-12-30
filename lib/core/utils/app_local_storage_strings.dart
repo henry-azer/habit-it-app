@@ -1,17 +1,11 @@
 import 'date_util.dart';
 
 class AppLocalStorageKeys {
-  /// AUTHENTICATION
-  static const String isUserRegistered = "AUTHENTICATION/IS_REGISTERED";
-  static const String isUserAuthenticated = "AUTHENTICATION/IS_AUTHENTICATED";
-  static const String isUserBiometricAuthenticated = "AUTHENTICATION/IS_BIOMETRIC_AUTHENTICATED";
+  static const String app = "APP/APP";
+  static const String user = "APP/USER";
 
-  /// USER DETAILS
-  static const String isUserGetStarted = "CURRENT_USER/IS_GET_STARTED";
-  static const String currentUserBiometric = "CURRENT_USER/BIOMETRIC";
-  static const String currentUserPIN = "CURRENT_USER/PIN";
-  static const String currentUsername = "CURRENT_USER/USERNAME";
-  static const String currentUserGender = "CURRENT_USER/GENDER";
+  /// HABIT
+  // static const String habits = "APP/HABITS";
 
   /// HABIT
   static const String habit = "HABITS/";

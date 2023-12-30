@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/core/widgets/buttons/button_widget.dart';
-import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
+import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 import 'package:habit_it/data/entities/user.dart';
 
@@ -28,9 +29,10 @@ class SignupSuccessScreen extends StatefulWidget {
 class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _genderTextController = TextEditingController();
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
-  late final User _user = User();
+  late AppLocalDataSource _appLocalDataSource;
+  late String username = "";
+  late String gender = "";
 
   @override
   void initState() {
@@ -40,48 +42,39 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
 
   _initLocalDataSources() async {
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _authenticationLocalDataSource =
-        GetIt.instance<AuthenticationLocalDataSource>();
+    _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
   }
 
   _submitFrom() async {
     _formKey.currentState!.save();
 
-    if (_user.username.isEmpty) {
+    if (username.isEmpty) {
       AppNotifier.showErrorDialog(
           context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupNameError));
+          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupNameError));
       return;
     }
-    if (_user.gender.isEmpty) {
+    if (gender.isEmpty) {
       AppNotifier.showErrorDialog(
           context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.signupGenderError));
+          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupGenderError));
       return;
     }
 
-    _saveUserData();
-  }
-
-  _saveUserData() async {
     bool isSaved = false;
     try {
-      await _userLocalDataSource.setUsername(_user.username);
-      await _userLocalDataSource.setUserGender(_user.gender);
-      await _authenticationLocalDataSource.setIsUserRegistered(true);
+      await _userLocalDataSource.setUsernameAndGender(username, gender);
       isSaved = true;
     } catch (exception) {
-      AppNotifier.showSnackBar(
+      AppNotifier.showErrorDialog(
         context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.signupFailed),
+        message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupFailed),
       );
       return;
     }
 
     if (isSaved) {
+      await _appLocalDataSource.setInitDate(DateUtil.getTodayDate().toString());
       Navigator.pushReplacementNamed(context, Routes.app);
     }
   }
@@ -176,7 +169,7 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
               secureText: false,
               onSave: (value) {
                 setState(() {
-                  _user.username = value;
+                  username = value;
                 });
               },
               contentPadding: const EdgeInsets.only(
@@ -200,7 +193,7 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
               onChanged: (value) {
                 _genderTextController.text = value;
                 setState(() {
-                  _user.gender = value;
+                  gender = value;
                 });
               },
               controller: _genderTextController,

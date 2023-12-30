@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 
 import '../../../../config/locale/app_localization_helper.dart';
 import '../../../../config/routes/app_routes.dart';
@@ -11,7 +12,6 @@ import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../core/widgets/buttons/icon_text_button_widget.dart';
-import '../../../../data/datasources/authentication/authentication_local_datasource.dart';
 
 class SigninBiometricScreen extends StatefulWidget {
   const SigninBiometricScreen({Key? key}) : super(key: key);
@@ -22,25 +22,24 @@ class SigninBiometricScreen extends StatefulWidget {
 
 class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
   late IBiometricAuthenticationManager _biometricAuthenticationManager;
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
-  late bool _isUserRegistered;
+  late UserLocalDataSource _userLocalDataSource;
 
   @override
   void initState() {
     super.initState();
-    _initAuthenticationManagers();
+    _initServices();
     _checkIfUserRegistered();
     _authenticateUserBiometric();
   }
 
-  _initAuthenticationManagers() async {
+  _initServices() async {
     _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
   }
 
   _checkIfUserRegistered() async {
-    _isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
-    if (!_isUserRegistered) {
+    final user = await _userLocalDataSource.getUser();
+    if (!user.isRegistered) {
       Navigator.pushReplacementNamed(context, Routes.initial);
     }
   }
@@ -51,15 +50,14 @@ class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
     try {
       isAuthenticated = await _biometricAuthenticationManager.verifyBiometricAuthentication();
     } catch (exception) {
-      AppNotifier.showSnackBar(
+      AppNotifier.showErrorDialog(
         context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.signinBiometricInvalid),
+        message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signinBiometricInvalid),
       );
     }
 
     if (isAuthenticated) {
-      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
+      await _userLocalDataSource.setUserAuthentication(true);
       Navigator.pushReplacementNamed(context, Routes.app);
     }
   }

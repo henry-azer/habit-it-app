@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/config/routes/app_routes.dart';
-import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
+import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 
 import '../../../../../config/locale/app_localization_helper.dart';
 import '../../../../../core/managers/biometric-authentication/i_biometric_auth_manager.dart';
@@ -22,7 +22,7 @@ class SignupBiometricScreen extends StatefulWidget {
 
 class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
   late IBiometricAuthenticationManager _biometricAuthenticationManager;
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late UserLocalDataSource _userLocalDataSource;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
   }
 
   _initLocalDataSourcesAndManagers() {
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
     _biometricAuthenticationManager = GetIt.instance<IBiometricAuthenticationManager>();
   }
 
@@ -40,19 +40,16 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
     bool isAuthenticated = false;
     try {
       isAuthenticated = await _biometricAuthenticationManager.requestBiometricAuthentication();
-      await _authenticationLocalDataSource.setIsUserAuthenticated(isAuthenticated);
-      await _authenticationLocalDataSource.setIsUserBiometricAuthenticated(isAuthenticated);
+      if (isAuthenticated) {
+        await _userLocalDataSource.setUserBiometricAuthentication(true);
+        Navigator.pushNamedAndRemoveUntil(context, Routes.signupSuccess, (route) => false);
+      }
+      throw Exception(AppLocalizationKeys.signupBiometricFailed);
     } catch (exception) {
-      AppNotifier.showSnackBar(
+      AppNotifier.showErrorDialog(
         context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.signupBiometricFailed),
+        message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupBiometricFailed),
       );
-    }
-
-    if (isAuthenticated) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routes.signupSuccess, (route) => false);
     }
   }
 

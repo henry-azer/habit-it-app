@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
+import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
 import 'package:habit_it/data/entities/habit_stats.dart';
@@ -27,32 +28,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  late String _selectedDateString =
-      DateUtil.convertDateToString(DateUtil.getTodayDate());
+  late String _selectedDateString = DateUtil.convertDateToString(DateUtil.getTodayDate());
   final String _currentMonthString = DateUtil.getCurrentMonthDateString();
   final DateTime _firstDate = DateUtil.getFirstDayOfCurrentMonth();
-  final DateTime _todayDate = DateUtil.getTodayDate().add(Duration(days: 15));
+  final DateTime _todayDate = DateUtil.getTodayDate();
   Map<String, bool> _habits = {};
 
   late HabitStatsLocalDataSource _habitStatsLocalDataSource;
   late HabitLocalDataSource _habitLocalDataSource;
+  late AppLocalDataSource _appLocalDataSource;
   late bool _isCurrentMonthInitialized;
 
   @override
   void initState() {
     super.initState();
     _initLocalDataSources();
+    _initAppLastDate();
     _initHabitLocalData();
   }
 
   _initLocalDataSources() async {
+    _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
     _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
     _habitStatsLocalDataSource = GetIt.instance<HabitStatsLocalDataSource>();
   }
 
+  _initAppLastDate() async {
+    await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
+  }
+
   _initHabitLocalData() async {
-    _isCurrentMonthInitialized =
-        await _habitLocalDataSource.getIsCurrentMonthInitialized();
+    _isCurrentMonthInitialized = await _habitLocalDataSource.getIsCurrentMonthInitialized();
     if (!_isCurrentMonthInitialized) {
       await _habitLocalDataSource.prepareMonthData();
     }
@@ -67,8 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   _loadHabits() async {
-    Map<String, bool> habits = await _habitLocalDataSource
-        .getAllMonthHabitsForDay(_currentMonthString, _selectedDateString);
+    Map<String, bool> habits = await _habitLocalDataSource.getAllMonthHabitsForDay(_currentMonthString, _selectedDateString);
     setState(() {
       _habits = habits;
     });
@@ -80,8 +85,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       builder: (BuildContext context) {
         return AddHabitDialog(
           onAddHabit: (habitName) async {
-            await _habitLocalDataSource.addHabitToCurrentMonth(
-                habitName, _currentMonthString);
+            await _habitLocalDataSource.addHabitToCurrentMonth(habitName, _currentMonthString);
             await _loadHabits();
             Navigator.of(context).pop();
           },

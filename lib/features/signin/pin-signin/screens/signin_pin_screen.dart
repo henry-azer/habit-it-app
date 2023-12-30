@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:habit_it/data/datasources/authentication/authentication_local_datasource.dart';
 
 import '../../../../config/locale/app_localization_helper.dart';
 import '../../../../config/routes/app_routes.dart';
@@ -11,6 +10,7 @@ import '../../../../core/utils/app_notifier.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../core/widgets/otp/otp_text_field_widget.dart';
+import '../../../../data/datasources/user/user_local_datasource.dart';
 
 class SigninPINScreen extends StatefulWidget {
   const SigninPINScreen({Key? key}) : super(key: key);
@@ -20,10 +20,8 @@ class SigninPINScreen extends StatefulWidget {
 }
 
 class _SigninPINScreenState extends State<SigninPINScreen> {
-  late AuthenticationLocalDataSource _authenticationLocalDataSource;
+  late UserLocalDataSource _userLocalDataSource;
   late String _authenticatedPIN;
-  late bool _isUserRegistered;
-
 
   @override
   void initState() {
@@ -34,29 +32,29 @@ class _SigninPINScreenState extends State<SigninPINScreen> {
   }
 
   _initLocalDataSources() {
-    _authenticationLocalDataSource = GetIt.instance<AuthenticationLocalDataSource>();
+    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
   }
 
   _checkIfUserRegistered() async {
-    _isUserRegistered = await _authenticationLocalDataSource.getIsUserRegistered();
-    if (!_isUserRegistered) {
-      Navigator.pushReplacementNamed(context, Routes.appSignup);
+    final user = await _userLocalDataSource.getUser();
+    if (!user.isRegistered) {
+      Navigator.pushReplacementNamed(context, Routes.initial);
     }
   }
 
   _initCurrentUserData() async {
-    _authenticatedPIN = await _authenticationLocalDataSource.getUserPIN();
+    final user = await _userLocalDataSource.getUser();
+    _authenticatedPIN = user.password;
   }
 
   _authenticateUserPIN(String pin) async {
     if (pin == _authenticatedPIN) {
-      await _authenticationLocalDataSource.setIsUserAuthenticated(true);
+      await _userLocalDataSource.setUserAuthentication(true);
       Navigator.pushReplacementNamed(context, Routes.app);
     } else {
       AppNotifier.showSnackBar(
         context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.signinPINInvalid),
+        message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signinPINInvalid),
       );
     }
   }

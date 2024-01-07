@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_text_styles.dart';
+import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/core/widgets/buttons/button_widget.dart';
 import 'package:habit_it/core/widgets/forms/text_field_widget.dart';
+import 'package:habit_it/data/enums/gender.dart';
 import '../../../../../config/locale/app_localization_helper.dart';
-import '../../../../../core/utils/app_constants.dart';
 import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/validation/validation_types.dart';
 import '../../../../../core/widgets/dropdown/custom_dropdown.dart';
@@ -46,7 +47,8 @@ class UpdateProfileWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: TextFieldWidget(
                     enabled: true,
-                    hintText: 'Username',
+                    hintText: AppLocalizationHelper.translate(
+                        context, AppLocalizationKeys.username),
                     hintTextStyle: AppTextStyles.signupNameTextFieldHint,
                     keyboardType: TextInputType.emailAddress,
                     validateType: ValidationTypes.signupName,
@@ -77,8 +79,9 @@ class UpdateProfileWidget extends StatelessWidget {
                     fillColor: Colors.transparent,
                     selectedStyle: AppTextStyles.signupGenderSelectedFieldItem,
                     hintStyle: AppTextStyles.signupGenderFieldHint,
-                    hintText: 'Gender',
-                    items: AppConstants.genders,
+                    hintText: AppLocalizationHelper.translate(
+                        context, AppLocalizationKeys.gender),
+                    items: genders,
                     borderRadius: BorderRadius.zero,
                     errorStyle: AppTextStyles.signupGenderFieldError,
                     onChanged: (value) {
@@ -91,7 +94,7 @@ class UpdateProfileWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 100),
+          SizedBox(height: context.height * 0.12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -126,7 +129,8 @@ class UpdateProfileWidget extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
+          const SizedBox(height: 20),
         ],
       ),
     );

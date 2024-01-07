@@ -13,5 +13,6 @@ class PageOffsetNotifier with ChangeNotifier {
   }
 
   double get offset => _offset;
+
   double get page => _page;
 }

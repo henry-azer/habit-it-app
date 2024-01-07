@@ -12,9 +12,13 @@ class AppImageAssets {
   static const String signupSuccess = '$imgPath/signup_success.png';
   static const String biometric = '$imgPath/biometric.png';
   static const String pin = '$imgPath/pin.png';
+  static const String remove = '$imgPath/remove.png';
+  static const String stats = '$imgPath/stats_1.png';
+  static const String stats2 = '$imgPath/stats_2.png';
+  static const String emptyHabits = '$imgPath/empty_habits.png';
+  static const String addHabit = '$imgPath/add_habit.png';
 }
 
 class AppFonts {
   static const String roboto = 'Roboto';
-  static const String rubik = 'Rubik';
 }

@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_notifier.dart';
 import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
-import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 import 'package:habit_it/data/enums/gender.dart';
 import 'package:habit_it/features/profile/presentation/widgets/base/profile_header_widget.dart';
@@ -15,7 +14,6 @@ import '../../../../core/utils/app_assets_manager.dart';
 import '../../../../core/utils/app_localization_strings.dart';
 import '../../../../data/entities/user.dart';
 import '../widgets/about-us/about_us_widget.dart';
-import '../widgets/month-picker/month_picker.dart';
 import '../widgets/profile/profile_menu_item_widget.dart';
 import '../widgets/profile/update_profile_widget.dart';
 
@@ -26,14 +24,16 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserver {
+class _ProfileScreenState extends State<ProfileScreen>
+    with WidgetsBindingObserver {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late DateTime _habitInitializedDate = DateTime.now();
+
   late AppLocalDataSource _appLocalDataSource;
-  late HabitLocalDataSource _habitLocalDataSource;
   late UserLocalDataSource _userLocalDataSource;
-  late User _updatedUser = User();
+
+  late final User _updatedUser = User();
   late User _user = User();
+
   bool isUpdatingProfile = false;
   bool isAboutUs = false;
 
@@ -47,15 +47,12 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
   _initLocalDataSources() async {
     _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
     _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-    _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
   }
 
   _initLocalData() async {
     final user = await _userLocalDataSource.getUser();
-    final habitInitMonth = await _habitLocalDataSource.getHabitInitializedMonth();
     setState(() {
       _user = user;
-      _habitInitializedDate = habitInitMonth;
     });
   }
 
@@ -68,23 +65,24 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
     _formKey.currentState!.save();
 
     if (_updatedUser.username.isEmpty) {
-      AppNotifier.showActionDialog(
+      AppNotifier.showErrorDialog(
           context: context,
-          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupNameError),
-          onClickYes: () => Navigator.pop(context));
+          message: AppLocalizationHelper.translate(
+              context, AppLocalizationKeys.signupNameError));
       return;
     }
     if (_updatedUser.gender.isEmpty) {
-      AppNotifier.showActionDialog(
+      AppNotifier.showErrorDialog(
           context: context,
-          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.signupGenderError),
-          onClickYes: () => Navigator.pop(context));
+          message: AppLocalizationHelper.translate(
+              context, AppLocalizationKeys.signupGenderError));
       return;
     }
 
     bool isSaved = false;
     try {
-      await _userLocalDataSource.setUsernameAndGender(_updatedUser.username, _updatedUser.gender);
+      await _userLocalDataSource.setUsernameAndGender(
+          _updatedUser.username, _updatedUser.gender);
       isSaved = true;
     } catch (exception) {
       return;
@@ -96,18 +94,6 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
         _user.gender = _updatedUser.gender;
         isUpdatingProfile = false;
       });
-    }
-  }
-
-  _navigateToMonthProgress() async {
-    DateTime? selectedDate = await showMonthPicker(
-      context: context,
-      initialDate: _habitInitializedDate,
-      firstDate: _habitInitializedDate,
-      lastDate: DateTime.now(),
-    );
-    if (selectedDate != null) {
-      Navigator.pushNamed(context, Routes.monthProgress, arguments: selectedDate);
     }
   }
 
@@ -133,12 +119,14 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
         image: _user.gender == Gender.male.value
             ? AppImageAssets.male
             : AppImageAssets.female,
-        title: AppLocalizationHelper.translate(context, AppLocalizationKeys.profileUpdateTitle),
+        title: AppLocalizationHelper.translate(
+            context, AppLocalizationKeys.profileUpdateTitle),
       );
     } else if (isAboutUs) {
       return ProfileHeaderWidget(
         image: AppImageAssets.henry,
-        title: AppLocalizationHelper.translate(context, AppLocalizationKeys.appCreator),
+        title: AppLocalizationHelper.translate(
+            context, AppLocalizationKeys.appCreator),
       );
     } else {
       return ProfileHeaderWidget(
@@ -188,25 +176,13 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
               ),
               const SizedBox(height: 10),
               ProfileMenuItemWidget(
-                  title: "Month Progress Report",
-                  icon: LineAwesomeIcons.calendar,
-                  onPress: _navigateToMonthProgress),
-              ProfileMenuItemWidget(
-                  title: "Update User Profile",
+                  title: AppLocalizationHelper.translate(context,
+                      AppLocalizationKeys.profileUpdateUserProfileTitle),
                   icon: LineAwesomeIcons.user_edit,
                   onPress: () {
                     setState(() {
                       isUpdatingProfile = true;
                     });
-                  }),
-              ProfileMenuItemWidget(
-                  title: "Reset App Data",
-                  icon: Icons.lock_reset_outlined,
-                  onPress: () {
-                    AppNotifier.showActionDialog(
-                        context: context,
-                        message: "Are you sure?",
-                        onClickYes: _resetAppData);
                   }),
               const SizedBox(height: 10),
             ],
@@ -219,25 +195,45 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
               Divider(
                 color: AppColors.white.withOpacity(0.7),
               ),
+              ProfileMenuItemWidget(
+                  title: AppLocalizationHelper.translate(
+                      context, AppLocalizationKeys.profileResetAppData),
+                  icon: Icons.lock_reset_outlined,
+                  onPress: () {
+                    AppNotifier.showDeleteActionDialog(
+                        context: context,
+                        message: AppLocalizationHelper.translate(
+                            context, AppLocalizationKeys.areYouSure),
+                        descriptionMessage: AppLocalizationHelper.translate(
+                            context,
+                            AppLocalizationKeys
+                                .profileYouAreAboutToRemoveAllData),
+                        onClickYes: _resetAppData);
+                  }),
               const SizedBox(height: 10),
               ProfileMenuItemWidget(
-                  title: "About Us",
+                  title: AppLocalizationHelper.translate(
+                      context, AppLocalizationKeys.profileAboutUs),
                   icon: LineAwesomeIcons.info,
                   onPress: () {
                     setState(() {
                       isAboutUs = true;
                     });
                   }),
+              const SizedBox(height: 10),
               ProfileMenuItemWidget(
-                  title: "Logout",
+                  title: AppLocalizationHelper.translate(
+                      context, AppLocalizationKeys.logout),
                   icon: LineAwesomeIcons.alternate_sign_out,
                   textColor: AppColors.red,
                   endIcon: false,
                   onPress: () async {
                     if (_user.isBiometricAuthenticated) {
-                      Navigator.pushReplacementNamed(context, Routes.signinBiometric);
+                      Navigator.pushReplacementNamed(
+                          context, Routes.appSigninBiometric);
                     } else {
-                      Navigator.pushReplacementNamed(context, Routes.signinPIN);
+                      Navigator.pushReplacementNamed(
+                          context, Routes.appSigninPIN);
                     }
                   }),
               const SizedBox(height: 10),

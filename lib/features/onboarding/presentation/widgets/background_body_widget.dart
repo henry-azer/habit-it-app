@@ -17,7 +17,7 @@ class BackgroundBody extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(bodies.length == totalPage);
     return PageView(
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       controller: controller,
       onPageChanged: (value) {
         function(value);

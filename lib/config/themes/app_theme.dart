@@ -8,6 +8,7 @@ ThemeData appTheme() {
     primaryColor: AppColors.background,
     hintColor: AppColors.white,
     brightness: Brightness.light,
+    primarySwatch: AppColors.primarySwatch,
     scaffoldBackgroundColor: AppColors.background,
     unselectedWidgetColor: AppColors.white,
   );

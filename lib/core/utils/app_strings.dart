@@ -41,4 +41,6 @@ class AppStrings {
   static const String fetchDataException = "Fetch Date Error";
   static const String internalServerErrorException = "Internal Server Error";
   static const String noNetworkConnectionException = "No Internet Connection";
+
+  static const String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 }

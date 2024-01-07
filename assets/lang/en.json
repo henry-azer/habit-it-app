@@ -10,6 +10,10 @@
   "cancel": "Cancel",
   "back" : "Back",
   "update": "Update",
+  "remove": "Remove",
+  "total": "Total",
+  "total_done": "Total Done",
+  "total_not": "Total Not",
   "something_wrong": "Something wrong happened!",
   "reload_screen": "Reload Screen",
   "want_to_logout": "Do you want to logout ?",
@@ -111,6 +115,34 @@
 
   "profile_update_title": "Update Profile",
   "profile_update_failed": "Profile update failed, please try again!",
-  "profile_update_success": "Profile updated successfully."
+  "profile_update_success": "Profile updated successfully.",
+  "profile_update_user_profile_title": "Update User Profile",
+  "profile_about_us": "About Us",
+  "profile_reset_app_data": "Reset App Data",
+  "profile_you_are_about_to_remove_all_data": "You are about to remove all data.",
 
+  "submit": "Submit",
+  "gender": "Gender",
+  "username": "Username",
+  "are_you_sure": "Are you sure!",
+
+  "habit_title": "HABIT",
+  "habit": "Habit",
+  "habits": "Habits",
+  "total_habits": "Total Habits",
+  "repeat_days": "Repeat Days",
+  "habit_name": "Habit name",
+  "habit_name_cap": "Habit Name",
+  "create_new_habit": "Create New Habit",
+  "select_repeated_days": "Select the repeated days!",
+  "habit_name_required": "Habit Name is required",
+  "no_habits_for_this_day": "No habits added for this day.",
+  "no_habits_for_this_month": "No habits added for this month.",
+  "try_to_add_some": "Try to add some.",
+
+  "statistics": "STATISTICS",
+  "month_stats": "Month Stats",
+  "your_habit_monthly_stats": "Your habit it monthly stats",
+  "month_progress": "Month Progress",
+  "your_habit_monthly_report": "Your habit it monthly report"
 }

@@ -42,9 +42,10 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
       isAuthenticated = await _biometricAuthenticationManager.requestBiometricAuthentication();
       if (isAuthenticated) {
         await _userLocalDataSource.setUserBiometricAuthentication(true);
-        Navigator.pushNamedAndRemoveUntil(context, Routes.signupSuccess, (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, Routes.appSignupSuccess, (route) => false);
+      } else {
+        throw Exception(AppLocalizationKeys.signupBiometricFailed);
       }
-      throw Exception(AppLocalizationKeys.signupBiometricFailed);
     } catch (exception) {
       AppNotifier.showErrorDialog(
         context: context,

@@ -5,24 +5,23 @@ import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'app_colors.dart';
 
 class AppTextStyles with Diagnosticable {
-
   /// SPLASH
-  static TextStyle? splashText = TextStyle(
+  static TextStyle splashText = TextStyle(
     fontSize: 52,
-    fontWeight: FontWeight.w800,
+    fontWeight: FontWeight.w900,
     color: AppColors.white,
-    fontFamily: AppFonts.rubik,
+    fontFamily: AppFonts.roboto,
   );
 
   /// ONBOARDING
-  static TextStyle? onboardingSubtitle = TextStyle(
+  static TextStyle onboardingSubtitle = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? onboardingDescription = TextStyle(
+  static TextStyle onboardingDescription = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w300,
     color: AppColors.fontPrimary,
@@ -30,98 +29,98 @@ class AppTextStyles with Diagnosticable {
   );
 
   /// SIGNUP
-  static TextStyle? signupSubtitle = TextStyle(
+  static TextStyle signupSubtitle = TextStyle(
     fontSize: 30,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupDescription = TextStyle(
+  static TextStyle signupDescription = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w300,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupBodyDescription = TextStyle(
+  static TextStyle signupBodyDescription = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w300,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupWith = TextStyle(
+  static TextStyle signupWith = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupPIN = TextStyle(
+  static TextStyle signupPIN = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w300,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupNameTextField = TextStyle(
+  static TextStyle signupNameTextField = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupNameTextFieldHint = TextStyle(
+  static TextStyle signupNameTextFieldHint = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
     color: AppColors.grey,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupNameTextFieldError = TextStyle(
+  static TextStyle signupNameTextFieldError = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w400,
     color: AppColors.error,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupGenderFieldItem = TextStyle(
+  static TextStyle signupGenderFieldItem = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupGenderSelectedFieldItem = TextStyle(
+  static TextStyle signupGenderSelectedFieldItem = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupGenderFieldHint = TextStyle(
+  static TextStyle signupGenderFieldHint = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w400,
     color: AppColors.grey,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupGenderFieldError = TextStyle(
+  static TextStyle signupGenderFieldError = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.error,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupSuccessButton = TextStyle(
+  static TextStyle signupSuccessButton = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signupIconTextButton = TextStyle(
+  static TextStyle signupIconTextButton = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
@@ -129,14 +128,14 @@ class AppTextStyles with Diagnosticable {
   );
 
   /// SIGNIN
-  static TextStyle? signinDescription = TextStyle(
+  static TextStyle signinDescription = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w300,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? signinIconTextButton = TextStyle(
+  static TextStyle signinIconTextButton = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
@@ -144,35 +143,35 @@ class AppTextStyles with Diagnosticable {
   );
 
   /// PROFILE
-  static TextStyle? profileTitle = TextStyle(
+  static TextStyle profileTitle = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? profileUpdateButtonText = TextStyle(
+  static TextStyle profileUpdateButtonText = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? profileCancelButtonText = TextStyle(
+  static TextStyle profileCancelButtonText = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? profileBackButtonText = TextStyle(
+  static TextStyle profileBackButtonText = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? profileIconTextButton = TextStyle(
+  static TextStyle profileIconTextButton = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
@@ -180,29 +179,52 @@ class AppTextStyles with Diagnosticable {
   );
 
   /// HOME
-  static TextStyle? habitNameText = TextStyle(
+  static TextStyle habitNameText = TextStyle(
     fontSize: 17,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? noHabitsTextTitle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w400,
-    color: AppColors.fontPrimary,
-    fontFamily: AppFonts.roboto,
-  );
-
-  static TextStyle? noHabitsTextSubtitle = TextStyle(
+  static TextStyle noHabitsTextTitle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle noHabitsTextSubtitle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  /// HEADER
+  static TextStyle headerTitle = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w300,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  static TextStyle headerTitle2 = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w300,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
+  /// STATS
+  static TextStyle statsDescription = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w300,
+    color: AppColors.fontPrimary,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// APPBAR
-  static TextStyle? appbarTitle = TextStyle(
+  static TextStyle appbarTitle = TextStyle(
     fontSize: 20,
     letterSpacing: 1.4,
     fontWeight: FontWeight.w300,
@@ -211,7 +233,7 @@ class AppTextStyles with Diagnosticable {
   );
 
   /// FLOATING ACTION BUTTON
-  static TextStyle? floatingSpeedDialChild = TextStyle(
+  static TextStyle floatingSpeedDialChild = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w300,
     color: AppColors.fontPrimary,
@@ -219,36 +241,43 @@ class AppTextStyles with Diagnosticable {
   );
 
   /// ALERT DIALOG
-  static TextStyle? alertDialogTitle = TextStyle(
+  static TextStyle alertDialogTitle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? alertDialogText = TextStyle(
+  static TextStyle alertDialogText = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? alertDialogActionTextField = TextStyle(
+  static TextStyle alertDialogActionTextField = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
-  static TextStyle? alertDialogActionButton = TextStyle(
+  static TextStyle alertDialogActionButton = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: AppColors.fontSecondary,
     fontFamily: AppFonts.roboto,
   );
 
+  static TextStyle alertDialogHintTextField = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.grey,
+    fontFamily: AppFonts.roboto,
+  );
+
   /// SNACKBAR
-  static TextStyle? snackbar = TextStyle(
+  static TextStyle snackbar = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.fontSecondary,

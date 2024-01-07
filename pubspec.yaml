@@ -21,7 +21,6 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   url_launcher: ^6.1.14
   intl: ^0.18.1
-  swipe_to: 1.0.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -34,17 +33,7 @@ flutter:
 
   assets:
     - assets/lang/en.json
-    - assets/images/henry.jpg
-    - assets/images/male.png
-    - assets/images/female.png
-    - assets/images/logo.png
-    - assets/images/onboarding_1.png
-    - assets/images/onboarding_2.png
-    - assets/images/onboarding_3.png
-    - assets/images/signup.png
-    - assets/images/signup_success.png
-    - assets/images/pin.png
-    - assets/images/biometric.png
+    - assets/images/
 
   fonts:
     - family: Roboto
@@ -59,14 +48,3 @@ flutter:
         - asset: assets/fonts/roboto/Roboto-MediumItalic.ttf
         - asset: assets/fonts/roboto/Roboto-Thin.ttf
         - asset: assets/fonts/roboto/Roboto-ThinItalic.ttf
-
-    - family: Rubik
-      fonts:
-        - asset: assets/fonts/rubik/Rubik-Regular.ttf
-        - asset: assets/fonts/rubik/Rubik-Bold.ttf
-        - asset: assets/fonts/rubik/Rubik-Italic.ttf
-        - asset: assets/fonts/rubik/Rubik-BoldItalic.ttf
-        - asset: assets/fonts/rubik/Rubik-Light.ttf
-        - asset: assets/fonts/rubik/Rubik-LightItalic.ttf
-        - asset: assets/fonts/rubik/Rubik-Medium.ttf
-        - asset: assets/fonts/rubik/Rubik-MediumItalic.ttf

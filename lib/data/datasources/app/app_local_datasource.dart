@@ -30,7 +30,7 @@ class AppLocalDataSourceImpl implements AppLocalDataSource {
 
   @override
   Future<void> setApp(App app) async {
-    return storageManager.setValue(AppLocalStorageKeys.app, app.toJson());
+    return await storageManager.setValue(AppLocalStorageKeys.app, app.toJson());
   }
 
   @override

@@ -8,7 +8,8 @@ class BackgroundController extends StatelessWidget {
   final double indicatorPosition;
   final bool hasFloatingButton;
 
-  BackgroundController({
+  const BackgroundController({
+    super.key,
     required this.currentPage,
     required this.totalPage,
     required this.controllerColor,
@@ -21,16 +22,16 @@ class BackgroundController extends StatelessWidget {
   Widget build(BuildContext context) {
     return indicatorAbove
         ? Container(
-            padding: EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.only(bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: _buildPageIndicator(context),
             ),
           )
         : (currentPage == totalPage - 1) && hasFloatingButton
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : Container(
-                padding: EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: _buildPageIndicator(context),
@@ -52,7 +53,7 @@ class BackgroundController extends StatelessWidget {
   /// Slide Controller / Indicator.
   Widget _indicator(bool isActive, BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
       margin: EdgeInsets.only(
           left: 8.0,
           right: 8.0,
@@ -63,7 +64,7 @@ class BackgroundController extends StatelessWidget {
         color: isActive
             ? controllerColor ?? Colors.white
             : (controllerColor ?? Colors.white).withOpacity(0.5),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
     );
   }

@@ -3,42 +3,32 @@ import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/core/utils/numbers_util.dart';
 
 import '../../../core/managers/storage-manager/i_storage_manager.dart';
+import '../../entities/habit.dart';
 
 abstract class HabitLocalDataSource {
-  Future<List<String>> getAllHabitMonths();
+  Future<List<Habit>> getHabits(String month);
 
-  Future<List<String>> getAllMonthHabitsForMonth(String month);
+  Future<int> getHabitIndexById(String habitId, String month);
 
-  Future<Map<String, bool>> getAllMonthHabitsForDay(String month, String day);
+  Future<Habit?> getHabitById(String id, String month);
 
-  Future<bool> getIsCurrentMonthInitialized();
+  Future<List<Habit>> getHabitsByDay(DateTime date, String month);
 
-  Future<DateTime> getHabitInitializedMonth();
+  Future<void> setHabits(List<Habit> habits, String month);
 
-  Future<bool> getIsHabitDone(String name, String month, String day);
+  Future<void> addHabit(Habit habit, String month);
 
-  Future<void> addCurrentMonthToHabitMonths();
+  Future<void> addHabitByName(String habitName, List<String> repeatDays, String month);
 
-  Future<void> addHabitToCurrentMonth(String name, String month);
+  Future<void> updateHabit(Habit habit, String month);
 
-  Future<void> prepareMonthData();
+  Future<void> updateHabitsStats(List<Habit> habits, DateTime day, String monthString);
 
-  Future<void> setIsCurrentMonthInitialized(bool value);
+  Future<void> reorderHabit(Habit habit1, Habit habit2, String month);
 
-  Future<void> setHabitInitializedMonth(String month);
+  Future<void> toggleHabitStatus(Habit habit, int day, String month);
 
-  Future<void> moveHabitToNextIndex(String habit, String month);
-
-  Future<void> moveHabitToPreviousIndex(String habit, String month);
-
-  Future<void> updateHabitName(String oldName, String newName, String month);
-
-  Future<void> setHabitStatus(
-      String name, String month, String day, bool status);
-
-  Future<void> toggleHabitStatus(String name, String month, String day);
-
-  Future<void> removeHabit(String name, String month);
+  Future<void> removeHabit(Habit habit, String month);
 }
 
 class HabitLocalDataSourceImpl implements HabitLocalDataSource {
@@ -47,179 +37,126 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   HabitLocalDataSourceImpl({required this.storageManager});
 
   @override
-  Future<List<String>> getAllHabitMonths() async {
-    List<dynamic> months =
-        await storageManager.getValue(AppLocalStorageKeys.habitMonths) ?? [];
-    return months.map((item) => item.toString()).toList();
+  Future<List<Habit>> getHabits(String month) async {
+    final habits = await storageManager.getValue<List<dynamic>>(AppLocalStorageKeys.habitMonth + month);
+    if (habits == null || habits.isEmpty) return [];
+    return habits.map((habitMap) => Habit.fromJson(habitMap)).toList();
   }
 
   @override
-  Future<List<String>> getAllMonthHabitsForMonth(String month) async {
-    List<dynamic> habitsList = await storageManager
-            .getValue(AppLocalStorageKeys.getMonthHabitsKey(month)) ??
-        [];
-    return habitsList.map((item) => item.toString()).toList();
-  }
-
-  @override
-  Future<Map<String, bool>> getAllMonthHabitsForDay(
-      String month, String day) async {
-    Map<String, bool> habits = {};
-    List<String> habitsList = await getAllMonthHabitsForMonth(month);
-    for (var habit in habitsList) {
-      habits[habit] = await getIsHabitDone(habit, month, day);
+  Future<Habit?> getHabitById(String id, String month) async {
+    final habits = await getHabits(month);
+    try {
+      return habits.firstWhere((habit) => habit.id == id);
+    } catch (exception) {
+      return null;
     }
-    return habits;
   }
 
   @override
-  Future<bool> getIsCurrentMonthInitialized() async {
-    return await storageManager
-            .getValue(AppLocalStorageKeys.getCurrentMonthIsInitializedKey()) ??
-        false;
+  Future<List<Habit>> getHabitsByDay(DateTime date, String month) async {
+    final habits = await storageManager.getValue<List<dynamic>>(AppLocalStorageKeys.habitMonth + month);
+    if (habits == null || habits.isEmpty) return [];
+    return habits.map((habitMap) => Habit.fromJson(habitMap))
+        .where((habit) => habit.repeatDays.contains(DateUtil.getDateDayName(date)))
+        .toList();
   }
 
   @override
-  Future<DateTime> getHabitInitializedMonth() async {
-    String initMonth = await storageManager
-            .getValue(AppLocalStorageKeys.getHabitInitializedMonthKey()) ??
-        "";
-    return DateUtil.convertMonthStringToDate(initMonth);
+  Future<void> setHabits(List<Habit> habits, String month) async {
+    return await storageManager.setValue(AppLocalStorageKeys.habitMonth + month,
+        habits.map((habitMap) => habitMap.toJson()).toList());
   }
 
   @override
-  Future<bool> getIsHabitDone(String habit, String month, String day) async {
-    return await storageManager
-            .getValue(AppLocalStorageKeys.getHabitKey(habit, month, day)) ??
-        false;
+  Future<void> addHabit(Habit habit, String month) async {
+    final habits = await getHabits(month);
+    habit.id = NumbersUtil.getRandomId();
+    habit.values[habit.createdDate.day] = false;
+    int daysCount = DateUtil.countDaysOfWeekSinceDate(habit.repeatDays, habit.createdDate);
+    habit.total = daysCount + (habit.values.length - daysCount);
+    habit.totalDone = habit.values.values.where((value) => value == true).length;
+    habits.add(habit);
+    return await setHabits(habits, month);
   }
 
   @override
-  Future<void> prepareMonthData() async {
-    await addCurrentMonthToHabitMonths();
-    await setIsCurrentMonthInitialized(true);
-    await setHabitInitializedMonth(DateUtil.getCurrentMonthDateString());
-    return;
+  Future<void> addHabitByName(String habitName, List<String> repeatDays, String month) async {
+    final habit = Habit(id: "", total: 0, totalDone: 0, values: {}, name: habitName,
+        repeatDays: repeatDays, createdDate: DateUtil.getTodayDate());
+    return await addHabit(habit, month);
   }
 
   @override
-  Future<void> setIsCurrentMonthInitialized(bool value) async {
-    return await storageManager.setValue(
-        AppLocalStorageKeys.getCurrentMonthIsInitializedKey(), value);
+  Future<int> getHabitIndexById(String habitId, String month) async {
+    final habits = await getHabits(month);
+    Habit? savedHabit = await getHabitById(habitId, month);
+    return savedHabit != null ? habits.indexWhere((h) => h.id.compareTo(habitId) == 0) : -1;
   }
 
   @override
-  Future<void> addCurrentMonthToHabitMonths() async {
-    List<String> habitMonths = await getAllHabitMonths();
-    habitMonths.add(DateUtil.getCurrentMonthDateString());
-    return await storageManager.setValue(
-        AppLocalStorageKeys.habitMonths, habitMonths);
-  }
-
-  @override
-  Future<void> setHabitInitializedMonth(String month) async {
-    return await storageManager.setValue(
-        AppLocalStorageKeys.getHabitInitializedMonthKey(), month);
-  }
-
-  @override
-  Future<void> addHabitToCurrentMonth(String name, String month) async {
-    List<String> monthHabitsList = await getAllMonthHabitsForMonth(month);
-    monthHabitsList.add(name + NumbersUtil.getRandomCode());
-    return await storageManager.setValue(
-        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
-  }
-
-  @override
-  Future<void> updateHabitName(
-      String oldName, String newName, String month) async {
-    List<String> monthHabitsList = await getAllMonthHabitsForMonth(month);
-    int oldIndex = monthHabitsList.indexOf(oldName);
-    newName += NumbersUtil.getRandomCode();
-    monthHabitsList.insert(oldIndex, newName);
-    await storageManager.setValue(
-        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
-    await _moveHabitDataToAnotherHabit(oldName, newName, month);
-    return await removeHabit(oldName, month);
-  }
-
-  @override
-  Future<void> toggleHabitStatus(String name, String month, String day) async {
-    bool isDone = await getIsHabitDone(name, month, day);
-    return await storageManager.setValue(
-            AppLocalStorageKeys.getHabitKey(name, month, day), !isDone) ??
-        false;
-  }
-
-  @override
-  Future<void> setHabitStatus(
-      String name, String month, String day, bool status) async {
-    return await storageManager.setValue(
-            AppLocalStorageKeys.getHabitKey(name, month, day), status) ??
-        false;
-  }
-
-  @override
-  Future<void> moveHabitToNextIndex(String habit, String month) async {
-    List<String> monthHabits = await getAllMonthHabitsForMonth(month);
-    int index = monthHabits.indexOf(habit);
-    if (index != -1 && index < monthHabits.length - 1) {
-      monthHabits.remove(habit);
-      monthHabits.insert(index + 1, habit);
+  Future<void> updateHabit(Habit habit, String month) async {
+    final habits = await getHabits(month);
+    final habitIndex = await getHabitIndexById(habit.id, month);
+    if (habitIndex > -1) {
+      int daysCount = DateUtil.countDaysOfWeekSinceDate(habit.repeatDays, habit.createdDate);
+      habit.total = daysCount + (habit.values.length - daysCount);
+      habit.totalDone = habit.values.values.where((value) => value == true).length;
+      habits[habitIndex] = habit;
+      return await setHabits(habits, month);
     }
-    await storageManager.setValue(
-        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabits);
   }
 
   @override
-  Future<void> moveHabitToPreviousIndex(String habit, String month) async {
-    List<String> monthHabits = await getAllMonthHabitsForMonth(month);
-    int index = monthHabits.indexOf(habit);
-    if (index != -1 && index > 0) {
-      monthHabits.remove(habit);
-      monthHabits.insert(index - 1, habit);
+  Future<void> updateHabitsStats(List<Habit> habits, DateTime day, String month) async {
+    bool isInit = await storageManager.getValue<bool>(AppLocalStorageKeys.habitInit + DateUtil.convertDateToString(day)) ?? false;
+    if (isInit) return;
+
+    final List<Habit> monthHabits = await getHabits(month);
+    for (var habit in habits) {
+      var habitIndex = await getHabitIndexById(habit.id, month);
+      var savedHabit = monthHabits.elementAt(habitIndex);
+      if (!savedHabit.values.containsKey(day.day) && day.isAfter(savedHabit.createdDate.subtract(const Duration(days: 1)))) {
+        savedHabit.values[day.day] = false;
+        int daysCount = DateUtil.countDaysOfWeekSinceDate(savedHabit.repeatDays, savedHabit.createdDate);
+        savedHabit.total = daysCount + (savedHabit.values.length - daysCount);
+        savedHabit.totalDone = savedHabit.values.values.where((value) => value == true).length;
+      }
     }
-    await storageManager.setValue(
-        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabits);
+
+    await setHabits(monthHabits, month);
+    await storageManager.setValue(AppLocalStorageKeys.habitInit + DateUtil.convertDateToString(day), true);
   }
 
   @override
-  Future<void> removeHabit(String name, String month) async {
-    String month = DateUtil.getCurrentMonthDateString();
-    List<String> monthHabitsList = await getAllMonthHabitsForMonth(month);
-    monthHabitsList.remove(name);
-    await storageManager.setValue(
-        AppLocalStorageKeys.getMonthHabitsKey(month), monthHabitsList);
-    await _removeHabitRelatedData(name, month);
-    return;
+  Future<void> reorderHabit(Habit habit1, Habit habit2, String month) async {
+    int oldIndex = await getHabitIndexById(habit1.id, month);
+    int newIndex = await getHabitIndexById(habit2.id, month);
+    if (oldIndex > -1 && newIndex > -1) {
+      var habits = await getHabits(month);
+      final item = habits.removeAt(oldIndex);
+      habits.insert(newIndex, item);
+      return await setHabits(habits, month);
+    }
   }
 
-  Future<void> _removeHabitRelatedData(String name, String month) async {
-    DateTime firstDate = DateUtil.getFirstDayOfCurrentMonth();
-    DateTime lastDate = DateUtil.getTodayDate();
-    while (
-        firstDate.isBefore(lastDate) || firstDate.isAtSameMomentAs(lastDate)) {
-      String day = DateUtil.convertDateToString(firstDate);
-      storageManager
-          .removeValue(AppLocalStorageKeys.getHabitKey(name, month, day));
-      firstDate =
-          DateTime(firstDate.year, firstDate.month, firstDate.day + 1, 0);
+  @override
+  Future<void> toggleHabitStatus(Habit habit, int day, String month) async {
+    if (habit.values.containsKey(day)) {
+      habit.values[day] = !habit.values[day]!;
+    } else {
+      habit.values[day] = true;
     }
-    return;
+    return await updateHabit(habit, month);
   }
 
-  Future<void> _moveHabitDataToAnotherHabit(
-      String oldHabit, String newHabit, String month) async {
-    DateTime firstDate = DateUtil.getFirstDayOfCurrentMonth();
-    DateTime lastDate = DateUtil.getTodayDate();
-    while (
-        firstDate.isBefore(lastDate) || firstDate.isAtSameMomentAs(lastDate)) {
-      String day = DateUtil.convertDateToString(firstDate);
-      bool isDone = await getIsHabitDone(oldHabit, month, day);
-      await setHabitStatus(newHabit, month, day, isDone);
-      firstDate =
-          DateTime(firstDate.year, firstDate.month, firstDate.day + 1, 0);
+  @override
+  Future<void> removeHabit(Habit habit, String month) async {
+    final habits = await getHabits(month);
+    final habitIndex = await getHabitIndexById(habit.id, month);
+    if (habitIndex > -1) {
+      habits.removeAt(habitIndex);
+      return await setHabits(habits, month);
     }
-    return;
   }
 }

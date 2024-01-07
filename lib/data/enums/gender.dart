@@ -3,6 +3,11 @@ enum Gender {
   female,
 }
 
+final List<String> genders = [
+  'Male',
+  'Female',
+];
+
 extension GenderExtension on Gender {
   String get value {
     switch (this) {

@@ -11,6 +11,7 @@ import 'package:habit_it/data/entities/app.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/utils/date_util.dart';
 import '../../../../data/datasources/app/app_local_datasource.dart';
 import '../../../../data/entities/user.dart';
 
@@ -70,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     });
   }
 
-  _navigateNext() {
+  _navigateNext() async {
     if (!_isInit) {
       Navigator.pushReplacementNamed(context, Routes.appOnboarding);
       return;
@@ -82,9 +83,11 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
 
     if (_isUserBiometricAuthenticated) {
-      Navigator.pushReplacementNamed(context, Routes.signinBiometric);
+      await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
+      Navigator.pushReplacementNamed(context, Routes.appSigninBiometric);
     } else {
-      Navigator.pushReplacementNamed(context, Routes.signinPIN);
+      await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
+      Navigator.pushReplacementNamed(context, Routes.appSigninPIN);
     }
   }
 

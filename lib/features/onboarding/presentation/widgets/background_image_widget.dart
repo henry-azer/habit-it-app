@@ -10,7 +10,7 @@ class BackgroundImage extends StatelessWidget {
   final double imageHorizontalOffset;
   final bool centerBackground;
 
-  BackgroundImage({
+  const BackgroundImage({super.key,
     required this.id,
     required this.speed,
     required this.background,
@@ -30,7 +30,7 @@ class BackgroundImage extends StatelessWidget {
                 speed * notifier.offset +
                 (centerBackground ? 0 : imageHorizontalOffset),
             child: centerBackground
-                ? Container(
+                ?  SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: child!,
                   )

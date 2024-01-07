@@ -3,6 +3,9 @@ import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../config/locale/app_localization_helper.dart';
+import '../../../../../core/utils/app_localization_strings.dart';
+
 Future<DateTime?> showMonthPicker({
   required BuildContext context,
   required DateTime initialDate,
@@ -266,8 +269,10 @@ class __MonthPickerState extends State<_MonthPicker> {
         foregroundColor: isSelected
             ? AppColors.fontPrimary
             : date.month == DateTime.now().month
-                ? AppColors.fontPrimary
-                : AppColors.grey.withOpacity(0.8),
+                ? AppColors.green
+                : date.month > _lastDate.month
+                    ? AppColors.grey.withOpacity(0.8)
+                    : AppColors.black,
         backgroundColor: isSelected ? AppColors.accent : null,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
@@ -281,7 +286,8 @@ class __MonthPickerState extends State<_MonthPicker> {
 
   _buildButtonBar() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: context.width * 0.06),
+      padding:
+          EdgeInsets.symmetric(vertical: 5.0, horizontal: context.width * 0.06),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -293,7 +299,8 @@ class __MonthPickerState extends State<_MonthPicker> {
             onPressed: () {
               Navigator.pop(context, _selectedDate);
             },
-            child: const Text("Submit"),
+            child: Text(AppLocalizationHelper.translate(
+                context, AppLocalizationKeys.submit)),
           ),
           TextButton(
             style: TextButton.styleFrom(
@@ -303,7 +310,8 @@ class __MonthPickerState extends State<_MonthPicker> {
             onPressed: () {
               Navigator.of(context).pop(null);
             },
-            child: const Text("Cancel"),
+            child: Text(AppLocalizationHelper.translate(
+                context, AppLocalizationKeys.cancel)),
           ),
         ],
       ),

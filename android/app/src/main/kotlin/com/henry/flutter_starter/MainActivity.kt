@@ -1,4 +1,4 @@
-package com.henry.flutter_starter
+package com.henry.habit_it
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterFragmentActivity

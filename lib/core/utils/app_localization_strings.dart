@@ -16,9 +16,18 @@ class AppLocalizationKeys {
   static const String mailLink = 'mail_link';
 
   /// GLOBAL
+  static const String submit = 'submit';
   static const String cancel = 'cancel';
   static const String back = 'back';
+  static const String remove = 'remove';
   static const String update = 'update';
+  static const String total = 'total';
+  static const String totalDone = 'total_done';
+  static const String totalNot = 'total_not';
+  static const String gender = 'gender';
+  static const String username = 'username';
+  static const String logout = 'logout';
+  static const String areYouSure = 'are_you_sure';
 
   /// SPLASH
   static const String splashTitle = 'splash_title';
@@ -78,5 +87,30 @@ class AppLocalizationKeys {
   static const String profileUpdateTitle = 'profile_update_title';
   static const String profileUpdateFailed = 'profile_update_failed';
   static const String profileUpdateSuccess = 'profile_update_success';
+  static const String profileUpdateUserProfileTitle = 'profile_update_user_profile_title';
+  static const String profileAboutUs = 'profile_about_us';
+  static const String profileResetAppData = 'profile_reset_app_data';
+  static const String profileYouAreAboutToRemoveAllData = 'profile_you_are_about_to_remove_all_data';
 
+  /// HABITS
+  static const String habit = 'habit';
+  static const String habitTitle = 'habit_title';
+  static const String habits = 'habits';
+  static const String totalHabits = 'total_habits';
+  static const String repeatDays = 'repeat_days';
+  static const String habitName = 'habit_name';
+  static const String habitNameCap = 'habit_name_cap';
+  static const String createNewHabit = 'create_new_habit';
+  static const String selectRepeatedDays = 'select_repeated_days';
+  static const String habitNameRequired = 'habit_name_required';
+  static const String noHabitsForThisDay = 'no_habits_for_this_day';
+  static const String noHabitsForThisMonth = 'no_habits_for_this_month';
+  static const String tryToAddSome = 'try_to_add_some';
+
+  /// STATS
+  static const String statistics = 'statistics';
+  static const String monthStats = 'month_stats';
+  static const String yourHabitMonthlyStats = 'your_habit_monthly_stats';
+  static const String monthProgress = 'month_progress';
+  static const String yourHabitMonthlyReport = 'your_habit_monthly_report';
 }

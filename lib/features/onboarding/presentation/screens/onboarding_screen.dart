@@ -10,7 +10,6 @@ import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/features/onboarding/presentation/widgets/onboarding_item_widget.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../data/datasources/user/user_local_datasource.dart';
 import '../widgets/background_final_button_widget.dart';
 import '../widgets/onboarding_slider_widget.dart';
 

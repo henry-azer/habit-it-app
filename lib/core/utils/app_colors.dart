@@ -6,7 +6,7 @@ class AppColors {
   static Color primary = HexColor('#000000');
   static Color secondary = HexColor('#FFFFFF');
   static Color accent = HexColor('#1C2D32');
-  static Color secondaryAccent  = HexColor('#FF725E');
+  static Color secondaryAccent = HexColor('#FF725E');
 
   static Color fontPrimary = HexColor('#FFFFFF');
   static Color fontSecondary = HexColor('#000000');
@@ -30,4 +30,20 @@ class AppColors {
   static Color linkedin = HexColor('#0072B1');
   static Color whatsapp = HexColor('#075E54');
   static Color outlook = HexColor('#127CD6');
+
+  static MaterialColor primarySwatch = MaterialColor(
+    accent.value,
+    <int, Color>{
+      50: const Color(0xFFE4E8EA),
+      100: const Color(0xFFB9C4C8),
+      200: const Color(0xFF8E9BA3),
+      300: const Color(0xFF636F7E),
+      400: const Color(0xFF3D4C5C),
+      500: accent,
+      600: const Color(0xFF172327),
+      700: const Color(0xFF10171C),
+      800: const Color(0xFF0B0F11),
+      900: const Color(0xFF050608),
+    },
+  );
 }

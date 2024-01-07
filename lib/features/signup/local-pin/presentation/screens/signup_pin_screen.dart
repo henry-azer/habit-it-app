@@ -11,7 +11,6 @@ import '../../../../../core/utils/app_notifier.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../../core/widgets/otp/otp_text_field_widget.dart';
-import '../../../../../data/entities/user.dart';
 
 class SignupPINScreen extends StatefulWidget {
   const SignupPINScreen({Key? key}) : super(key: key);
@@ -47,7 +46,7 @@ class _SignupPINScreenState extends State<SignupPINScreen> {
     }
 
     if (isAuthenticated) {
-      Navigator.pushNamedAndRemoveUntil(context, Routes.signupSuccess, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, Routes.appSignupSuccess, (route) => false);
     }
   }
 

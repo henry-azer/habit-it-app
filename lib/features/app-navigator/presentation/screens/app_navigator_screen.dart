@@ -15,8 +15,6 @@ class AppNavigatorScreen extends StatefulWidget {
 
 class _AppNavigatorScreenState extends State<AppNavigatorScreen> with WidgetsBindingObserver {
   late UserLocalDataSource _userLocalDataSource;
-  late bool _isUserBiometricAuthenticated;
-  late bool _isUserAuthenticated;
 
   @override
   void initState() {
@@ -47,9 +45,9 @@ class _AppNavigatorScreenState extends State<AppNavigatorScreen> with WidgetsBin
     final User user = await _userLocalDataSource.getUser();
     if (!user.isAuthenticated) {
       if (user.isBiometricAuthenticated) {
-        Navigator.pushReplacementNamed(context, Routes.signinBiometric);
+        Navigator.pushReplacementNamed(context, Routes.appSigninBiometric);
       } else {
-        Navigator.pushReplacementNamed(context, Routes.signinPIN);
+        Navigator.pushReplacementNamed(context, Routes.appSigninPIN);
       }
     }
   }

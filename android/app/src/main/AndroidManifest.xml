@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.henry.flutter_starter">
+    package="com.henry.habit_it">
    <application
         android:label="Habit It"
         android:name="${applicationName}"

@@ -30,7 +30,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   @override
   Future<void> setUser(User user) async {
-    return storageManager.setValue(AppLocalStorageKeys.user, user.toJson());
+    return await storageManager.setValue(AppLocalStorageKeys.user, user.toJson());
   }
 
   @override

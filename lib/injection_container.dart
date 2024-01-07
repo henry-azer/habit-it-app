@@ -5,7 +5,6 @@ import 'package:habit_it/core/managers/storage-manager/i_storage_manager.dart';
 import 'package:habit_it/core/managers/storage-manager/local_storage_manager.dart';
 import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
-import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/datasources/user/user_local_datasource.dart';
@@ -17,7 +16,6 @@ Future<void> init() async {
   sl.registerLazySingleton<AppLocalDataSource>(() => AppLocalDataSourceImpl(storageManager: sl()));
   sl.registerLazySingleton<UserLocalDataSource>(() => UserLocalDataSourceImpl(storageManager: sl()));
   sl.registerLazySingleton<HabitLocalDataSource>(() => HabitLocalDataSourceImpl(storageManager: sl()));
-  sl.registerLazySingleton<HabitStatsLocalDataSource>(() => HabitStatsLocalDataSourceImpl(storageManager: sl(), habitLocalDataSource: sl()));
 
   // !---- External ----!
   sl.registerLazySingleton(() => SharedPreferences.getInstance());

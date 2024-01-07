@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
  import 'package:flutter/rendering.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:habit_it/features/habit/stats/stats/presentation/screens/habit_stats_screen.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../../../home/presentation/screens/home_screen.dart';
+import '../../../habit/habit/presentation/screens/habit_screen.dart';
 import '../../../../core/utils/app_colors.dart';
 
 class NavigationBarWidget extends StatefulWidget {
@@ -15,8 +17,8 @@ class NavigationBarWidget extends StatefulWidget {
 
 class NavigationBarWidgetState extends State<NavigationBarWidget> {
   final PageController _pageController = PageController();
-  final double _selectedItemSize = 28.0;
-  final double _defaultItemSize = 24.0;
+  final double _selectedItemSize = 26.0;
+  final double _defaultItemSize = 22.0;
   final double _navigationHeight = 42;
   int _selectedItemPosition = 0;
 
@@ -26,14 +28,14 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
       children: [
         Expanded(
           child: PageView(
-            physics: const NeverScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             controller: _pageController,
             onPageChanged: (index) {
               setState(() {
                 _selectedItemPosition = index;
               });
             },
-            children: const [HomeScreen(), ProfileScreen()],
+            children: const [HabitScreen(), HabitStatsScreen(), ProfileScreen()],
           ),
         ),
         SnakeNavigationBar.color(
@@ -55,7 +57,7 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.home_sharp,
+                LineAwesomeIcons.clipboard_list,
                 size: _selectedItemPosition == 0
                     ? _selectedItemSize
                     : _defaultItemSize,
@@ -63,7 +65,15 @@ class NavigationBarWidgetState extends State<NavigationBarWidget> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.person_sharp,
+                LineAwesomeIcons.pie_chart,
+                size: _selectedItemPosition == 1
+                    ? _selectedItemSize
+                    : _defaultItemSize,
+              ),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                LineAwesomeIcons.user,
                 size: _selectedItemPosition == 2
                     ? _selectedItemSize
                     : _defaultItemSize,

@@ -1,8 +1,9 @@
+import '../../data/enums/day.dart';
+
 /// AUTHOR: Henry Azer
 /// DATE: 23-10-2023
 /// UTIL: DATE UTIL
 class DateUtil {
-
   /// Now Date
   static DateTime now = DateTime.now();
 
@@ -31,7 +32,8 @@ class DateUtil {
 
     for (int i = 0; i < todayDate.day; i++) {
       DateTime currentDay = firstDayOfCurrentMonth.add(Duration(days: i));
-      monthDaysList.add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
+      monthDaysList
+          .add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
     }
 
     return monthDaysList.reversed.toList();
@@ -43,7 +45,8 @@ class DateUtil {
 
     for (int i = 0; i < date.day; i++) {
       DateTime currentDay = firstDayOfCurrentMonth.add(Duration(days: i));
-      monthDaysList.add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
+      monthDaysList
+          .add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
     }
 
     return monthDaysList.reversed.toList();
@@ -94,6 +97,9 @@ class DateUtil {
 
   /// Calculations
   static int countDaysOfMonth(DateTime date) {
+    final todayDate = getTodayDate();
+    if (todayDate.month == date.month) return todayDate.day;
+
     final nextMonth = DateTime(date.year, date.month + 1, 1);
     final lastDayOfCurrentMonth = nextMonth.subtract(const Duration(days: 1));
     return lastDayOfCurrentMonth.day;
@@ -101,5 +107,107 @@ class DateUtil {
 
   static int countDaysOfMonthUntilToday(DateTime date) {
     return DateTime.now().add(const Duration(days: 1)).difference(date).inDays;
+  }
+
+  /// Today Name
+  static String getDateDayName(DateTime date) {
+    Day? today;
+    switch (date.weekday) {
+      case 1:
+        today = Day.Monday;
+        break;
+      case 2:
+        today = Day.Tuesday;
+        break;
+      case 3:
+        today = Day.Wednesday;
+        break;
+      case 4:
+        today = Day.Thursday;
+        break;
+      case 5:
+        today = Day.Friday;
+        break;
+      case 6:
+        today = Day.Saturday;
+        break;
+      case 7:
+        today = Day.Sunday;
+        break;
+      default:
+        today = null;
+    }
+    return today?.value ?? 'Unknown';
+  }
+
+  /// CALCULATE DAYS COUNT
+  static int countDaysOfWeekSinceDate(List<String> days, DateTime date) {
+    int totalCount = 0;
+    DateTime currentDate = DateUtil.getTodayDate();
+
+    for (var day in days) {
+      int differenceInDays = currentDate.difference(date).inDays;
+
+      int count = 0;
+      for (int i = 0; i <= differenceInDays; i++) {
+        DateTime currentDay = date.add(Duration(days: i));
+        if (currentDay.weekday == getDayOfWeekNumber(day)) {
+          count++;
+        }
+      }
+
+      totalCount += count;
+    }
+
+    return totalCount;
+  }
+
+  static int getDayOfWeekNumber(String dayOfWeek) {
+    switch (dayOfWeek.toLowerCase()) {
+      case 'monday':
+        return 1;
+      case 'tuesday':
+        return 2;
+      case 'wednesday':
+        return 3;
+      case 'thursday':
+        return 4;
+      case 'friday':
+        return 5;
+      case 'saturday':
+        return 6;
+      case 'sunday':
+        return 7;
+      default:
+        throw Exception('Invalid day of the week provided.');
+    }
+  }
+
+  static String getDayOfWeekName(int day, DateTime month) {
+    if (day < 1 || day > 31) {
+      throw ArgumentError('Invalid day value: $day');
+    }
+
+    DateTime date = DateTime(month.year, month.month, day);
+    int weekday = date.weekday;
+
+    switch (weekday) {
+      case 1:
+        return 'Monday';
+      case 2:
+        return 'Tuesday';
+      case 3:
+        return 'Wednesday';
+      case 4:
+        return 'Thursday';
+      case 5:
+        return 'Friday';
+      case 6:
+        return 'Saturday';
+      case 7:
+        return 'Sunday';
+      default:
+        throw Exception('Unexpected weekday value: $weekday');
+    }
   }
 }

@@ -72,7 +72,6 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   Future<void> addHabit(Habit habit, String month) async {
     final habits = await getHabits(month);
     habit.id = NumbersUtil.getRandomId();
-    habit.values[habit.createdDate.day] = false;
     int daysCount = DateUtil.countDaysOfWeekSinceDate(habit.repeatDays, habit.createdDate);
     habit.total = daysCount + (habit.values.length - daysCount);
     habit.totalDone = habit.values.values.where((value) => value == true).length;

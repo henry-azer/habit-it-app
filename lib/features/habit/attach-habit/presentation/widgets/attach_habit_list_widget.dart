@@ -3,32 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:habit_it/data/entities/habit.dart';
 
 import '../../../../../../core/utils/app_colors.dart';
-import 'habit_item_widget.dart';
+import 'attach_habit_item_widget.dart';
 
-class HabitListWidget extends StatefulWidget {
+class AttachHabitListWidget extends StatefulWidget {
   final int selectedDay;
   final List<Habit> habits;
   final Function(int, int) onReorder;
-  final Function(Habit) onPressAction;
-  final Function(Habit) onPressRemove;
   final Function(Habit) onPressSuspend;
-  final Function(Habit) onPressSave;
+  final Function(Habit) onPressUnsuspend;
+  final Function(Habit) onPressRemove;
 
-  const HabitListWidget(
+  const AttachHabitListWidget(
       {super.key,
       required this.habits,
       required this.onReorder,
-      required this.onPressAction,
-      required this.onPressRemove,
       required this.onPressSuspend,
-      required this.onPressSave,
+      required this.onPressUnsuspend,
+      required this.onPressRemove,
       required this.selectedDay});
 
   @override
-  State<HabitListWidget> createState() => _HabitListWidgetState();
+  State<AttachHabitListWidget> createState() => _AttachHabitListWidgetState();
 }
 
-class _HabitListWidgetState extends State<HabitListWidget> {
+class _AttachHabitListWidgetState extends State<AttachHabitListWidget> {
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -54,21 +52,18 @@ class _HabitListWidgetState extends State<HabitListWidget> {
     return Column(
       key: ValueKey(widget.habits[index].id),
       children: [
-        HabitItemWidget(
+        AttachHabitItemWidget(
           key: ValueKey(widget.habits[index].id),
           habit: widget.habits[index],
-          onPressSave: (habit) async {
-            await widget.onPressSave(habit);
-          },
-          onPressRemove: (habit) async {
-            await widget.onPressRemove(habit);
-          },
-          onPressActivate: (habit) async {
-            await widget.onPressAction(habit);
-          },
-          selectedDay: widget.selectedDay,
           onPressSuspend: (habit) async {
             await widget.onPressSuspend(habit);
+          },
+          onPressUnsuspend: (habit) async {
+            await widget.onPressUnsuspend(habit);
+          },
+          selectedDay: widget.selectedDay,
+          onPressRemove: (habit) async {
+            await widget.onPressRemove(habit);
           },
         ),
         Padding(

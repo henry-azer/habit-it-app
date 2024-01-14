@@ -3,6 +3,7 @@ import 'package:habit_it/core/utils/app_colors.dart';
 import 'package:habit_it/core/utils/app_text_styles.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/data/entities/habit.dart';
+import 'package:habit_it/data/enums/habit_state.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../../../core/widgets/day-picker/model/day_in_week.dart';
@@ -12,6 +13,7 @@ class HabitItemWidget extends StatefulWidget {
   final Habit habit;
   final int selectedDay;
   final Function(Habit) onPressRemove;
+  final Function(Habit) onPressSuspend;
   final Function(Habit) onPressSave;
   final Function(Habit) onPressActivate;
 
@@ -22,6 +24,7 @@ class HabitItemWidget extends StatefulWidget {
     required this.onPressSave,
     required this.onPressActivate,
     required this.selectedDay,
+    required this.onPressSuspend,
   }) : super(key: key);
 
   @override
@@ -86,7 +89,7 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                               ),
                             ),
                             SizedBox(
-                              width: context.width * 0.12,
+                              width: context.width * 0.11,
                             ),
                           ],
                         ),
@@ -108,29 +111,9 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                         ),
                       ),
                 isEditing
-                    ? Row(
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              if (textEditingController.text.isNotEmpty) {
-                                widget.onPressSave(widget.habit);
-                                setState(() {
-                                  isEditing = false;
-                                });
-                              }
-                            },
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: AppColors.black.withOpacity(0.3),
-                              ),
-                              child: Icon(LineAwesomeIcons.save,
-                                  size: 18.0, color: AppColors.green),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
                           InkWell(
                             onTap: () {
                               setState(() {
@@ -145,9 +128,55 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                                 borderRadius: BorderRadius.circular(100),
                                 color: AppColors.black.withOpacity(0.3),
                               ),
-                              child: Icon(Icons.restore_outlined,
+                              child: Icon(Icons.close,
                                   size: 18.0, color: AppColors.grey),
                             ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (textEditingController.text.isNotEmpty) {
+                                    widget.onPressSave(widget.habit);
+                                    setState(() {
+                                      isEditing = false;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: AppColors.black.withOpacity(0.3),
+                                  ),
+                                  child: Icon(LineAwesomeIcons.save,
+                                      size: 18.0, color: AppColors.green),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () {
+                                  if (textEditingController.text.isNotEmpty) {
+                                    widget.onPressSuspend(widget.habit);
+                                    setState(() {
+                                      isEditing = false;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: AppColors.black.withOpacity(0.3),
+                                  ),
+                                  child: Icon(Icons.remove,
+                                      size: 18.0, color: AppColors.grey),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       )
@@ -165,24 +194,27 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                                 color: AppColors.black.withOpacity(0.3),
                               ),
                               child: Icon(
-                                  (widget.habit.values.containsKey(widget.selectedDay))
-                                      ? (widget.habit.values[widget.selectedDay] ?? false)
-                                          ? Icons.check
-                                          : Icons.close
-                                      : DateTime(DateTime.now().year, DateTime.now().month, widget.selectedDay, 0)
-                                        .isBefore(widget.habit.createdDate)
-                                      ? Icons.remove
-                                      : Icons.close,
-                                  size: 18.0,
-                                  color:
-                                  (widget.habit.values.containsKey(widget.selectedDay))
-                                      ? (widget.habit.values[widget.selectedDay] ?? false)
-                                      ? AppColors.green
-                                      : AppColors.red
-                                      : DateTime(DateTime.now().year, DateTime.now().month, widget.selectedDay, 0)
-                                      .isBefore(widget.habit.createdDate)
-                                      ? AppColors.grey
-                                      : AppColors.red,
+                                (widget.habit.daysStates[widget.selectedDay] ==
+                                        HabitState.DONE)
+                                    ? Icons.check
+                                    : (widget.habit.daysStates[
+                                                widget.selectedDay] ==
+                                            HabitState.NOT_DONE)
+                                        ? Icons.close
+                                        : Icons.remove,
+                                size: 18.0,
+                                color: (widget.habit
+                                            .daysStates[widget.selectedDay] ==
+                                        HabitState.DONE)
+                                    ? AppColors.green
+                                    : (widget.habit.daysStates[
+                                                    widget.selectedDay] ==
+                                                HabitState.NOT_DONE) ||
+                                            (widget.habit.daysStates[
+                                                    widget.selectedDay] ==
+                                                HabitState.SUSPENDED)
+                                        ? AppColors.red
+                                        : AppColors.grey,
                               ),
                             ),
                           ),

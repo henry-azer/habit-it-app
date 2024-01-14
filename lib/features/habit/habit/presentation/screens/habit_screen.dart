@@ -15,6 +15,8 @@ import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/utils/app_notifier.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/utils/date_util.dart';
+import '../../../../../core/widgets/floating-action-button/floating_speed_dial.dart';
+import '../../../../../core/widgets/floating-action-button/floating_speed_dial_child.dart';
 import '../../../../../core/widgets/title/title_divider_widget.dart';
 import '../widgets/app-bar/calendar_app_bar_widget.dart';
 
@@ -26,7 +28,8 @@ class HabitScreen extends StatefulWidget {
 }
 
 class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
-  final String _currentMonthString = DateUtil.convertDateToMonthString(DateUtil.getTodayDate());
+  final String _currentMonthString =
+      DateUtil.convertDateToMonthString(DateUtil.getTodayDate());
   final DateTime _firstDate = DateUtil.getFirstDayOfCurrentMonth();
   late DateTime _selectedDate = DateUtil.getTodayDate();
   final DateTime _todayDate = DateUtil.getTodayDate();
@@ -53,8 +56,9 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
   }
 
   _loadHabits() async {
-    final habits = await _habitLocalDataSource.getHabitsByDay(_selectedDate, _currentMonthString);
-    await _habitLocalDataSource.updateHabitsStats(habits, _selectedDate, _currentMonthString);
+    await _habitLocalDataSource.updateDayHabits(_selectedDate, _currentMonthString);
+    final habits = await _habitLocalDataSource.getHabitsByDay(
+        _selectedDate, _currentMonthString);
     setState(() {
       _habits = habits;
     });
@@ -65,6 +69,12 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
     if (result is bool && result) {
       await _loadHabits();
     }
+  }
+
+  _navigateToAttachHabit() async {
+    await Navigator.pushNamed(context, Routes.appHabitAttach,
+        arguments: _selectedDate.day);
+    await _loadHabits();
   }
 
   _reorderHabit(int oldIndex, int newIndex) async {
@@ -84,7 +94,8 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
         context: context,
         message: AppLocalizationHelper.translate(
             context, AppLocalizationKeys.areYouSure),
-        descriptionMessage: "${AppLocalizationHelper.translate(context, AppLocalizationKeys.remove)} `${habit.name}` ${AppLocalizationHelper.translate(context, AppLocalizationKeys.habit)}",
+        descriptionMessage:
+            "${AppLocalizationHelper.translate(context, AppLocalizationKeys.remove)} `${habit.name}` ${AppLocalizationHelper.translate(context, AppLocalizationKeys.habit)}",
         onClickYes: () async {
           await _habitLocalDataSource.removeHabit(habit, _currentMonthString);
           await _loadHabits();
@@ -140,6 +151,11 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
       onPressRemove: (habit) async {
         await _removeHabit(habit);
       },
+      onPressSuspend: (habit) async {
+        await _habitLocalDataSource.suspendHabit(
+            habit, _selectedDate.day, _currentMonthString);
+        await _loadHabits();
+      },
       onPressSave: (habit) async {
         await _habitLocalDataSource.updateHabit(habit, _currentMonthString);
         await _loadHabits();
@@ -180,11 +196,34 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
             Expanded(child: _buildHabitList()),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await _navigateToAddHabit();
-          },
-          child: const Icon(LineAwesomeIcons.pushed),
+        floatingActionButton: FloatingSpeedDial(
+          labelsBackgroundColor: AppColors.accent,
+          labelsStyle: AppTextStyles.floatingSpeedDialChild,
+          speedDialChildren: <FloatingSpeedDialChild>[
+            FloatingSpeedDialChild(
+              child: const Icon(LineAwesomeIcons.pushed),
+              foregroundColor: AppColors.black,
+              backgroundColor: AppColors.secondary.withOpacity(0.9),
+              label: 'Add Habit',
+              onPressed: () async {
+                await _navigateToAddHabit();
+              },
+            ),
+            FloatingSpeedDialChild(
+              child: const Icon(LineAwesomeIcons.paperclip),
+              foregroundColor: AppColors.black,
+              backgroundColor: AppColors.secondary.withOpacity(0.9),
+              label: 'Attach Habit',
+              onPressed: () async {
+                await _navigateToAttachHabit();
+              },
+            ),
+          ],
+          openForegroundColor: AppColors.secondary.withOpacity(0.9),
+          openBackgroundColor: AppColors.accent,
+          closedBackgroundColor: AppColors.secondary.withOpacity(0.9),
+          closedForegroundColor: AppColors.black,
+          child: const Icon(LineAwesomeIcons.list),
         ),
       ),
     );

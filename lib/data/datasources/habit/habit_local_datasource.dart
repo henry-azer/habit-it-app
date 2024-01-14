@@ -1,6 +1,7 @@
 import 'package:habit_it/core/utils/app_local_storage_strings.dart';
 import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/core/utils/numbers_util.dart';
+import 'package:habit_it/data/enums/habit_state.dart';
 
 import '../../../core/managers/storage-manager/i_storage_manager.dart';
 import '../../entities/habit.dart';
@@ -16,17 +17,19 @@ abstract class HabitLocalDataSource {
 
   Future<void> setHabits(List<Habit> habits, String month);
 
-  Future<void> addHabit(Habit habit, String month);
-
-  Future<void> addHabitByName(String habitName, List<String> repeatDays, String month);
+  Future<void> addHabit(String name, List<String> repeatDays, String month);
 
   Future<void> updateHabit(Habit habit, String month);
 
-  Future<void> updateHabitsStats(List<Habit> habits, DateTime day, String monthString);
+  Future<void> updateDayHabits(DateTime day, String monthString);
 
   Future<void> reorderHabit(Habit habit1, Habit habit2, String month);
 
   Future<void> toggleHabitStatus(Habit habit, int day, String month);
+
+  Future<void> suspendHabit(Habit habit, int day, String month);
+
+  Future<void> unsuspendHabit(Habit habit, int day, String month);
 
   Future<void> removeHabit(Habit habit, String month);
 }
@@ -38,7 +41,8 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
 
   @override
   Future<List<Habit>> getHabits(String month) async {
-    final habits = await storageManager.getValue<List<dynamic>>(AppLocalStorageKeys.habitMonth + month);
+    final habits = await storageManager
+        .getValue<List<dynamic>>(AppLocalStorageKeys.habitMonth + month);
     if (habits == null || habits.isEmpty) return [];
     return habits.map((habitMap) => Habit.fromJson(habitMap)).toList();
   }
@@ -55,10 +59,15 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
 
   @override
   Future<List<Habit>> getHabitsByDay(DateTime date, String month) async {
-    final habits = await storageManager.getValue<List<dynamic>>(AppLocalStorageKeys.habitMonth + month);
+    final habits = await storageManager
+        .getValue<List<dynamic>>(AppLocalStorageKeys.habitMonth + month);
     if (habits == null || habits.isEmpty) return [];
-    return habits.map((habitMap) => Habit.fromJson(habitMap))
-        .where((habit) => habit.repeatDays.contains(DateUtil.getDateDayName(date)))
+    return habits
+        .map((habitMap) => Habit.fromJson(habitMap))
+        .where((habit) => ((habit.daysStates[date.day] == HabitState.DONE ||
+                habit.daysStates[date.day] == HabitState.NOT_DONE) ||
+            (habit.repeatDays.contains(DateUtil.getDateDayName(date)) &&
+                habit.daysStates[date.day] == HabitState.CREATED)))
         .toList();
   }
 
@@ -69,28 +78,46 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   }
 
   @override
-  Future<void> addHabit(Habit habit, String month) async {
+  Future<void> addHabit(
+      String name, List<String> repeatDays, String month) async {
     final habits = await getHabits(month);
-    habit.id = NumbersUtil.getRandomId();
-    int daysCount = DateUtil.countDaysOfWeekSinceDate(habit.repeatDays, habit.createdDate);
-    habit.total = daysCount + (habit.values.length - daysCount);
-    habit.totalDone = habit.values.values.where((value) => value == true).length;
+    Map<int, HabitState> daysStates = await _createDaysStates(repeatDays);
+    Habit habit = Habit(
+        id: NumbersUtil.getRandomId(),
+        name: name,
+        daysStates: daysStates,
+        repeatDays: repeatDays,
+        createdDate: DateUtil.getTodayDate());
     habits.add(habit);
     return await setHabits(habits, month);
   }
 
-  @override
-  Future<void> addHabitByName(String habitName, List<String> repeatDays, String month) async {
-    final habit = Habit(id: "", total: 0, totalDone: 0, values: {}, name: habitName,
-        repeatDays: repeatDays, createdDate: DateUtil.getTodayDate());
-    return await addHabit(habit, month);
+  Future<Map<int, HabitState>> _createDaysStates(
+      List<String> repeatDays) async {
+    int monthDaysCount = DateUtil.countDaysOfMonth(DateTime.now());
+    Map<int, HabitState> daysStates = {};
+    if (monthDaysCount > 0) {
+      if (repeatDays.contains(
+          DateUtil.getDateDayName(DateUtil.getDateByDay(monthDaysCount)))) {
+        daysStates[monthDaysCount] = HabitState.NOT_DONE;
+        monthDaysCount--;
+      }
+
+      while (monthDaysCount != 0) {
+        daysStates[monthDaysCount] = HabitState.CREATED;
+        monthDaysCount--;
+      }
+    }
+    return daysStates;
   }
 
   @override
   Future<int> getHabitIndexById(String habitId, String month) async {
     final habits = await getHabits(month);
     Habit? savedHabit = await getHabitById(habitId, month);
-    return savedHabit != null ? habits.indexWhere((h) => h.id.compareTo(habitId) == 0) : -1;
+    return savedHabit != null
+        ? habits.indexWhere((h) => h.id.compareTo(habitId) == 0)
+        : -1;
   }
 
   @override
@@ -98,28 +125,23 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
     final habits = await getHabits(month);
     final habitIndex = await getHabitIndexById(habit.id, month);
     if (habitIndex > -1) {
-      int daysCount = DateUtil.countDaysOfWeekSinceDate(habit.repeatDays, habit.createdDate);
-      habit.total = daysCount + (habit.values.length - daysCount);
-      habit.totalDone = habit.values.values.where((value) => value == true).length;
       habits[habitIndex] = habit;
       return await setHabits(habits, month);
     }
   }
 
   @override
-  Future<void> updateHabitsStats(List<Habit> habits, DateTime day, String month) async {
+  Future<void> updateDayHabits(DateTime day, String month) async {
     bool isInit = await storageManager.getValue<bool>(AppLocalStorageKeys.habitInit + DateUtil.convertDateToString(day)) ?? false;
     if (isInit) return;
 
-    final List<Habit> monthHabits = await getHabits(month);
-    for (var habit in habits) {
+    List<Habit> monthHabits = await getHabits(month);
+    List<Habit> todayHabits = monthHabits.where((habit) => habit.repeatDays.contains(DateUtil.getDayOfWeekName(day))).toList();
+    for (var habit in todayHabits) {
       var habitIndex = await getHabitIndexById(habit.id, month);
       var savedHabit = monthHabits.elementAt(habitIndex);
-      if (!savedHabit.values.containsKey(day.day) && day.isAfter(savedHabit.createdDate.subtract(const Duration(days: 1)))) {
-        savedHabit.values[day.day] = false;
-        int daysCount = DateUtil.countDaysOfWeekSinceDate(savedHabit.repeatDays, savedHabit.createdDate);
-        savedHabit.total = daysCount + (savedHabit.values.length - daysCount);
-        savedHabit.totalDone = savedHabit.values.values.where((value) => value == true).length;
+      if (!savedHabit.daysStates.containsKey(day.day)) {
+        savedHabit.daysStates[day.day] = HabitState.NOT_DONE;
       }
     }
 
@@ -141,12 +163,34 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
 
   @override
   Future<void> toggleHabitStatus(Habit habit, int day, String month) async {
-    if (habit.values.containsKey(day)) {
-      habit.values[day] = !habit.values[day]!;
+    if (habit.daysStates[day] == HabitState.DONE) {
+      habit.daysStates[day] = HabitState.NOT_DONE;
     } else {
-      habit.values[day] = true;
+      habit.daysStates[day] = HabitState.DONE;
     }
     return await updateHabit(habit, month);
+  }
+
+  @override
+  Future<void> suspendHabit(Habit habit, int day, String month) async {
+    final habitIndex = await getHabitIndexById(habit.id, month);
+    if (habitIndex > -1) {
+      if (habit.repeatDays.contains(DateUtil.getDateDayName(DateUtil.getDateByDay(day)))) {
+        habit.daysStates[day] = HabitState.SUSPENDED;
+      } else {
+        habit.daysStates[day] = HabitState.CREATED;
+      }
+      return await updateHabit(habit, month);
+    }
+  }
+
+  @override
+  Future<void> unsuspendHabit(Habit habit, int day, String month) async {
+    final habitIndex = await getHabitIndexById(habit.id, month);
+    if (habitIndex > -1) {
+      habit.daysStates[day] = HabitState.NOT_DONE;
+      return await updateHabit(habit, month);
+    }
   }
 
   @override

@@ -61,7 +61,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     try {
       final String currentMonthString =
           DateUtil.convertDateToMonthString(DateUtil.getTodayDate());
-      await _habitLocalDataSource.addHabitByName(
+      await _habitLocalDataSource.addHabit(
           habitName, repeatDays, currentMonthString);
       isSaved = true;
     } catch (exception) {

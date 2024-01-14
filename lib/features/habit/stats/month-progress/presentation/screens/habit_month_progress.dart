@@ -4,7 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
-import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
+import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
+import 'package:habit_it/data/dtos/habit_progress.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../../config/locale/app_localization_helper.dart';
@@ -12,7 +13,7 @@ import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../../core/utils/app_text_styles.dart';
 import '../../../../../../core/widgets/appbar/header_widget.dart';
-import '../../../../../../data/entities/habit.dart';
+import '../../../../../../data/enums/habit_state.dart';
 
 class HabitMonthProgressScreen extends StatefulWidget {
   final DateTime date;
@@ -26,8 +27,8 @@ class HabitMonthProgressScreen extends StatefulWidget {
 }
 
 class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
-  late HabitLocalDataSource _habitLocalDataSource;
-  late List<Habit> _habits = [];
+  late HabitStatsLocalDataSource _habitStatsLocalDataSource;
+  late List<HabitProgress> _habitsProgress = [];
   late int _monthDaysCount = 0;
 
   @override
@@ -53,15 +54,16 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
   }
 
   _initServices() {
-    _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
+    _habitStatsLocalDataSource = GetIt.instance<HabitStatsLocalDataSource>();
   }
 
   _initLocalData() async {
     int monthDaysCount = DateUtil.countDaysOfMonth(widget.date);
-    List<Habit> habits = await _habitLocalDataSource
-        .getHabits(DateUtil.convertDateToMonthString(widget.date));
+    List<HabitProgress> habitsProgress =
+        await _habitStatsLocalDataSource.getHabitsProgressByMonth(
+            DateUtil.convertDateToMonthString(widget.date));
     setState(() {
-      _habits = habits;
+      _habitsProgress = habitsProgress;
       _monthDaysCount = monthDaysCount;
     });
   }
@@ -83,7 +85,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
               paddingLeft: 0.05,
               titleStyle: AppTextStyles.headerTitle2,
             ),
-            if (_habits.isEmpty) ...{
+            if (_habitsProgress.isEmpty) ...{
               Column(
                 children: [
                   SizedBox(
@@ -104,7 +106,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                 ],
               ),
             },
-            if (_habits.isNotEmpty) ...{
+            if (_habitsProgress.isNotEmpty) ...{
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -159,49 +161,19 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                               ),
                             ),
                           ],
-                          rows: _habits.asMap().entries.map((entry) {
-                            Habit habit = entry.value;
+                          rows: _habitsProgress.asMap().entries.map((entry) {
+                            HabitProgress habitProgress = entry.value;
                             return DataRow(
                               cells: [
                                 DataCell(
-                                  Text("${habit.name}   ",
+                                  Text("${habitProgress.name}   ",
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: AppColors.fontPrimary)),
                                 ),
                                 for (int day = 1; day <= _monthDaysCount; day++)
-                                  if (habit.values[day] == null) ...{
-                                    if (habit.repeatDays.contains(
-                                            DateUtil.getDayOfWeekName(
-                                                day, widget.date)) &&
-                                        DateTime(widget.date.year,
-                                                widget.date.month, day, 0)
-                                            .isAfter(habit.createdDate.subtract(
-                                                const Duration(days: 1)))) ...{
-                                      DataCell(
-                                        placeholder: false,
-                                        showEditIcon: false,
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 4.0),
-                                          child: Icon(Icons.close,
-                                              size: 12.0, color: AppColors.red),
-                                        ),
-                                      ),
-                                    } else ...{
-                                      DataCell(
-                                        placeholder: false,
-                                        showEditIcon: false,
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 4.0),
-                                          child: Icon(Icons.remove,
-                                              size: 12.0,
-                                              color: AppColors.grey),
-                                        ),
-                                      ),
-                                    }
-                                  } else if (habit.values[day]!) ...{
+                                  if (habitProgress.daysStates[day] ==
+                                      HabitState.DONE) ...{
                                     DataCell(
                                       placeholder: false,
                                       showEditIcon: false,
@@ -212,7 +184,8 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                             size: 12.0, color: AppColors.green),
                                       ),
                                     ),
-                                  } else if (!habit.values[day]!) ...{
+                                  } else if (habitProgress.daysStates[day] ==
+                                      HabitState.NOT_DONE) ...{
                                     DataCell(
                                       placeholder: false,
                                       showEditIcon: false,
@@ -223,10 +196,26 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                             size: 12.0, color: AppColors.red),
                                       ),
                                     ),
+                                  } else ...{
+                                    DataCell(
+                                      placeholder: false,
+                                      showEditIcon: false,
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 4.0),
+                                        child: Icon(Icons.remove,
+                                            size: 12.0,
+                                            color: (habitProgress
+                                                        .daysStates[day] ==
+                                                    HabitState.CREATED)
+                                                ? AppColors.grey
+                                                : AppColors.red),
+                                      ),
+                                    ),
                                   },
                                 DataCell(
                                   Text(
-                                    "   ${habit.totalDone}/${habit.total}",
+                                    "   ${habitProgress.totalDone}/${habitProgress.total}",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.fontPrimary),

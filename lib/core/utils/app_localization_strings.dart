@@ -95,6 +95,7 @@ class AppLocalizationKeys {
   /// HABITS
   static const String habit = 'habit';
   static const String habitTitle = 'habit_title';
+  static const String attachHabitTitle = 'attach_habit_title';
   static const String habits = 'habits';
   static const String totalHabits = 'total_habits';
   static const String repeatDays = 'repeat_days';

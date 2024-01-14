@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
 import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
-import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
+import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../../config/locale/app_localization_helper.dart';
@@ -12,7 +12,7 @@ import '../../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../../core/utils/app_text_styles.dart';
 import '../../../../../../core/widgets/appbar/header_widget.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
-import '../../../../../../data/entities/habit.dart';
+import '../../../../../../data/dtos/habit_stats.dart';
 
 class HabitMonthStatsScreen extends StatefulWidget {
   final DateTime date;
@@ -24,8 +24,8 @@ class HabitMonthStatsScreen extends StatefulWidget {
 }
 
 class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
-  late HabitLocalDataSource _habitLocalDataSource;
-  late List<Habit> _habits = [];
+  late HabitStatsLocalDataSource _habitStatsLocalDataSource;
+  late List<HabitStats> _habitsStats = [];
 
   @override
   void initState() {
@@ -35,14 +35,14 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
   }
 
   _initServices() {
-    _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
+    _habitStatsLocalDataSource = GetIt.instance<HabitStatsLocalDataSource>();
   }
 
   _initLocalData() async {
-    List<Habit> habits = await _habitLocalDataSource
-        .getHabits(DateUtil.convertDateToMonthString(widget.date));
+    final List<HabitStats> habitsStats = await _habitStatsLocalDataSource
+        .getHabitsStatsByMonth(DateUtil.convertDateToMonthString(widget.date));
     setState(() {
-      _habits = habits;
+      _habitsStats = habitsStats;
     });
   }
 
@@ -62,7 +62,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
               height: 125,
               titleStyle: AppTextStyles.headerTitle2,
             ),
-            if (_habits.isEmpty) ...{
+            if (_habitsStats.isEmpty) ...{
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -84,7 +84,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                 ],
               ),
             },
-            if (_habits.isNotEmpty) ...{
+            if (_habitsStats.isNotEmpty) ...{
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -101,7 +101,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                         padding: const EdgeInsets.only(top: 5, bottom: 20),
                         child: TitleDividerWidget(
                           text:
-                              '${AppLocalizationHelper.translate(context, AppLocalizationKeys.totalHabits)} ${_habits.length}',
+                              '${AppLocalizationHelper.translate(context, AppLocalizationKeys.totalHabits)} ${_habitsStats.length}',
                         ),
                       ),
                       Expanded(
@@ -160,7 +160,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                 ),
                               ),
                             ],
-                            rows: _habits.map((habit) {
+                            rows: _habitsStats.map((habit) {
                               return DataRow(
                                 cells: [
                                   DataCell(

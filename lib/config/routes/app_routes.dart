@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/features/app-navigator/presentation/screens/app_navigator_screen.dart';
+import 'package:habit_it/features/habit/attach-habit/presentation/screens/attach_habit_screen.dart';
 import 'package:habit_it/features/habit/stats/month-stats/presentation/screens/habit_month_stats.dart';
 import 'package:habit_it/features/habit/stats/stats/presentation/screens/habit_stats_screen.dart';
 import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -32,6 +33,8 @@ class Routes {
 
   static const String appHabit = '/app/habit';
   static const String appHabitAdd = '/app/habit/add';
+  static const String appHabitAttach = '/app/habit/attach';
+
   static const String appHabitStats = '/app/habit/stats';
   static const String appHabitMonthStats = '/app/habit/stats/month-stats';
   static const String appHabitMonthProgress = '/app/habit/stats/month-progress';
@@ -116,6 +119,14 @@ class AppRoutes {
         return MaterialPageRoute(
             builder: (context) {
               return const AddHabitScreen();
+            },
+            settings: routeSettings);
+
+      case Routes.appHabitAttach:
+        int selectedDay = routeSettings.arguments as int;
+        return MaterialPageRoute(
+            builder: (context) {
+              return AttachHabitScreen(selectedDay: selectedDay,);
             },
             settings: routeSettings);
 

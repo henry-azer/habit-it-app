@@ -8,6 +8,10 @@ class DateUtil {
   static DateTime now = DateTime.now();
 
   /// Getters
+  static DateTime getDateByDay(int day) {
+    return DateTime(now.year, now.month, day, 0);
+  }
+
   static DateTime getTodayDate() {
     return DateTime(now.year, now.month, now.day, 0);
   }
@@ -183,12 +187,7 @@ class DateUtil {
     }
   }
 
-  static String getDayOfWeekName(int day, DateTime month) {
-    if (day < 1 || day > 31) {
-      throw ArgumentError('Invalid day value: $day');
-    }
-
-    DateTime date = DateTime(month.year, month.month, day);
+  static String getDayOfWeekName(DateTime date) {
     int weekday = date.weekday;
 
     switch (weekday) {

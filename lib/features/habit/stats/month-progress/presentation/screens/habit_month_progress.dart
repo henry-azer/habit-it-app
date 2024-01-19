@@ -106,6 +106,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                 ],
               ),
             },
+            const SizedBox(height: 10),
             if (_habitsProgress.isNotEmpty) ...{
               Expanded(
                 child: SingleChildScrollView(
@@ -113,9 +114,6 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: DataTable(
@@ -184,8 +182,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                             size: 12.0, color: AppColors.green),
                                       ),
                                     ),
-                                  } else if (habitProgress.daysStates[day] ==
-                                      HabitState.NOT_DONE) ...{
+                                  } else if (habitProgress.daysStates[day] == HabitState.NOT_DONE) ...{
                                     DataCell(
                                       placeholder: false,
                                       showEditIcon: false,
@@ -205,9 +202,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                             const EdgeInsets.only(left: 4.0),
                                         child: Icon(Icons.remove,
                                             size: 12.0,
-                                            color: (habitProgress
-                                                        .daysStates[day] ==
-                                                    HabitState.CREATED)
+                                            color: (habitProgress.daysStates[day] != HabitState.SUSPENDED)
                                                 ? AppColors.grey
                                                 : AppColors.red),
                                       ),

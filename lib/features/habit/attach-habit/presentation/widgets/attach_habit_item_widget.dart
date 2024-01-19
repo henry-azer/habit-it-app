@@ -72,13 +72,10 @@ class _AttachHabitItemWidgetState extends State<AttachHabitItemWidget> {
                   children: [
                     InkWell(
                       onTap: () {
-                        if (widget.habit.daysStates[widget.selectedDay] ==
-                                HabitState.CREATED ||
-                            widget.habit.daysStates[widget.selectedDay] ==
-                                HabitState.SUSPENDED) {
-                          widget.onPressUnsuspend(widget.habit);
-                        } else {
+                        if (widget.habit.daysStates[widget.selectedDay] == HabitState.DONE || widget.habit.daysStates[widget.selectedDay] == HabitState.NOT_DONE) {
                           widget.onPressSuspend(widget.habit);
+                        } else {
+                          widget.onPressUnsuspend(widget.habit);
                         }
                       },
                       child: Container(
@@ -89,17 +86,34 @@ class _AttachHabitItemWidgetState extends State<AttachHabitItemWidget> {
                           color: AppColors.black.withOpacity(0.3),
                         ),
                         child: Icon(
-                          ((widget.habit.daysStates[widget.selectedDay] == HabitState.DONE ||
-                              widget.habit.daysStates[widget.selectedDay] == HabitState.NOT_DONE) ||
-                              (widget.habit.repeatDays.contains(DateUtil.getDateDayName(DateUtil.getDateByDay(widget.selectedDay))) &&
-                                  widget.habit.daysStates[widget.selectedDay] == HabitState.CREATED))
+                          ((widget.habit.daysStates[widget.selectedDay] ==
+                                          HabitState.DONE ||
+                                      widget.habit
+                                              .daysStates[widget.selectedDay] ==
+                                          HabitState.NOT_DONE) ||
+                                  (widget.habit.repeatDays.contains(
+                                          DateUtil.getDateDayName(
+                                              DateUtil.getDateByDay(
+                                                  widget.selectedDay))) &&
+                                      widget.habit
+                                              .daysStates[widget.selectedDay] ==
+                                          HabitState.CREATED))
                               ? LineAwesomeIcons.link
                               : LineAwesomeIcons.unlink,
                           size: 18.0,
-                          color: ((widget.habit.daysStates[widget.selectedDay] == HabitState.DONE ||
-                              widget.habit.daysStates[widget.selectedDay] == HabitState.NOT_DONE) ||
-                              (widget.habit.repeatDays.contains(DateUtil.getDateDayName(DateUtil.getDateByDay(widget.selectedDay))) &&
-                                  widget.habit.daysStates[widget.selectedDay] == HabitState.CREATED))
+                          color: ((widget.habit
+                                              .daysStates[widget.selectedDay] ==
+                                          HabitState.DONE ||
+                                      widget.habit
+                                              .daysStates[widget.selectedDay] ==
+                                          HabitState.NOT_DONE) ||
+                                  (widget.habit.repeatDays.contains(
+                                          DateUtil.getDateDayName(
+                                              DateUtil.getDateByDay(
+                                                  widget.selectedDay))) &&
+                                      widget.habit
+                                              .daysStates[widget.selectedDay] ==
+                                          HabitState.CREATED))
                               ? AppColors.green
                               : AppColors.red,
                         ),

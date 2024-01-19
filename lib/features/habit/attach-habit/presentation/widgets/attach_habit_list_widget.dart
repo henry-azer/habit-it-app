@@ -74,7 +74,7 @@ class _AttachHabitListWidgetState extends State<AttachHabitListWidget> {
         ),
         if (index == widget.habits.length - 1) ...{
           const SizedBox(
-            height: 80,
+            height: 20,
           ),
         },
       ],

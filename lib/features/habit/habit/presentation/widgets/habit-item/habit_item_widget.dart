@@ -158,12 +158,10 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                               const SizedBox(width: 10),
                               InkWell(
                                 onTap: () {
-                                  if (textEditingController.text.isNotEmpty) {
                                     widget.onPressSuspend(widget.habit);
                                     setState(() {
                                       isEditing = false;
                                     });
-                                  }
                                 },
                                 child: Container(
                                   width: 30,

@@ -26,7 +26,8 @@ class AttachHabitScreen extends StatefulWidget {
 }
 
 class _AttachHabitScreenState extends State<AttachHabitScreen> {
-  final String _currentMonthString = DateUtil.convertDateToMonthString(DateUtil.getTodayDate());
+  final String _currentMonthString =
+      DateUtil.convertDateToMonthString(DateUtil.getTodayDate());
   late HabitLocalDataSource _habitLocalDataSource;
   late List<Habit> _monthHabits = [];
 
@@ -67,14 +68,13 @@ class _AttachHabitScreenState extends State<AttachHabitScreen> {
         message: AppLocalizationHelper.translate(
             context, AppLocalizationKeys.areYouSure),
         descriptionMessage:
-        "${AppLocalizationHelper.translate(context, AppLocalizationKeys.remove)} `${habit.name}` ${AppLocalizationHelper.translate(context, AppLocalizationKeys.habit)}",
+            "${AppLocalizationHelper.translate(context, AppLocalizationKeys.remove)} `${habit.name}` ${AppLocalizationHelper.translate(context, AppLocalizationKeys.habit)}",
         onClickYes: () async {
           await _habitLocalDataSource.removeHabit(habit, _currentMonthString);
           await _loadMonthHabits();
           Navigator.of(context).pop();
         });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,24 +124,28 @@ class _AttachHabitScreenState extends State<AttachHabitScreen> {
                       context, AppLocalizationKeys.habits),
                 ),
               ),
-              AttachHabitListWidget(
-                habits: _monthHabits,
-                onReorder: (oldIndex, newIndex) async {
-                  await _reorderHabit(oldIndex, newIndex);
-                },
-                onPressSuspend: (habit) async {
-                  await _habitLocalDataSource.suspendHabit(habit, widget.selectedDay, _currentMonthString);
-                  await _loadMonthHabits();
-                },
-                onPressUnsuspend: (habit) async {
-                  await _habitLocalDataSource.unsuspendHabit(habit, widget.selectedDay, _currentMonthString);
-                  await _loadMonthHabits();
-                },
-                onPressRemove: (habit) async {
-                  await _removeHabit(habit);
-                },
-                selectedDay: widget.selectedDay,
-              ),
+              Expanded(
+                child: AttachHabitListWidget(
+                  habits: _monthHabits,
+                  onReorder: (oldIndex, newIndex) async {
+                    await _reorderHabit(oldIndex, newIndex);
+                  },
+                  onPressSuspend: (habit) async {
+                    await _habitLocalDataSource.suspendHabit(
+                        habit, widget.selectedDay, _currentMonthString);
+                    await _loadMonthHabits();
+                  },
+                  onPressUnsuspend: (habit) async {
+                    await _habitLocalDataSource.unsuspendHabit(
+                        habit, widget.selectedDay, _currentMonthString);
+                    await _loadMonthHabits();
+                  },
+                  onPressRemove: (habit) async {
+                    await _removeHabit(habit);
+                  },
+                  selectedDay: widget.selectedDay,
+                ),
+              )
             },
           ],
         ),

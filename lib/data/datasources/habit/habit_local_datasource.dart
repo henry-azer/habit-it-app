@@ -137,11 +137,15 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
 
     List<Habit> monthHabits = await getHabits(month);
     List<Habit> todayHabits = monthHabits.where((habit) => habit.repeatDays.contains(DateUtil.getDayOfWeekName(day))).toList();
-    for (var habit in todayHabits) {
-      var habitIndex = await getHabitIndexById(habit.id, month);
-      var savedHabit = monthHabits.elementAt(habitIndex);
-      if (!savedHabit.daysStates.containsKey(day.day)) {
-        savedHabit.daysStates[day.day] = HabitState.NOT_DONE;
+    for (var habit in monthHabits) {
+      var monthHabitIndex = await getHabitIndexById(habit.id, month);
+      var monthHabit = monthHabits.elementAt(monthHabitIndex);
+      if (todayHabits.where((habit) => habit.id == monthHabit.id).isNotEmpty) {
+        if (!monthHabit.daysStates.containsKey(day.day)) {
+          monthHabit.daysStates[day.day] = HabitState.NOT_DONE;
+        } else {
+          monthHabit.daysStates[day.day] = HabitState.CREATED;
+        }
       }
     }
 
@@ -173,23 +177,27 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
 
   @override
   Future<void> suspendHabit(Habit habit, int day, String month) async {
+    final habits = await getHabits(month);
     final habitIndex = await getHabitIndexById(habit.id, month);
     if (habitIndex > -1) {
-      if (habit.repeatDays.contains(DateUtil.getDateDayName(DateUtil.getDateByDay(day)))) {
-        habit.daysStates[day] = HabitState.SUSPENDED;
+      final savedHabit = habits[habitIndex];
+      if (savedHabit.repeatDays.contains(DateUtil.getDateDayName(DateUtil.getDateByDay(day)))) {
+        savedHabit.daysStates[day] = HabitState.SUSPENDED;
       } else {
-        habit.daysStates[day] = HabitState.CREATED;
+        savedHabit.daysStates[day] = HabitState.CREATED;
       }
-      return await updateHabit(habit, month);
+      return await updateHabit(savedHabit, month);
     }
   }
 
   @override
   Future<void> unsuspendHabit(Habit habit, int day, String month) async {
+    final habits = await getHabits(month);
     final habitIndex = await getHabitIndexById(habit.id, month);
     if (habitIndex > -1) {
-      habit.daysStates[day] = HabitState.NOT_DONE;
-      return await updateHabit(habit, month);
+      final savedHabit = habits[habitIndex];
+      savedHabit.daysStates[day] = HabitState.NOT_DONE;
+      return await updateHabit(savedHabit, month);
     }
   }
 

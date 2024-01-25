@@ -43,17 +43,10 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
 
   _submitHabitFrom() async {
     if (habitName.isEmpty) {
-      AppNotifier.showErrorDialog(
+      AppNotifier.showSnackBar(
           context: context,
           message: AppLocalizationHelper.translate(
               context, AppLocalizationKeys.habitNameRequired));
-      return;
-    }
-    if (repeatDays.isEmpty) {
-      AppNotifier.showErrorDialog(
-          context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.selectRepeatedDays));
       return;
     }
 
@@ -136,7 +129,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                         borderColor: AppColors.border,
                         borderWidth: 1,
                         maxLines: 1,
-                        maxLength: 16,
+                        maxLength: 20,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.signupNameTextField,
                         cursorColor: AppColors.fontSecondary,

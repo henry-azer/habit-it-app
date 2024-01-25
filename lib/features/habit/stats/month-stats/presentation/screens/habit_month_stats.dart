@@ -116,9 +116,9 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                             columns: [
                               DataColumn(
                                 label: Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
+                                  padding: const EdgeInsets.only(right: 45.0),
                                   child: Text(
-                                    "${AppLocalizationHelper.translate(context, AppLocalizationKeys.habitName)}              ",
+                                    "${AppLocalizationHelper.translate(context, AppLocalizationKeys.habitName)}      ",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.fontPrimary),
@@ -127,8 +127,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                               ),
                               DataColumn(
                                 label: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
                                     AppLocalizationHelper.translate(
                                         context, AppLocalizationKeys.totalDone),

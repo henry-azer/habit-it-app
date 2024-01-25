@@ -164,7 +164,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                             return DataRow(
                               cells: [
                                 DataCell(
-                                  Text("${habitProgress.name}   ",
+                                  Text("${habitProgress.name}    ",
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: AppColors.fontPrimary)),

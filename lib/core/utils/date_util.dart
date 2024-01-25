@@ -80,15 +80,9 @@ class DateUtil {
 
   /// Convert String to Date
   static DateTime convertStringToDate(String date) {
-    List<String> parts = date.split("-");
-    if (parts.length == 3) {
-      int? year = int.tryParse(parts[0]);
-      int? month = int.tryParse(parts[1]);
-      int? day = int.tryParse(parts[2]);
-      if (year != null && month != null && day != null) {
-        return DateTime(year, month, day, 0);
-      }
-    }
+    try {
+      return DateTime.parse(date);
+    } catch (ignore) {}
     return now;
   }
 
@@ -116,6 +110,10 @@ class DateUtil {
 
   static int countDaysOfMonthUntilToday(DateTime date) {
     return DateTime.now().add(const Duration(days: 1)).difference(date).inDays;
+  }
+
+  static bool isDateInRange(DateTime checkDate, DateTime startMonth, DateTime endMonth) {
+    return (checkDate.isAfter(startMonth) || checkDate.isAtSameMomentAs(startMonth)) && (checkDate.isBefore(endMonth) || checkDate.isAtSameMomentAs(endMonth));
   }
 
   /// Today Name

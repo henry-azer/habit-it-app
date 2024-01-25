@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
+import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:intl/intl.dart';
 
@@ -8,7 +9,6 @@ import '../../../../../core/utils/app_localization_strings.dart';
 
 Future<DateTime?> showMonthPicker({
   required BuildContext context,
-  required DateTime initialDate,
   required DateTime firstDate,
   required DateTime lastDate,
 }) async {
@@ -16,7 +16,6 @@ Future<DateTime?> showMonthPicker({
     context: context,
     builder: (context) {
       return _MonthPicker(
-        initialDate: initialDate,
         firstDate: firstDate,
         lastDate: lastDate,
       );
@@ -25,13 +24,11 @@ Future<DateTime?> showMonthPicker({
 }
 
 class _MonthPicker extends StatefulWidget {
-  final DateTime initialDate;
   final DateTime firstDate;
   final DateTime lastDate;
 
   const _MonthPicker({
     Key? key,
-    required this.initialDate,
     required this.firstDate,
     required this.lastDate,
   }) : super(key: key);
@@ -54,7 +51,7 @@ class __MonthPickerState extends State<_MonthPicker> {
     super.initState();
     _firstDate = DateTime(widget.firstDate.year, widget.firstDate.month);
     _lastDate = DateTime(widget.lastDate.year, widget.lastDate.month);
-    _selectedDate = DateTime(widget.initialDate.year, widget.initialDate.month);
+    _selectedDate = DateTime(widget.lastDate.year, widget.lastDate.month);
     _displayedPage = _selectedDate.year;
     _pageController = PageController(initialPage: _displayedPage);
   }
@@ -255,24 +252,18 @@ class __MonthPickerState extends State<_MonthPicker> {
   }
 
   _getMonthButton(DateTime date) {
-    bool isSelected =
-        date.month == _selectedDate.month && date.year == _selectedDate.year;
-    final int isFirstDate = _firstDate.compareTo(date);
-    final int isLastDate = _lastDate.compareTo(date);
+    bool isSelected = date.month == _selectedDate.month && date.year == _selectedDate.year;
+    bool isInRange = DateUtil.isDateInRange(date, _firstDate, _lastDate);
 
-    VoidCallback? callback = (isFirstDate <= 0) && (isLastDate >= 0)
-        ? () => setState(() => _selectedDate = DateTime(date.year, date.month))
-        : null;
+    VoidCallback? callback = isInRange ? () => setState(() => _selectedDate = DateTime(date.year, date.month)) : null;
     return TextButton(
       onPressed: callback,
       style: TextButton.styleFrom(
         foregroundColor: isSelected
             ? AppColors.fontPrimary
-            : date.month == DateTime.now().month
-                ? AppColors.green
-                : date.month > _lastDate.month
-                    ? AppColors.grey.withOpacity(0.8)
-                    : AppColors.black,
+            : isInRange
+                ? AppColors.black
+                : AppColors.grey.withOpacity(0.8),
         backgroundColor: isSelected ? AppColors.accent : null,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),

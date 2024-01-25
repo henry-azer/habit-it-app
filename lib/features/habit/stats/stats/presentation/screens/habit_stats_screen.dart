@@ -12,9 +12,9 @@ import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/utils/app_assets_manager.dart';
 import '../../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../../core/utils/app_text_styles.dart';
+import '../../../../../../core/widgets/month-picker/month_picker.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
 import '../../../../../../data/datasources/app/app_local_datasource.dart';
-import '../../../../../profile/presentation/widgets/month-picker/month_picker.dart';
 import '../widgets/habit_stats_item_widget.dart';
 
 class HabitStatsScreen extends StatefulWidget {
@@ -51,7 +51,6 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
   _navigateToMonthStats() async {
     DateTime? selectedDate = await showMonthPicker(
       context: context,
-      initialDate: DateUtil.convertStringToDate(_appData.initDate),
       firstDate: DateUtil.convertStringToDate(_appData.initDate),
       lastDate: DateUtil.convertStringToDate(_appData.lastDate),
     );
@@ -64,7 +63,6 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
   _navigateToMonthProgress() async {
     DateTime? selectedDate = await showMonthPicker(
       context: context,
-      initialDate: DateUtil.convertStringToDate(_appData.initDate),
       firstDate: DateUtil.convertStringToDate(_appData.initDate),
       lastDate: DateUtil.convertStringToDate(_appData.lastDate),
     );

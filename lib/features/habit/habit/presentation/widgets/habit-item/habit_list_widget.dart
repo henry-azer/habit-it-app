@@ -10,18 +10,14 @@ class HabitListWidget extends StatefulWidget {
   final List<Habit> habits;
   final Function(int, int) onReorder;
   final Function(Habit) onPressAction;
-  final Function(Habit) onPressRemove;
   final Function(Habit) onPressSuspend;
-  final Function(Habit) onPressSave;
 
   const HabitListWidget(
       {super.key,
       required this.habits,
       required this.onReorder,
       required this.onPressAction,
-      required this.onPressRemove,
       required this.onPressSuspend,
-      required this.onPressSave,
       required this.selectedDay});
 
   @override
@@ -57,12 +53,6 @@ class _HabitListWidgetState extends State<HabitListWidget> {
         HabitItemWidget(
           key: ValueKey(widget.habits[index].id),
           habit: widget.habits[index],
-          onPressSave: (habit) async {
-            await widget.onPressSave(habit);
-          },
-          onPressRemove: (habit) async {
-            await widget.onPressRemove(habit);
-          },
           onPressActivate: (habit) async {
             await widget.onPressAction(habit);
           },

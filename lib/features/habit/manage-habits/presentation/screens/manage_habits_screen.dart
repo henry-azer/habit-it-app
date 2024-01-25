@@ -7,27 +7,26 @@ import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/core/widgets/appbar/header_widget.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/entities/habit.dart';
-import 'package:habit_it/features/habit/attach-habit/presentation/widgets/attach_habit_list_widget.dart';
 
 import '../../../../../../core/utils/app_text_styles.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
 import '../../../../../config/locale/app_localization_helper.dart';
 import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/utils/app_notifier.dart';
+import '../widgets/manage_habits_list_widget.dart';
 
-class AttachHabitScreen extends StatefulWidget {
+class ManageHabitsScreen extends StatefulWidget {
   final int selectedDay;
 
-  const AttachHabitScreen({Key? key, required this.selectedDay})
+  const ManageHabitsScreen({Key? key, required this.selectedDay})
       : super(key: key);
 
   @override
-  State<AttachHabitScreen> createState() => _AttachHabitScreenState();
+  State<ManageHabitsScreen> createState() => _ManageHabitsScreenState();
 }
 
-class _AttachHabitScreenState extends State<AttachHabitScreen> {
-  final String _currentMonthString =
-      DateUtil.convertDateToMonthString(DateUtil.getTodayDate());
+class _ManageHabitsScreenState extends State<ManageHabitsScreen> {
+  final String _currentMonthString = DateUtil.convertDateToMonthString(DateUtil.getTodayDate());
   late HabitLocalDataSource _habitLocalDataSource;
   late List<Habit> _monthHabits = [];
 
@@ -85,8 +84,7 @@ class _AttachHabitScreenState extends State<AttachHabitScreen> {
         body: Column(
           children: [
             HeaderWidget(
-              title: AppLocalizationHelper.translate(
-                  context, AppLocalizationKeys.attachHabitTitle),
+              title: AppLocalizationHelper.translate(context, AppLocalizationKeys.manageHabitsTitle),
               backButton: true,
               height: 125,
               onPressBack: () {
@@ -117,18 +115,29 @@ class _AttachHabitScreenState extends State<AttachHabitScreen> {
               ),
             },
             if (_monthHabits.isNotEmpty) ...{
+
               Padding(
                 padding: const EdgeInsets.only(top: 15, bottom: 8),
                 child: TitleDividerWidget(
                   text: AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.habits),
+                      context, AppLocalizationKeys.habits) ,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: TitleDividerWidget(
+                  text: "$_currentMonthString-${widget.selectedDay}",
                 ),
               ),
               Expanded(
-                child: AttachHabitListWidget(
+                child: ManageHabitsListWidget(
                   habits: _monthHabits,
                   onReorder: (oldIndex, newIndex) async {
                     await _reorderHabit(oldIndex, newIndex);
+                  },
+                  onPressSave: (habit) async {
+                    await _habitLocalDataSource.updateHabit(habit, _currentMonthString);
+                    await _loadMonthHabits();
                   },
                   onPressSuspend: (habit) async {
                     await _habitLocalDataSource.suspendHabit(

@@ -3,30 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:habit_it/data/entities/habit.dart';
 
 import '../../../../../../core/utils/app_colors.dart';
-import 'attach_habit_item_widget.dart';
+import 'manage_habit_widget.dart';
 
-class AttachHabitListWidget extends StatefulWidget {
+class ManageHabitsListWidget extends StatefulWidget {
   final int selectedDay;
   final List<Habit> habits;
   final Function(int, int) onReorder;
+  final Function(Habit) onPressSave;
   final Function(Habit) onPressSuspend;
   final Function(Habit) onPressUnsuspend;
   final Function(Habit) onPressRemove;
 
-  const AttachHabitListWidget(
+  const ManageHabitsListWidget(
       {super.key,
       required this.habits,
       required this.onReorder,
+      required this.onPressSave,
       required this.onPressSuspend,
       required this.onPressUnsuspend,
       required this.onPressRemove,
       required this.selectedDay});
 
   @override
-  State<AttachHabitListWidget> createState() => _AttachHabitListWidgetState();
+  State<ManageHabitsListWidget> createState() => _ManageHabitsListWidgetState();
 }
 
-class _AttachHabitListWidgetState extends State<AttachHabitListWidget> {
+class _ManageHabitsListWidgetState extends State<ManageHabitsListWidget> {
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -52,19 +54,22 @@ class _AttachHabitListWidgetState extends State<AttachHabitListWidget> {
     return Column(
       key: ValueKey(widget.habits[index].id),
       children: [
-        AttachHabitItemWidget(
+        ManageHabitWidget(
           key: ValueKey(widget.habits[index].id),
           habit: widget.habits[index],
+          onPressSave: (habit) async {
+            await widget.onPressSave(habit);
+          },
           onPressSuspend: (habit) async {
             await widget.onPressSuspend(habit);
           },
           onPressUnsuspend: (habit) async {
             await widget.onPressUnsuspend(habit);
           },
-          selectedDay: widget.selectedDay,
           onPressRemove: (habit) async {
             await widget.onPressRemove(habit);
           },
+          selectedDay: widget.selectedDay,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),

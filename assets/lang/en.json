@@ -140,6 +140,8 @@
   "no_habits_for_this_day": "No habits added for this day.",
   "no_habits_for_this_month": "No habits added for this month.",
   "try_to_add_some": "Try to add some.",
+  "move_month_habits": "You are about to move last month habits to this month.",
+  "keep_your_habits": "Keep Your Last Month Habits",
 
   "statistics": "STATISTICS",
   "month_stats": "Month Stats",

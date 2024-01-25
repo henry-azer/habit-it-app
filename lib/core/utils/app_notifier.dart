@@ -129,6 +129,68 @@ class AppNotifier {
     );
   }
 
+  static void showMoveHabitsActionDialog({
+    required BuildContext context,
+    required String message,
+    required String descriptionMessage,
+    required Function() onClickYes,
+    required Function() onClickNo,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            message,
+            style: TextStyle(color: AppColors.black, fontSize: 16),
+          ),
+          content: Column(
+            children: [
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                descriptionMessage,
+                style: TextStyle(color: AppColors.black, fontSize: 14),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Image.asset(
+                AppImageAssets.addHabit,
+                width: 160,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.black,
+                textStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: onClickYes,
+              child: const Text("Yes"),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.black,
+                textStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: onClickNo,
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   static void showToast(
       {required String message, Color? color, ToastGravity? gravity}) {
     Fluttertoast.showToast(

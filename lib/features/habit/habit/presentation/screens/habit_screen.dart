@@ -41,6 +41,7 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _initServices();
+    _initMonthHabits();
     _loadHabits();
   }
 
@@ -48,20 +49,41 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
     _habitLocalDataSource = GetIt.instance<HabitLocalDataSource>();
   }
 
+  _initMonthHabits() async {
+    String previousMonthString = DateUtil.getPreviousMonthDateString(_selectedDate);
+    bool isInit = await _habitLocalDataSource.isMonthHabitsInit(_currentMonthString);
+    List<Habit> previousMonthHabits = await _habitLocalDataSource.getHabits(previousMonthString);
+    if (!isInit && previousMonthHabits.isNotEmpty) {
+      AppNotifier.showMoveHabitsActionDialog(
+          context: context,
+          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.keepYourHabits),
+          descriptionMessage: "${AppLocalizationHelper.translate(context, AppLocalizationKeys.moveMonthHabits)}",
+          onClickYes: () async {
+            await _habitLocalDataSource.moveMonthHabits(previousMonthString, _currentMonthString, true);
+            await _loadHabits();
+            Navigator.of(context).pop();
+          },
+          onClickNo: () async {
+            await _habitLocalDataSource.moveMonthHabits(previousMonthString, _currentMonthString, false);
+            await _loadHabits();
+            Navigator.of(context).pop();
+          });
+    }
+  }
+
+  _loadHabits() async {
+    await _habitLocalDataSource.updateDayHabits(_selectedDate, _currentMonthString);
+    final habits = await _habitLocalDataSource.getHabitsByDay(_selectedDate, _currentMonthString);
+    setState(() {
+      _habits = habits;
+    });
+  }
+
   _onDateChanged(DateTime newDate) async {
     setState(() {
       _selectedDate = newDate;
     });
     await _loadHabits();
-  }
-
-  _loadHabits() async {
-    await _habitLocalDataSource.updateDayHabits(_selectedDate, _currentMonthString);
-    final habits = await _habitLocalDataSource.getHabitsByDay(
-        _selectedDate, _currentMonthString);
-    setState(() {
-      _habits = habits;
-    });
   }
 
   _navigateToAddHabit() async {

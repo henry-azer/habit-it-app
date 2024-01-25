@@ -56,6 +56,11 @@ class DateUtil {
     return monthDaysList.reversed.toList();
   }
 
+  static String getPreviousMonthDateString(DateTime date) {
+    DateTime previousMonth = DateTime(date.year, date.month - 1, date.day);
+    return "${previousMonth.year}-${previousMonth.month}";
+  }
+
   static String getCurrentMonthDateString() {
     return "${now.year}-${now.month}";
   }

@@ -107,6 +107,8 @@ class AppLocalizationKeys {
   static const String noHabitsForThisDay = 'no_habits_for_this_day';
   static const String noHabitsForThisMonth = 'no_habits_for_this_month';
   static const String tryToAddSome = 'try_to_add_some';
+  static const String moveMonthHabits = 'move_month_habits';
+  static const String keepYourHabits = 'keep_your_habits';
 
   /// STATS
   static const String statistics = 'statistics';

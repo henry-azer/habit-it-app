@@ -23,6 +23,10 @@ abstract class HabitLocalDataSource {
 
   Future<void> updateDayHabits(DateTime day, String monthString);
 
+  Future<bool> isMonthHabitsInit(String month);
+
+  Future<void> moveMonthHabits(String lastMonth, String currentMonth, bool value);
+
   Future<void> reorderHabit(Habit habit1, Habit habit2, String month);
 
   Future<void> toggleHabitStatus(Habit habit, int day, String month);
@@ -151,6 +155,23 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
 
     await setHabits(monthHabits, month);
     await storageManager.setValue(AppLocalStorageKeys.habitInit + DateUtil.convertDateToString(day), true);
+  }
+
+  @override
+  Future<bool> isMonthHabitsInit(String month) async {
+    return await storageManager.getValue<bool>(AppLocalStorageKeys.habitMonthInit + month) ?? false;
+  }
+
+  @override
+  Future<void> moveMonthHabits(String lastMonth, String currentMonth, bool value) async {
+    bool isInit = await storageManager.getValue<bool>(AppLocalStorageKeys.habitMonthInit + currentMonth) ?? false;
+    if (!isInit && value) {
+      List<Habit> lastMonthHabits = await getHabits(lastMonth);
+      for (var habit in lastMonthHabits) {
+        await addHabit(habit.name, habit.repeatDays, currentMonth);
+      }
+    }
+    await storageManager.setValue(AppLocalStorageKeys.habitMonthInit + currentMonth, true);
   }
 
   @override

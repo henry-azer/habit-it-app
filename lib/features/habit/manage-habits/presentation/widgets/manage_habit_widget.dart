@@ -33,13 +33,15 @@ class ManageHabitWidget extends StatefulWidget {
 }
 
 class _ManageHabitWidgetState extends State<ManageHabitWidget> {
-  TextEditingController textEditingController = TextEditingController();
+  TextEditingController habitNameTexController = TextEditingController();
+  List<String> repeatDays = [];
   bool isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    textEditingController.text = widget.habit.name;
+    habitNameTexController.text = widget.habit.name;
+    repeatDays = widget.habit.repeatDays;
   }
 
   @override
@@ -73,9 +75,9 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                             maxLines: 1,
                             maxLength: 20,
                             onChanged: (value) {
-                              widget.habit.name = value;
+                              habitNameTexController.text = value;
                             },
-                            controller: textEditingController,
+                            controller: habitNameTexController,
                             style: AppTextStyles.habitNameText,
                             cursorColor: AppColors.fontPrimary,
                             decoration: InputDecoration(
@@ -122,7 +124,9 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                         children: [
                           InkWell(
                             onTap: () {
-                              if (textEditingController.text.isNotEmpty) {
+                              if (habitNameTexController.text.isNotEmpty) {
+                                widget.habit.name = habitNameTexController.text;
+                                widget.habit.repeatDays = repeatDays;
                                 widget.onPressSave(widget.habit);
                                 setState(() {
                                   isEditing = false;
@@ -143,8 +147,9 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                           const SizedBox(width: 10),
                           InkWell(
                             onTap: () {
+                              habitNameTexController.text = widget.habit.name;
+                              repeatDays = widget.habit.repeatDays;
                               setState(() {
-                                textEditingController.text = widget.habit.name;
                                 isEditing = false;
                               });
                             },
@@ -251,7 +256,7 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                   boxDecoration:
                       BoxDecoration(border: Border.all(color: AppColors.white)),
                   onSelect: (values) {
-                    widget.habit.repeatDays = values;
+                    repeatDays = values;
                   },
                 ),
               ),

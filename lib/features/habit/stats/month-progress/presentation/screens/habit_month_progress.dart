@@ -8,10 +8,9 @@ import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dar
 import 'package:habit_it/data/dtos/habit_progress.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../../config/locale/app_localization_helper.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import '../../../../../../core/utils/app_colors.dart';
-import '../../../../../../core/utils/app_localization_strings.dart';
-import '../../../../../../core/utils/app_text_styles.dart';
 import '../../../../../../core/widgets/appbar/header_widget.dart';
 import '../../../../../../data/enums/habit_state.dart';
 
@@ -72,7 +71,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
             HeaderWidget(
@@ -83,7 +82,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
               backButton: true,
               height: 75,
               paddingLeft: 0.05,
-              titleStyle: AppTextStyles.headerTitle2,
+              titleStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold) ?? const TextStyle(),
             ),
             if (_habitsProgress.isEmpty) ...{
               Column(
@@ -99,9 +98,8 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                     height: 15,
                   ),
                   Text(
-                    AppLocalizationHelper.translate(
-                        context, AppLocalizationKeys.noHabitsForThisMonth),
-                    style: AppTextStyles.noHabitsTextTitle,
+                    AppStrings.noHabitsForThisMonth.tr,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
@@ -120,7 +118,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                           dataRowHeight: 20,
                           border: TableBorder.all(
                             width: 0.5,
-                            color: AppColors.secondary,
+                            color: Theme.of(context).dividerColor,
                           ),
                           columnSpacing: 0,
                           columns: [
@@ -128,11 +126,10 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                               label: Padding(
                                 padding: const EdgeInsets.only(right: 15.0),
                                 child: Text(
-                                  AppLocalizationHelper.translate(
-                                      context, AppLocalizationKeys.habit),
+                                  AppStrings.habit.tr,
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColors.fontPrimary),
+                                      color: Theme.of(context).textTheme.bodyMedium?.color),
                                 ),
                               ),
                             ),
@@ -142,7 +139,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                   day < 10 ? '  $day ' : ' $day ',
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColors.fontPrimary),
+                                      color: Theme.of(context).textTheme.bodyMedium?.color),
                                 ),
                               ),
                             DataColumn(
@@ -150,11 +147,10 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                               label: Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
                                 child: Text(
-                                  AppLocalizationHelper.translate(
-                                      context, AppLocalizationKeys.total),
+                                  AppStrings.total.tr,
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColors.fontPrimary),
+                                      color: Theme.of(context).textTheme.bodyMedium?.color),
                                 ),
                               ),
                             ),
@@ -167,7 +163,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                   Text("${habitProgress.name}    ",
                                       style: TextStyle(
                                           fontSize: 12,
-                                          color: AppColors.fontPrimary)),
+                                          color: Theme.of(context).textTheme.bodyMedium?.color)),
                                 ),
                                 for (int day = 1; day <= _monthDaysCount; day++)
                                   if (habitProgress.daysStates[day] ==
@@ -179,7 +175,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                         padding:
                                             const EdgeInsets.only(left: 4.0),
                                         child: Icon(Icons.check,
-                                            size: 12.0, color: AppColors.green),
+                                            size: 12.0, color: AppColors.success),
                                       ),
                                     ),
                                   } else if (habitProgress.daysStates[day] == HabitState.NOT_DONE) ...{
@@ -190,7 +186,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                         padding:
                                             const EdgeInsets.only(left: 4.0),
                                         child: Icon(Icons.close,
-                                            size: 12.0, color: AppColors.red),
+                                            size: 12.0, color: AppColors.error),
                                       ),
                                     ),
                                   } else ...{
@@ -203,8 +199,8 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                         child: Icon(Icons.remove,
                                             size: 12.0,
                                             color: (habitProgress.daysStates[day] != HabitState.SUSPENDED)
-                                                ? AppColors.grey
-                                                : AppColors.red),
+                                                ? AppColors.darkTextSecondary
+                                                : AppColors.error),
                                       ),
                                     ),
                                   },
@@ -213,7 +209,7 @@ class _HabitMonthProgressScreenState extends State<HabitMonthProgressScreen> {
                                     "   ${habitProgress.totalDone}/${habitProgress.total}",
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColors.fontPrimary),
+                                        color: Theme.of(context).textTheme.bodyMedium?.color),
                                   ),
                                 ),
                               ],

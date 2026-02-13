@@ -74,7 +74,7 @@ class _ManageHabitsListWidgetState extends State<ManageHabitsListWidget> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Divider(
-            color: AppColors.white.withOpacity(0.7),
+            color: Theme.of(context).dividerColor,
           ),
         ),
         if (index == widget.habits.length - 1) ...{

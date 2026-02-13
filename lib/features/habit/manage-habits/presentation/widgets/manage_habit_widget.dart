@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
-import 'package:habit_it/core/utils/app_text_styles.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/data/entities/habit.dart';
 import 'package:habit_it/data/enums/habit_state.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../../../core/utils/date_util.dart';
 import '../../../../../core/widgets/day-picker/model/day_in_week.dart';
@@ -49,7 +47,7 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
-        color: AppColors.accent,
+        color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSecondary,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
           children: [
@@ -61,7 +59,7 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                   height: 28,
                   child: Icon(
                     Icons.drag_handle_outlined,
-                    color: AppColors.white.withOpacity(0.9),
+                    color: AppColors.darkTextPrimary.withValues(alpha: 0.9),
                     size: 18,
                   ),
                 ),
@@ -78,16 +76,16 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                               habitNameTexController.text = value;
                             },
                             controller: habitNameTexController,
-                            style: AppTextStyles.habitNameText,
-                            cursorColor: AppColors.fontPrimary,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.darkTextPrimary, fontWeight: FontWeight.w500),
+                            cursorColor: AppColors.darkTextPrimary,
                             decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: AppColors.fontPrimary),
+                                    BorderSide(color: AppColors.darkTextPrimary),
                               ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: AppColors.fontPrimary),
+                                    BorderSide(color: AppColors.darkTextPrimary),
                               ),
                             ),
                           ),
@@ -109,7 +107,7 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                             });
                           },
                           child: Text(widget.habit.name,
-                              style: AppTextStyles.habitNameText),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.darkTextPrimary, fontWeight: FontWeight.w500)),
                         ),
                         const Expanded(child: SizedBox()),
                       ],
@@ -138,10 +136,10 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                               height: 30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                color: AppColors.black.withOpacity(0.3),
+                                color: Colors.black.withValues(alpha: 0.3),
                               ),
-                              child: Icon(LineAwesomeIcons.save,
-                                  size: 18.0, color: AppColors.green),
+                              child: Icon(Icons.save_outlined,
+                                  size: 18.0, color: AppColors.success),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -158,10 +156,10 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                               height: 30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                color: AppColors.black.withOpacity(0.3),
+                                color: Colors.black.withValues(alpha: 0.3),
                               ),
                               child: Icon(Icons.close,
-                                  size: 18.0, color: AppColors.grey),
+                                  size: 18.0, color: AppColors.darkTextSecondary),
                             ),
                           ),
                         ],
@@ -187,7 +185,7 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                           height: 30,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: AppColors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                           ),
                           child: Icon(
                             ((widget.habit.daysStates[widget.selectedDay] ==
@@ -202,8 +200,8 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                                         widget.habit.daysStates[
                                                 widget.selectedDay] ==
                                             HabitState.CREATED))
-                                ? LineAwesomeIcons.link
-                                : LineAwesomeIcons.unlink,
+                                ? Icons.link
+                                : Icons.link_off,
                             size: 18.0,
                             color:
                                 ((widget.habit.daysStates[widget.selectedDay] ==
@@ -218,8 +216,8 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                                             widget.habit.daysStates[
                                                     widget.selectedDay] ==
                                                 HabitState.CREATED))
-                                    ? AppColors.green
-                                    : AppColors.red,
+                                    ? AppColors.success
+                                    : AppColors.error,
                           ),
                         ),
                       ),
@@ -233,10 +231,10 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                           height: 30,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: AppColors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                           ),
                           child: Icon(Icons.delete_outline,
-                              size: 18.0, color: AppColors.grey),
+                              size: 18.0, color: AppColors.darkTextSecondary),
                         ),
                       ),
                     ],
@@ -254,7 +252,7 @@ class _ManageHabitWidgetState extends State<ManageHabitWidget> {
                       widget.habit.repeatDays),
                   border: false,
                   boxDecoration:
-                      BoxDecoration(border: Border.all(color: AppColors.white)),
+                      BoxDecoration(border: Border.all(color: Theme.of(context).dividerColor)),
                   onSelect: (values) {
                     repeatDays = values;
                   },

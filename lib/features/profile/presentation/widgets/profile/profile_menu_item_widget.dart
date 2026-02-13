@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class ProfileMenuItemWidget extends StatelessWidget {
   final String title;
@@ -10,21 +9,20 @@ class ProfileMenuItemWidget extends StatelessWidget {
   final Color? textColor;
 
   const ProfileMenuItemWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.onPress,
     this.endIcon = true,
     this.textColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: onPress,
-      hoverColor: AppColors.primary,
-      highlightColor: AppColors.primary,
-      focusColor: AppColors.primary,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         child: Row(
@@ -34,9 +32,9 @@ class ProfileMenuItemWidget extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: AppColors.accent,
+                color: isDark ? AppColors.darkSurface : AppColors.lightSecondary,
               ),
-              child: Icon(icon, color: AppColors.white),
+              child: Icon(icon, color: AppColors.darkTextPrimary),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -45,15 +43,15 @@ class ProfileMenuItemWidget extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
-                    ?.apply(color: textColor ?? AppColors.fontPrimary),
+                    ?.apply(color: textColor),
               ),
             ),
             if (endIcon)
               SizedBox(
                 width: 30,
                 height: 30,
-                child: Icon(LineAwesomeIcons.angle_right,
-                    size: 18.0, color: AppColors.grey),
+                child: Icon(Icons.chevron_right,
+                    size: 18.0, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
               ),
           ],
         ),

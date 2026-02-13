@@ -1,42 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:habit_it/config/locale/app_localization_helper.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
-import 'package:habit_it/core/utils/app_localization_strings.dart';
-import 'package:habit_it/core/utils/media_query_values.dart';
-import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
-import 'package:habit_it/data/entities/app.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
+import 'package:habit_it/core/providers/i_auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../core/utils/app_text_styles.dart';
-import '../../../../core/utils/date_util.dart';
-import '../../../../data/datasources/app/app_local_datasource.dart';
-import '../../../../data/entities/user.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
-  late UserLocalDataSource _userLocalDataSource;
-  late AppLocalDataSource _appLocalDataSource;
-
-  late bool _isUserBiometricAuthenticated = false;
-  late bool _isUserRegistered = false;
-  late bool _isInit = false;
-
   late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    _initLocalDataSources();
-    _initCurrentUserData();
     _navigatorHandler();
   }
 
@@ -46,48 +31,27 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     super.dispose();
   }
 
-  _initLocalDataSources() async {
-    _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
-    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-  }
-
-  _initCurrentUserData() async {
-    final App app = await _appLocalDataSource.getApp();
-    final User user =  await _userLocalDataSource.getUser();
-    setState(() {
-      _isInit = app.init;
-      _isUserRegistered = user.isRegistered;
-      _isUserBiometricAuthenticated = user.isBiometricAuthenticated;
-    });
-  }
-
   _navigatorHandler() {
-    _timer = Timer(const Duration(seconds: 1), () {
-      if (_isUserRegistered) {
-        _timer = Timer(const Duration(seconds: 0), () => _navigateNext());
-      } else {
-        _timer = Timer(const Duration(seconds: 5), () => _navigateNext());
-      }
+    _timer = Timer(const Duration(seconds: 2), () {
+      _navigateNext();
     });
   }
 
   _navigateNext() async {
-    if (!_isInit) {
-      Navigator.pushReplacementNamed(context, Routes.appOnboarding);
+    if (!mounted) return;
+
+    final authProvider = Provider.of<IAuthProvider>(context, listen: false);
+
+    final isOnboarded = await authProvider.isUserOnboarded();
+    if (!isOnboarded) {
+      Navigator.pushReplacementNamed(context, Routes.onboarding);
       return;
     }
 
-    if (!_isUserRegistered) {
-      Navigator.pushReplacementNamed(context, Routes.appSignup);
-      return;
-    }
-
-    if (_isUserBiometricAuthenticated) {
-      await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
-      Navigator.pushReplacementNamed(context, Routes.appSigninBiometric);
+    if (authProvider.isAuthenticated) {
+      Navigator.pushReplacementNamed(context, Routes.app);
     } else {
-      await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
-      Navigator.pushReplacementNamed(context, Routes.appSigninPIN);
+      Navigator.pushReplacementNamed(context, Routes.login);
     }
   }
 
@@ -103,17 +67,15 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 AppImageAssets.logo,
                 height: 300,
               ),
-              SizedBox(
-                height: context.height * 0.05,
-              ),
+              const SizedBox(height: 30),
               Text(
-                AppLocalizationHelper.translate(
-                    context, AppLocalizationKeys.splashTitle),
-                style: AppTextStyles.splashText,
+                AppStrings.appName.tr.toUpperCase(),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 3,
+                ),
               ),
-              SizedBox(
-                height: context.height * 0.10,
-              ),
+              const SizedBox(height: 60),
             ],
           ),
         ),

@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import 'package:habit_it/features/app-navigator/presentation/screens/app_navigator_screen.dart';
+import 'package:habit_it/features/auth/presentation/screens/signin_screen.dart';
+import 'package:habit_it/features/auth/presentation/screens/signup_screen.dart';
 import 'package:habit_it/features/habit/manage-habits/presentation/screens/manage_habits_screen.dart';
 import 'package:habit_it/features/habit/stats/month-stats/presentation/screens/habit_month_stats.dart';
 import 'package:habit_it/features/habit/stats/stats/presentation/screens/habit_stats_screen.dart';
 import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
-import 'package:habit_it/features/signup/local-biometric/presentation/screens/signup_biometric_screen.dart';
-import 'package:habit_it/features/signup/local-pin/presentation/screens/signup_pin_screen.dart';
 import 'package:habit_it/features/splash/presentation/screens/splash_screen.dart';
-
-import '../../core/utils/app_strings.dart';
-import '../../features/habit/add-habit/presentation/screens/add_habit_screen.dart';
-import '../../features/habit/habit/presentation/screens/habit_screen.dart';
-import '../../features/habit/stats/month-progress/presentation/screens/habit_month_progress.dart';
-import '../../features/signin/biometric-signin/presentation/screens/signin_biometric_screen.dart';
-import '../../features/signin/pin-signin/presentation/screens/signin_pin_screen.dart';
-import '../../features/signup/base-signup/presentation/screens/signup_screen.dart';
-import '../../features/signup/success-signup/presentation/screens/signup_success_screen.dart';
+import 'package:habit_it/features/habit/add-habit/presentation/screens/add_habit_screen.dart';
+import 'package:habit_it/features/habit/habit/presentation/screens/habit_screen.dart';
+import 'package:habit_it/features/habit/stats/month-progress/presentation/screens/habit_month_progress.dart';
 
 class Routes {
   static const String initial = '/';
   static const String app = '/app';
-  static const String appOnboarding = '/app/onboarding';
+  static const String onboarding = '/onboarding';
 
-  static const String appSignup = '/app/signup';
-  static const String appSignupPIN = '/app/signup/pin';
-  static const String appSignupBiometric = '/app/signup/biometric';
-  static const String appSignupSuccess = '/app/signup/success';
-
-  static const String appSigninPIN = '/app/signin/pin';
-  static const String appSigninBiometric = '/app/signin/biometric';
+  static const String login = '/auth/login';
+  static const String register = '/auth/register';
 
   static const String appHabit = '/app/habit';
   static const String appHabitAdd = '/app/habit/add';
@@ -40,6 +30,14 @@ class Routes {
   static const String appHabitMonthProgress = '/app/habit/stats/month-progress';
 
   static const String appProfile = '/app/profile';
+  static const String settings = '/app/settings';
+  static const String userProfile = '/app/settings/profile';
+  static const String changePassword = '/app/settings/change-password';
+  static const String theme = '/app/settings/theme';
+  static const String language = '/app/settings/language';
+  static const String about = '/app/settings/about';
+  static const String privacyPolicy = '/app/terms/privacy-policy';
+  static const String termsOfService = '/app/terms/terms-of-service';
 }
 
 class AppRoutes {
@@ -52,52 +50,24 @@ class AppRoutes {
             },
             settings: routeSettings);
 
-      case Routes.appOnboarding:
+      case Routes.onboarding:
         return MaterialPageRoute(
             builder: (context) {
               return const OnboardingScreen();
             },
             settings: routeSettings);
 
-      case Routes.appSignup:
+      case Routes.login:
         return MaterialPageRoute(
             builder: (context) {
-              return const SignupScreen();
+              return const SignInScreen();
             },
             settings: routeSettings);
 
-      case Routes.appSignupBiometric:
+      case Routes.register:
         return MaterialPageRoute(
             builder: (context) {
-              return const SignupBiometricScreen();
-            },
-            settings: routeSettings);
-
-      case Routes.appSignupPIN:
-        return MaterialPageRoute(
-            builder: (context) {
-              return const SignupPINScreen();
-            },
-            settings: routeSettings);
-
-      case Routes.appSignupSuccess:
-        return MaterialPageRoute(
-            builder: (context) {
-              return const SignupSuccessScreen();
-            },
-            settings: routeSettings);
-
-      case Routes.appSigninPIN:
-        return MaterialPageRoute(
-            builder: (context) {
-              return const SigninPINScreen();
-            },
-            settings: routeSettings);
-
-      case Routes.appSigninBiometric:
-        return MaterialPageRoute(
-            builder: (context) {
-              return const SigninBiometricScreen();
+              return const SignUpScreen();
             },
             settings: routeSettings);
 
@@ -159,8 +129,6 @@ class AppRoutes {
               return const ProfileScreen();
             },
             settings: routeSettings);
-
-
 
       default:
         return undefinedRoute();

@@ -8,10 +8,9 @@ import 'package:habit_it/core/widgets/appbar/header_widget.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/entities/habit.dart';
 
-import '../../../../../../core/utils/app_text_styles.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
-import '../../../../../config/locale/app_localization_helper.dart';
-import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/utils/app_notifier.dart';
 import '../widgets/manage_habits_list_widget.dart';
 
@@ -64,10 +63,9 @@ class _ManageHabitsScreenState extends State<ManageHabitsScreen> {
   _removeHabit(Habit habit) {
     AppNotifier.showDeleteActionDialog(
         context: context,
-        message: AppLocalizationHelper.translate(
-            context, AppLocalizationKeys.areYouSure),
+        message: AppStrings.areYouSure.tr,
         descriptionMessage:
-            "${AppLocalizationHelper.translate(context, AppLocalizationKeys.remove)} `${habit.name}` ${AppLocalizationHelper.translate(context, AppLocalizationKeys.habit)}",
+            "${AppStrings.remove.tr} `${habit.name}` ${AppStrings.habit.tr}",
         onClickYes: () async {
           await _habitLocalDataSource.removeHabit(habit, _currentMonthString);
           await _loadMonthHabits();
@@ -84,13 +82,13 @@ class _ManageHabitsScreenState extends State<ManageHabitsScreen> {
         body: Column(
           children: [
             HeaderWidget(
-              title: AppLocalizationHelper.translate(context, AppLocalizationKeys.manageHabitsTitle),
+              title: AppStrings.manageHabits.tr,
               backButton: true,
               height: 125,
               onPressBack: () {
                 Navigator.of(context).pop(false);
               },
-              titleStyle: AppTextStyles.headerTitle,
+              titleStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold) ?? const TextStyle(),
             ),
             if (_monthHabits.isEmpty) ...{
               Column(
@@ -107,9 +105,8 @@ class _ManageHabitsScreenState extends State<ManageHabitsScreen> {
                     height: 15,
                   ),
                   Text(
-                    AppLocalizationHelper.translate(
-                        context, AppLocalizationKeys.noHabitsForThisMonth),
-                    style: AppTextStyles.noHabitsTextTitle,
+                    AppStrings.noHabitsForThisMonth.tr,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
@@ -119,8 +116,7 @@ class _ManageHabitsScreenState extends State<ManageHabitsScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 15, bottom: 8),
                 child: TitleDividerWidget(
-                  text: AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.habits) ,
+                  text: AppStrings.habits.tr,
                 ),
               ),
               Padding(

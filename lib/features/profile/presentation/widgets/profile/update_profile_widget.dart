@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
-import 'package:habit_it/core/utils/app_text_styles.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/core/widgets/buttons/button_widget.dart';
 import 'package:habit_it/core/widgets/forms/text_field_widget.dart';
 import 'package:habit_it/data/enums/gender.dart';
-import '../../../../../config/locale/app_localization_helper.dart';
-import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/validation/validation_types.dart';
 import '../../../../../core/widgets/dropdown/custom_dropdown.dart';
 import '../../../../../data/entities/user.dart';
@@ -27,6 +26,7 @@ class UpdateProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final genderTextController = TextEditingController();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -34,7 +34,9 @@ class UpdateProfileWidget extends StatelessWidget {
         children: [
           const SizedBox(height: 15),
           Divider(
-            color: AppColors.white.withOpacity(0.7),
+            color: isDark
+                ? AppColors.darkTextSecondary.withValues(alpha: 0.3)
+                : AppColors.lightTextSecondary.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 35),
           Form(
@@ -47,23 +49,22 @@ class UpdateProfileWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: TextFieldWidget(
                     enabled: true,
-                    hintText: AppLocalizationHelper.translate(
-                        context, AppLocalizationKeys.username),
-                    hintTextStyle: AppTextStyles.signupNameTextFieldHint,
-                    keyboardType: TextInputType.emailAddress,
+                    hintText: AppStrings.username.tr,
+                    hintTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+                    keyboardType: TextInputType.text,
                     validateType: ValidationTypes.signupName,
-                    errorStyle: AppTextStyles.signupNameTextFieldError,
+                    errorStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.error),
                     errorBorderColor: AppColors.error,
-                    borderColor: AppColors.border,
+                    borderColor: Theme.of(context).dividerColor,
                     borderWidth: 1,
                     maxLines: 1,
                     maxLength: 16,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.signupNameTextField,
-                    cursorColor: AppColors.fontSecondary,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    cursorColor: Theme.of(context).textTheme.bodyLarge?.color,
                     secureText: false,
                     onSave: (value) {
-                      updatedUser.username = value;
+                      // User is now immutable - handle via provider
                     },
                     contentPadding: const EdgeInsets.only(
                       top: 12,
@@ -77,16 +78,14 @@ class UpdateProfileWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 70),
                   child: CustomDropdown(
                     fillColor: Colors.transparent,
-                    selectedStyle: AppTextStyles.signupGenderSelectedFieldItem,
-                    hintStyle: AppTextStyles.signupGenderFieldHint,
-                    hintText: AppLocalizationHelper.translate(
-                        context, AppLocalizationKeys.gender),
+                    selectedStyle: Theme.of(context).textTheme.bodyMedium ?? const TextStyle(),
+                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor) ?? const TextStyle(),
+                    hintText: AppStrings.gender.tr,
                     items: genders,
                     borderRadius: BorderRadius.zero,
-                    errorStyle: AppTextStyles.signupGenderFieldError,
+                    errorStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.error) ?? const TextStyle(),
                     onChanged: (value) {
                       genderTextController.text = value;
-                      updatedUser.gender = value;
                     },
                     controller: genderTextController,
                   ),
@@ -100,17 +99,16 @@ class UpdateProfileWidget extends StatelessWidget {
             children: [
               ButtonWidget(
                 onPress: onSubmit,
-                backgroundColor: AppColors.secondary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 width: 120,
                 height: 40,
                 borderRadius: 0,
                 borderWidth: 0.7,
-                borderColor: AppColors.border,
+                borderColor: Theme.of(context).dividerColor,
                 child: Text(
-                  AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.update),
+                  AppStrings.update.tr,
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.profileUpdateButtonText,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
               ButtonWidget(
@@ -119,13 +117,12 @@ class UpdateProfileWidget extends StatelessWidget {
                 width: 120,
                 height: 40,
                 borderRadius: 0,
-                borderColor: AppColors.border,
+                borderColor: Theme.of(context).dividerColor,
                 borderWidth: 0.7,
                 child: Text(
-                  AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.cancel),
+                  AppStrings.cancel.tr,
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.profileCancelButtonText,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ],

@@ -30,7 +30,7 @@ class HabitStatsItemWidget extends StatelessWidget {
       child: Container(
         width: containerWidth,
         height: containerHeight,
-        color: AppColors.accent,
+        color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSecondary,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

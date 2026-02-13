@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/app_colors.dart';
-import '../../../../../core/utils/app_text_styles.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
   final String image;
@@ -12,12 +11,14 @@ class ProfileHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Stack(
       children: [
         Container(
           height: 280,
           decoration: BoxDecoration(
-            color: AppColors.accent,
+            color: isDark ? AppColors.darkSurface : AppColors.lightSecondary,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(60),
               bottomRight: Radius.circular(60),
@@ -42,7 +43,10 @@ class ProfileHeaderWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20.0, bottom: 40.0),
                 child: Text(
                   title,
-                  style: AppTextStyles.profileTitle,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: AppColors.darkTextPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

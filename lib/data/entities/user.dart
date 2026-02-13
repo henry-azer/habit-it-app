@@ -1,47 +1,105 @@
 class User {
-  late String id;
-  late String username;
-  late String gender;
-  late String password;
-  late bool isRegistered;
-  late bool isAuthenticated;
-  late bool isPINAuthenticated;
-  late bool isBiometricAuthenticated;
+  final String id;
+  final String email;
+  final String username;
+  final String? displayName;
+  final String? gender;
+  final DateTime? birthday;
+  final String? phoneNumber;
+  final bool isAuthenticated;
+  final bool isOnboardingCompleted;
+  final bool emailVerified;
+  final DateTime? lastSignInAt;
+  final DateTime createdDate;
+  final Map<String, dynamic>? metadata;
 
-  User({
-    this.id = "",
-    this.username = "",
-    this.gender = "",
-    this.password = "",
-    this.isRegistered = false,
-    this.isAuthenticated = false,
-    this.isPINAuthenticated = false,
-    this.isBiometricAuthenticated = false,
+  const User({
+    required this.id,
+    required this.email,
+    required this.username,
+    this.displayName,
+    this.gender,
+    this.birthday,
+    this.phoneNumber,
+    required this.isAuthenticated,
+    required this.isOnboardingCompleted,
+    this.emailVerified = false,
+    this.lastSignInAt,
+    required this.createdDate,
+    this.metadata,
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'email': email,
       'username': username,
+      'displayName': displayName,
       'gender': gender,
-      'password': password,
-      'isRegistered': isRegistered,
+      'birthday': birthday?.toIso8601String(),
+      'phoneNumber': phoneNumber,
       'isAuthenticated': isAuthenticated,
-      'isPINAuthenticated': isPINAuthenticated,
-      'isBiometricAuthenticated': isBiometricAuthenticated,
+      'isOnboardingCompleted': isOnboardingCompleted,
+      'emailVerified': emailVerified,
+      'lastSignInAt': lastSignInAt?.toIso8601String(),
+      'createdDate': createdDate.toIso8601String(),
+      'metadata': metadata,
     };
   }
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: json['id'] ?? "",
-      username: json['username'] ?? "",
-      gender: json['gender'] ?? "",
-      password: json['password'] ?? "",
-      isRegistered: json['isRegistered'] ?? false,
-      isAuthenticated: json['isAuthenticated'] ?? false,
-      isPINAuthenticated: json['isPINAuthenticated'] ?? false,
-      isBiometricAuthenticated: json['isBiometricAuthenticated'] ?? false,
+      id: map['id'] ?? '',
+      email: map['email'] ?? '',
+      username: map['username'] ?? '',
+      displayName: map['displayName'] as String?,
+      gender: map['gender'] as String?,
+      birthday: map['birthday'] != null
+          ? DateTime.parse(map['birthday'])
+          : null,
+      phoneNumber: map['phoneNumber'] as String?,
+      isAuthenticated: map['isAuthenticated'] ?? false,
+      isOnboardingCompleted: map['isOnboardingCompleted'] ?? false,
+      emailVerified: map['emailVerified'] ?? false,
+      lastSignInAt: map['lastSignInAt'] != null
+          ? DateTime.parse(map['lastSignInAt'])
+          : null,
+      createdDate: DateTime.parse(
+          map['createdDate'] ?? DateTime.now().toIso8601String()),
+      metadata: map['metadata'] as Map<String, dynamic>?,
+    );
+  }
+
+  User copyWith({
+    String? id,
+    String? email,
+    String? username,
+    String? displayName,
+    String? gender,
+    DateTime? birthday,
+    String? phoneNumber,
+    bool? isAuthenticated,
+    bool? isOnboardingCompleted,
+    bool? emailVerified,
+    DateTime? lastSignInAt,
+    DateTime? createdDate,
+    Map<String, dynamic>? metadata,
+  }) {
+    return User(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      displayName: displayName ?? this.displayName,
+      gender: gender ?? this.gender,
+      birthday: birthday ?? this.birthday,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      isOnboardingCompleted:
+          isOnboardingCompleted ?? this.isOnboardingCompleted,
+      emailVerified: emailVerified ?? this.emailVerified,
+      lastSignInAt: lastSignInAt ?? this.lastSignInAt,
+      createdDate: createdDate ?? this.createdDate,
+      metadata: metadata ?? this.metadata,
     );
   }
 }

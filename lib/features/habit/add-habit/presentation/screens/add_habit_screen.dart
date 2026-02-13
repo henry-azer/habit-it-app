@@ -10,14 +10,13 @@ import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_notifier.dart';
-import '../../../../../../core/utils/app_text_styles.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import '../../../../../../core/validation/validation_types.dart';
 import '../../../../../../core/widgets/buttons/button_widget.dart';
 import '../../../../../../core/widgets/day-picker/widgets/select_day.dart';
 import '../../../../../../core/widgets/forms/text_field_widget.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
-import '../../../../../config/locale/app_localization_helper.dart';
-import '../../../../../core/utils/app_localization_strings.dart';
 
 class AddHabitScreen extends StatefulWidget {
   const AddHabitScreen({Key? key}) : super(key: key);
@@ -45,8 +44,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     if (habitName.isEmpty) {
       AppNotifier.showSnackBar(
           context: context,
-          message: AppLocalizationHelper.translate(
-              context, AppLocalizationKeys.habitNameRequired));
+          message: AppStrings.habitNameRequired.tr);
       return;
     }
 
@@ -75,14 +73,13 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
         body: Column(
           children: [
             HeaderWidget(
-              title: AppLocalizationHelper.translate(
-                  context, AppLocalizationKeys.habitTitle),
+              title: AppStrings.habit.tr.toUpperCase(),
               backButton: true,
               height: 125,
               onPressBack: () {
                 Navigator.of(context).pop(false);
               },
-              titleStyle: AppTextStyles.headerTitle,
+              titleStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold) ?? const TextStyle(),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -91,8 +88,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 10),
                       child: TitleDividerWidget(
-                        text: AppLocalizationHelper.translate(
-                            context, AppLocalizationKeys.createNewHabit),
+                        text: AppStrings.createNewHabit.tr,
                       ),
                     ),
                     const SizedBox(
@@ -108,8 +104,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 10),
                       child: TitleDividerWidget(
-                        text: AppLocalizationHelper.translate(
-                            context, AppLocalizationKeys.habitNameCap),
+                        text: AppStrings.habitName.tr,
                       ),
                     ),
                     const SizedBox(
@@ -119,20 +114,19 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 55.0),
                       child: TextFieldWidget(
                         enabled: true,
-                        hintText: AppLocalizationHelper.translate(
-                            context, AppLocalizationKeys.habitName),
-                        hintTextStyle: AppTextStyles.signupNameTextFieldHint,
-                        keyboardType: TextInputType.emailAddress,
+                        hintText: AppStrings.habitName.tr,
+                        hintTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+                        keyboardType: TextInputType.text,
                         validateType: ValidationTypes.signupName,
-                        errorStyle: AppTextStyles.signupNameTextFieldError,
+                        errorStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.error),
                         errorBorderColor: AppColors.error,
-                        borderColor: AppColors.border,
+                        borderColor: Theme.of(context).dividerColor,
                         borderWidth: 1,
                         maxLines: 1,
                         maxLength: 20,
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.signupNameTextField,
-                        cursorColor: AppColors.fontSecondary,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        cursorColor: Theme.of(context).textTheme.bodyLarge?.color,
                         secureText: false,
                         onChange: (value) {
                           habitName = value;
@@ -148,8 +142,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 10),
                       child: TitleDividerWidget(
-                        text: AppLocalizationHelper.translate(
-                            context, AppLocalizationKeys.repeatDays),
+                        text: AppStrings.repeatDays.tr,
                       ),
                     ),
                     const SizedBox(
@@ -163,7 +156,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                         days: DayInWeek.getWeekDays(),
                         border: false,
                         boxDecoration: BoxDecoration(
-                            border: Border.all(color: AppColors.white)),
+                            border: Border.all(color: Theme.of(context).dividerColor)),
                         onSelect: (values) {
                           repeatDays = values;
                         },
@@ -177,14 +170,13 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                       height: 45,
                       borderRadius: 0,
                       borderWidth: 1.0,
-                      borderColor: AppColors.border,
-                      backgroundColor: AppColors.secondary,
+                      borderColor: Theme.of(context).dividerColor,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       onPress: _submitHabitFrom,
                       child: Text(
-                        AppLocalizationHelper.translate(
-                            context, AppLocalizationKeys.submit),
+                        AppStrings.submit.tr,
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.signupSuccessButton,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/app_text_styles.dart';
-
 class OnboardingItem extends StatelessWidget {
   final String title;
   final String image;
@@ -27,7 +25,9 @@ class OnboardingItem extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: AppTextStyles.onboardingSubtitle,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.1),
           Image.asset(image),
@@ -35,7 +35,9 @@ class OnboardingItem extends StatelessWidget {
           Text(
             description,
             textAlign: TextAlign.center,
-            style: AppTextStyles.onboardingDescription,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              height: 1.5,
+            ),
           ),
         ],
       ),

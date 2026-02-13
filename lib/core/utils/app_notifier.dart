@@ -1,26 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_it/core/utils/app_assets_manager.dart';
 
 import 'app_colors.dart';
-import 'app_text_styles.dart';
 
 class AppNotifier {
   static void showErrorDialog(
       {required BuildContext context, required String message}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     showDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
               title: Text(
                 message,
-                style: TextStyle(color: AppColors.black, fontSize: 16),
+                style: TextStyle(color: textColor, fontSize: 16),
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   style: TextButton.styleFrom(
-                      foregroundColor: AppColors.black,
+                      foregroundColor: textColor,
                       textStyle: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.bold)),
                   child: const Text('Ok'),
@@ -33,18 +33,20 @@ class AppNotifier {
       {required BuildContext context,
       required String message,
       required Function() onClickYes}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
           title: Text(
             message,
-            style: TextStyle(color: AppColors.black, fontSize: 16),
+            style: TextStyle(color: textColor, fontSize: 16),
           ),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
-                  foregroundColor: AppColors.black,
+                  foregroundColor: textColor,
                   textStyle: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.bold)),
               onPressed: onClickYes,
@@ -52,7 +54,7 @@ class AppNotifier {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                  foregroundColor: AppColors.black,
+                  foregroundColor: textColor,
                   textStyle: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.bold)),
               onPressed: () {
@@ -72,13 +74,15 @@ class AppNotifier {
     required String descriptionMessage,
     required Function() onClickYes,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
           title: Text(
             message,
-            style: TextStyle(color: AppColors.black, fontSize: 16),
+            style: TextStyle(color: textColor, fontSize: 16),
           ),
           content: Column(
             children: [
@@ -87,7 +91,7 @@ class AppNotifier {
               ),
               Text(
                 descriptionMessage,
-                style: TextStyle(color: AppColors.black, fontSize: 14),
+                style: TextStyle(color: textColor, fontSize: 14),
               ),
               const SizedBox(
                 height: 10,
@@ -101,7 +105,7 @@ class AppNotifier {
           actions: [
             TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.black,
+                foregroundColor: textColor,
                 textStyle: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -112,7 +116,7 @@ class AppNotifier {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.black,
+                foregroundColor: textColor,
                 textStyle: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -136,13 +140,15 @@ class AppNotifier {
     required Function() onClickYes,
     required Function() onClickNo,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
           title: Text(
             message,
-            style: TextStyle(color: AppColors.black, fontSize: 16),
+            style: TextStyle(color: textColor, fontSize: 16),
           ),
           content: Column(
             children: [
@@ -151,7 +157,7 @@ class AppNotifier {
               ),
               Text(
                 descriptionMessage,
-                style: TextStyle(color: AppColors.black, fontSize: 14),
+                style: TextStyle(color: textColor, fontSize: 14),
               ),
               const SizedBox(
                 height: 10,
@@ -165,7 +171,7 @@ class AppNotifier {
           actions: [
             TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.black,
+                foregroundColor: textColor,
                 textStyle: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -176,7 +182,7 @@ class AppNotifier {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.black,
+                foregroundColor: textColor,
                 textStyle: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -191,24 +197,22 @@ class AppNotifier {
     );
   }
 
-  static void showToast(
-      {required String message, Color? color, ToastGravity? gravity}) {
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: gravity ?? ToastGravity.BOTTOM,
-        backgroundColor: color ?? AppColors.snackbar);
-  }
-
   static void showSnackBar(
       {required BuildContext context, required String message}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: AppColors.snackbar.withOpacity(0.9),
+      backgroundColor: isDark
+          ? AppColors.darkCardBackground.withValues(alpha: 0.9)
+          : AppColors.lightTextPrimary.withValues(alpha: 0.9),
       behavior: SnackBarBehavior.floating,
       dismissDirection: DismissDirection.none,
       content: Text(
         message,
-        style: AppTextStyles.snackbar,
+        style: TextStyle(
+          color: isDark ? AppColors.darkTextPrimary : AppColors.lightOnPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     ));
   }

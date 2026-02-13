@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../utils/app_colors.dart';
 
@@ -23,12 +22,14 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Stack(
       children: [
         Container(
           height: height,
           decoration: BoxDecoration(
-            color: AppColors.accent,
+            color: isDark ? AppColors.darkSurface : AppColors.lightSecondary,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(60),
               bottomRight: Radius.circular(60),
@@ -47,7 +48,7 @@ class HeaderWidget extends StatelessWidget {
                   child: IconButton(
                     color: Colors.white,
                     onPressed: onPressBack,
-                    icon: const Icon(LineAwesomeIcons.angle_left),
+                    icon: const Icon(Icons.arrow_back_ios),
                   ),
                 ),
               ],

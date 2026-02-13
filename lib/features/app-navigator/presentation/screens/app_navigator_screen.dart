@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
+import 'package:habit_it/core/providers/i_auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../data/entities/user.dart';
 import '../widgets/navigation_bar_widget.dart';
 
 class AppNavigatorScreen extends StatefulWidget {
-  const AppNavigatorScreen({Key? key}) : super(key: key);
+  const AppNavigatorScreen({super.key});
 
   @override
   State<AppNavigatorScreen> createState() => _AppNavigatorScreenState();
 }
 
 class _AppNavigatorScreenState extends State<AppNavigatorScreen> with WidgetsBindingObserver {
-  late UserLocalDataSource _userLocalDataSource;
 
   @override
   void initState() {
     super.initState();
-    _initLocalDataSources();
     _checkIfUserAuthenticated();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -30,32 +27,11 @@ class _AppNavigatorScreenState extends State<AppNavigatorScreen> with WidgetsBin
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
-      updateUser();
-    }
-  }
-
-  _initLocalDataSources() {
-    _userLocalDataSource = GetIt.instance<UserLocalDataSource>();
-  }
-
   _checkIfUserAuthenticated() async {
-    final User user = await _userLocalDataSource.getUser();
-    if (!user.isAuthenticated) {
-      if (user.isBiometricAuthenticated) {
-        Navigator.pushReplacementNamed(context, Routes.appSigninBiometric);
-      } else {
-        Navigator.pushReplacementNamed(context, Routes.appSigninPIN);
-      }
+    final authProvider = Provider.of<IAuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated) {
+      Navigator.pushReplacementNamed(context, Routes.login);
     }
-  }
-
-  Future<void> updateUser() async {
-    final User user = await _userLocalDataSource.getUser();
-    user.isAuthenticated = false;
-    await _userLocalDataSource.setUser(user);
   }
 
   @override

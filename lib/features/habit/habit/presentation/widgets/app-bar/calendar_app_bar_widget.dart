@@ -3,8 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../../config/locale/app_localization_helper.dart';
-import '../../../../../../core/utils/app_localization_strings.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import '../../../../../../core/utils/date_util.dart';
 
 class CalendarAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -110,8 +110,7 @@ class CalendarAppBarState extends State<CalendarAppBar> {
                 child: Row(
                   children: [
                     Text(
-                      AppLocalizationHelper.translate(
-                          context, AppLocalizationKeys.appName),
+                      AppStrings.appName.tr,
                       style: TextStyle(
                           fontSize: 23.0,
                           color: fontColor,

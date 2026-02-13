@@ -7,11 +7,10 @@ import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/core/widgets/appbar/header_widget.dart';
 import 'package:habit_it/data/entities/app.dart';
 
-import '../../../../../../config/locale/app_localization_helper.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import '../../../../../../config/routes/app_routes.dart';
 import '../../../../../../core/utils/app_assets_manager.dart';
-import '../../../../../../core/utils/app_localization_strings.dart';
-import '../../../../../../core/utils/app_text_styles.dart';
 import '../../../../../../core/widgets/month-picker/month_picker.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
 import '../../../../../../data/datasources/app/app_local_datasource.dart';
@@ -42,10 +41,12 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
 
   _initAppServices() async {
     _appLocalDataSource = GetIt.instance<AppLocalDataSource>();
-    final app = await _appLocalDataSource.getApp();
-    setState(() {
-      _appData = app;
-    });
+    final app = await _appLocalDataSource.getAppData();
+    if (app != null) {
+      setState(() {
+        _appData = app;
+      });
+    }
   }
 
   _navigateToMonthStats() async {
@@ -81,10 +82,9 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
         body: Column(
           children: [
             HeaderWidget(
-              title: AppLocalizationHelper.translate(
-                  context, AppLocalizationKeys.statistics),
+              title: AppStrings.statistics.tr,
               height: 125,
-              titleStyle: AppTextStyles.headerTitle,
+              titleStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold) ?? const TextStyle(),
             ),
             Expanded(
               child: OrientationBuilder(builder: (context, orientation) {
@@ -103,8 +103,7 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 15, bottom: 10),
                         child: TitleDividerWidget(
-                          text: AppLocalizationHelper.translate(
-                              context, AppLocalizationKeys.monthStats),
+                          text: AppStrings.monthStats.tr,
                         ),
                       ),
                       HabitStatsItemWidget(
@@ -113,15 +112,13 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
                         containerHeight: containerHeight,
                         imageAssetPath: AppImageAssets.stats,
                         imageWidth: imageWidth,
-                        description: AppLocalizationHelper.translate(
-                            context, AppLocalizationKeys.yourHabitMonthlyStats),
-                        descriptionStyle: AppTextStyles.statsDescription,
+                        description: AppStrings.yourHabitMonthlyStats.tr,
+                        descriptionStyle: Theme.of(context).textTheme.bodyMedium ?? const TextStyle(),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15, bottom: 10),
                         child: TitleDividerWidget(
-                          text: AppLocalizationHelper.translate(
-                              context, AppLocalizationKeys.monthProgress),
+                          text: AppStrings.monthProgress.tr,
                         ),
                       ),
                       HabitStatsItemWidget(
@@ -130,9 +127,8 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
                         containerHeight: containerHeight,
                         imageAssetPath: AppImageAssets.stats2,
                         imageWidth: imageWidth,
-                        description: AppLocalizationHelper.translate(context,
-                            AppLocalizationKeys.yourHabitMonthlyReport),
-                        descriptionStyle: AppTextStyles.statsDescription,
+                        description: AppStrings.yourHabitMonthlyReport.tr,
+                        descriptionStyle: Theme.of(context).textTheme.bodyMedium ?? const TextStyle(),
                       ),
                       const SizedBox(
                         height: 20,

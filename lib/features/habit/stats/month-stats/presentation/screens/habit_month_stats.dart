@@ -6,10 +6,9 @@ import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../../config/locale/app_localization_helper.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 import '../../../../../../core/utils/app_colors.dart';
-import '../../../../../../core/utils/app_localization_strings.dart';
-import '../../../../../../core/utils/app_text_styles.dart';
 import '../../../../../../core/widgets/appbar/header_widget.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
 import '../../../../../../data/dtos/habit_stats.dart';
@@ -50,7 +49,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
             HeaderWidget(
@@ -60,7 +59,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
               title: DateFormat.yMMMM().format(widget.date).toString(),
               backButton: true,
               height: 125,
-              titleStyle: AppTextStyles.headerTitle2,
+              titleStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold) ?? const TextStyle(),
             ),
             if (_habitsStats.isEmpty) ...{
               Column(
@@ -77,9 +76,8 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                     height: 15,
                   ),
                   Text(
-                    AppLocalizationHelper.translate(
-                        context, AppLocalizationKeys.noHabitsForThisMonth),
-                    style: AppTextStyles.noHabitsTextTitle,
+                    AppStrings.noHabitsForThisMonth.tr,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
@@ -93,15 +91,14 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 15, bottom: 8),
                         child: TitleDividerWidget(
-                          text: AppLocalizationHelper.translate(
-                              context, AppLocalizationKeys.habits),
+                          text: AppStrings.habits.tr,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 5, bottom: 20),
                         child: TitleDividerWidget(
                           text:
-                              '${AppLocalizationHelper.translate(context, AppLocalizationKeys.totalHabits)} ${_habitsStats.length}',
+                              '${AppStrings.totalHabits.tr} ${_habitsStats.length}',
                         ),
                       ),
                       Expanded(
@@ -110,7 +107,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                             dataRowHeight: 40,
                             border: TableBorder.all(
                               width: 0.5,
-                              color: AppColors.secondary,
+                              color: Theme.of(context).dividerColor,
                             ),
                             columnSpacing: 0,
                             columns: [
@@ -118,10 +115,10 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                 label: Padding(
                                   padding: const EdgeInsets.only(right: 45.0),
                                   child: Text(
-                                    "${AppLocalizationHelper.translate(context, AppLocalizationKeys.habitName)}      ",
+                                    "${AppStrings.habitName.tr}      ",
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColors.fontPrimary),
+                                        color: Theme.of(context).textTheme.bodyMedium?.color),
                                   ),
                                 ),
                               ),
@@ -129,11 +126,10 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                 label: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    AppLocalizationHelper.translate(
-                                        context, AppLocalizationKeys.totalDone),
+                                    AppStrings.totalDone.tr,
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColors.fontPrimary),
+                                        color: Theme.of(context).textTheme.bodyMedium?.color),
                                   ),
                                 ),
                               ),
@@ -142,20 +138,19 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
                                   child: Text(
-                                    AppLocalizationHelper.translate(
-                                        context, AppLocalizationKeys.totalNot),
+                                    AppStrings.totalNot.tr,
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColors.fontPrimary),
+                                        color: Theme.of(context).textTheme.bodyMedium?.color),
                                   ),
                                 ),
                               ),
                               DataColumn(
                                 label: Text(
-                                  '        ${AppLocalizationHelper.translate(context, AppLocalizationKeys.total)}',
+                                  '        ${AppStrings.total.tr}',
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: AppColors.fontPrimary),
+                                      color: Theme.of(context).textTheme.bodyMedium?.color),
                                 ),
                               ),
                             ],
@@ -166,7 +161,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                     Text("${habit.name}  ",
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color: AppColors.fontPrimary)),
+                                            color: Theme.of(context).textTheme.bodyMedium?.color)),
                                   ),
                                   DataCell(
                                     Center(
@@ -174,7 +169,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                         "${habit.totalDone}",
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color: AppColors.green),
+                                            color: AppColors.success),
                                       ),
                                     ),
                                   ),
@@ -183,7 +178,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                       child: Text(
                                         " ${habit.total - habit.totalDone}",
                                         style: TextStyle(
-                                            fontSize: 12, color: AppColors.red),
+                                            fontSize: 12, color: AppColors.error),
                                       ),
                                     ),
                                   ),
@@ -193,7 +188,7 @@ class _HabitMonthStatsScreenState extends State<HabitMonthStatsScreen> {
                                         "       ${habit.total}",
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color: AppColors.fontPrimary),
+                                            color: Theme.of(context).textTheme.bodyMedium?.color),
                                       ),
                                     ),
                                   ),

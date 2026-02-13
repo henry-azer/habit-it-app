@@ -7,13 +7,11 @@ import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/entities/habit.dart';
 import 'package:habit_it/features/habit/habit/presentation/widgets/habit-item/habit_list_widget.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 
-import '../../../../../config/locale/app_localization_helper.dart';
 import '../../../../../config/routes/app_routes.dart';
-import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/utils/app_notifier.dart';
-import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/utils/date_util.dart';
 import '../../../../../core/widgets/floating-action-button/floating_speed_dial.dart';
 import '../../../../../core/widgets/floating-action-button/floating_speed_dial_child.dart';
@@ -56,8 +54,8 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
     if (!isInit && previousMonthHabits.isNotEmpty) {
       AppNotifier.showMoveHabitsActionDialog(
           context: context,
-          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.keepYourHabits),
-          descriptionMessage: "${AppLocalizationHelper.translate(context, AppLocalizationKeys.moveMonthHabits)}",
+          message: AppStrings.keepYourHabits.tr,
+          descriptionMessage: AppStrings.moveMonthHabits.tr,
           onClickYes: () async {
             await _habitLocalDataSource.moveMonthHabits(previousMonthString, _currentMonthString, true);
             await _loadHabits();
@@ -128,17 +126,15 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
                 height: 10,
               ),
               Text(
-                AppLocalizationHelper.translate(
-                    context, AppLocalizationKeys.noHabitsForThisDay),
-                style: AppTextStyles.noHabitsTextTitle,
+                AppStrings.noHabitsForThisDay.tr,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(
                 height: 10,
               ),
               Text(
-                AppLocalizationHelper.translate(
-                    context, AppLocalizationKeys.tryToAddSome),
-                style: AppTextStyles.noHabitsTextSubtitle,
+                AppStrings.tryToAddSome.tr,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
@@ -167,6 +163,7 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Material(
       child: Scaffold(
         extendBody: true,
@@ -177,10 +174,10 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
           firstDate: _firstDate,
           lastDate: _todayDate,
           onDateChanged: _onDateChanged,
-          black: AppColors.black,
-          accent: AppColors.accent,
-          fontColor: AppColors.fontPrimary,
-          white: AppColors.secondary.withOpacity(0.9),
+          black: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+          accent: isDark ? AppColors.darkSurface : AppColors.lightSecondary,
+          fontColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          white: isDark ? AppColors.darkSurface.withValues(alpha: 0.9) : AppColors.lightSurface.withValues(alpha: 0.9),
           events: [_todayDate],
         ),
         body: Column(
@@ -189,8 +186,7 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
               Padding(
                 padding: const EdgeInsets.only(top: 5, bottom: 10),
                 child: TitleDividerWidget(
-                  text: AppLocalizationHelper.translate(
-                      context, AppLocalizationKeys.habits),
+                  text: AppStrings.habits.tr,
                 ),
               ),
             },
@@ -198,33 +194,33 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
           ],
         ),
         floatingActionButton: FloatingSpeedDial(
-          labelsBackgroundColor: AppColors.accent,
-          labelsStyle: AppTextStyles.floatingSpeedDialChild,
+          labelsBackgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSecondary,
+          labelsStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.darkTextPrimary) ?? const TextStyle(),
           speedDialChildren: <FloatingSpeedDialChild>[
             FloatingSpeedDialChild(
-              child: const Icon(LineAwesomeIcons.pushed),
-              foregroundColor: AppColors.black,
-              backgroundColor: AppColors.secondary.withOpacity(0.9),
+              child: const Icon(Icons.add),
+              foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              backgroundColor: isDark ? AppColors.darkSurface.withValues(alpha: 0.9) : AppColors.lightSurface.withValues(alpha: 0.9),
               label: 'Add Habit',
               onPressed: () async {
                 await _navigateToAddHabit();
               },
             ),
             FloatingSpeedDialChild(
-              child: const Icon(LineAwesomeIcons.tools),
-              foregroundColor: AppColors.black,
-              backgroundColor: AppColors.secondary.withOpacity(0.9),
+              child: const Icon(Icons.build_outlined),
+              foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              backgroundColor: isDark ? AppColors.darkSurface.withValues(alpha: 0.9) : AppColors.lightSurface.withValues(alpha: 0.9),
               label: 'Manage Habits',
               onPressed: () async {
                 await _navigateToManageHabits();
               },
             ),
           ],
-          openForegroundColor: AppColors.secondary.withOpacity(0.9),
-          openBackgroundColor: AppColors.accent,
-          closedBackgroundColor: AppColors.secondary.withOpacity(0.9),
-          closedForegroundColor: AppColors.black,
-          child: const Icon(LineAwesomeIcons.list),
+          openForegroundColor: isDark ? AppColors.darkSurface.withValues(alpha: 0.9) : AppColors.lightSurface.withValues(alpha: 0.9),
+          openBackgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSecondary,
+          closedBackgroundColor: isDark ? AppColors.darkSurface.withValues(alpha: 0.9) : AppColors.lightSurface.withValues(alpha: 0.9),
+          closedForegroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          child: const Icon(Icons.list),
         ),
       ),
     );

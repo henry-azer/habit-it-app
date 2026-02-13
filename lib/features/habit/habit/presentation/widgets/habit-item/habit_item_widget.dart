@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
-import 'package:habit_it/core/utils/app_text_styles.dart';
 import 'package:habit_it/data/entities/habit.dart';
 import 'package:habit_it/data/enums/habit_state.dart';
 
@@ -28,7 +27,7 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
-        color: AppColors.accent,
+        color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSecondary,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
           children: [
@@ -40,7 +39,7 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                   height: 28,
                   child: Icon(
                     Icons.drag_handle_outlined,
-                    color: AppColors.white.withOpacity(0.9),
+                    color: AppColors.darkTextPrimary.withValues(alpha: 0.9),
                     size: 18,
                   ),
                 ),
@@ -49,7 +48,7 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                   child: Row(
                     children: [
                       Text(widget.habit.name,
-                          style: AppTextStyles.habitNameText),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.darkTextPrimary, fontWeight: FontWeight.w500)),
                       const Expanded(child: SizedBox()),
                     ],
                   ),
@@ -65,7 +64,7 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                         height: 30,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          color: AppColors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                         ),
                         child: Icon(
                           (widget.habit.daysStates[widget.selectedDay] ==
@@ -78,14 +77,14 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                           size: 18.0,
                           color: (widget.habit.daysStates[widget.selectedDay] ==
                                   HabitState.DONE)
-                              ? AppColors.green
+                              ? AppColors.success
                               : (widget.habit.daysStates[widget.selectedDay] ==
                                           HabitState.NOT_DONE) ||
                                       (widget.habit
                                               .daysStates[widget.selectedDay] ==
                                           HabitState.SUSPENDED)
-                                  ? AppColors.red
-                                  : AppColors.grey,
+                                  ? AppColors.error
+                                  : AppColors.darkTextSecondary,
                         ),
                       ),
                     ),
@@ -99,10 +98,10 @@ class _HabitItemWidgetState extends State<HabitItemWidget> {
                         height: 30,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          color: AppColors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                         ),
                         child: Icon(Icons.delete_outline,
-                            size: 18.0, color: AppColors.grey),
+                            size: 18.0, color: AppColors.darkTextSecondary),
                       ),
                     ),
                   ],

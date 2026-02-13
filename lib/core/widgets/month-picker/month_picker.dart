@@ -4,8 +4,8 @@ import 'package:habit_it/core/utils/date_util.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../config/locale/app_localization_helper.dart';
-import '../../../../../core/utils/app_localization_strings.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 
 Future<DateTime?> showMonthPicker({
   required BuildContext context,
@@ -59,7 +59,7 @@ class __MonthPickerState extends State<_MonthPicker> {
   @override
   Widget build(BuildContext context) {
     final content = Material(
-      color: AppColors.white.withOpacity(0.9),
+      color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSurface.withValues(alpha: 0.9) : AppColors.lightSurface.withValues(alpha: 0.9),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(30.0)),
       ),
@@ -113,7 +113,7 @@ class __MonthPickerState extends State<_MonthPicker> {
 
   _buildHeader() {
     return Material(
-      color: AppColors.accent,
+      color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSecondary,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0))),
       child: Padding(
@@ -124,7 +124,7 @@ class __MonthPickerState extends State<_MonthPicker> {
             Center(
               child: Text(
                 DateFormat.MMM().format(_selectedDate),
-                style: TextStyle(color: AppColors.fontPrimary, fontSize: 18),
+                style: TextStyle(color: AppColors.darkTextPrimary, fontSize: 18),
               ),
             ),
             Row(
@@ -133,7 +133,7 @@ class __MonthPickerState extends State<_MonthPicker> {
                 IconButton(
                   icon: Icon(
                     Icons.keyboard_arrow_left,
-                    color: AppColors.fontPrimary,
+                    color: AppColors.darkTextPrimary,
                   ),
                   onPressed: () => _pageController.animateToPage(
                     _displayedPage - 1,
@@ -170,7 +170,7 @@ class __MonthPickerState extends State<_MonthPicker> {
                 IconButton(
                   icon: Icon(
                     Icons.keyboard_arrow_right,
-                    color: AppColors.fontPrimary,
+                    color: AppColors.darkTextPrimary,
                   ),
                   onPressed: () => _pageController.animateToPage(
                     _displayedPage + 1,
@@ -236,11 +236,11 @@ class __MonthPickerState extends State<_MonthPicker> {
       ),
       style: TextButton.styleFrom(
         foregroundColor: isSelected
-            ? AppColors.fontPrimary
+            ? AppColors.darkTextPrimary
             : year == DateTime.now().year
-                ? AppColors.fontSecondary
-                : AppColors.grey.withOpacity(0.9),
-        backgroundColor: isSelected ? AppColors.accent : null,
+                ? AppColors.lightTextPrimary
+                : AppColors.darkTextSecondary.withValues(alpha: 0.9),
+        backgroundColor: isSelected ? (Theme.of(context).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSecondary) : null,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
@@ -260,11 +260,11 @@ class __MonthPickerState extends State<_MonthPicker> {
       onPressed: callback,
       style: TextButton.styleFrom(
         foregroundColor: isSelected
-            ? AppColors.fontPrimary
+            ? AppColors.darkTextPrimary
             : isInRange
-                ? AppColors.black
-                : AppColors.grey.withOpacity(0.8),
-        backgroundColor: isSelected ? AppColors.accent : null,
+                ? AppColors.lightTextPrimary
+                : AppColors.darkTextSecondary.withValues(alpha: 0.8),
+        backgroundColor: isSelected ? (Theme.of(context).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSecondary) : null,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
@@ -284,25 +284,23 @@ class __MonthPickerState extends State<_MonthPicker> {
         children: [
           TextButton(
             style: TextButton.styleFrom(
-                foregroundColor: AppColors.black,
+                foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
                 textStyle:
                     const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
             onPressed: () {
               Navigator.pop(context, _selectedDate);
             },
-            child: Text(AppLocalizationHelper.translate(
-                context, AppLocalizationKeys.submit)),
+            child: Text(AppStrings.submit.tr),
           ),
           TextButton(
             style: TextButton.styleFrom(
-                foregroundColor: AppColors.black,
+                foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
                 textStyle:
                     const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
             onPressed: () {
               Navigator.of(context).pop(null);
             },
-            child: Text(AppLocalizationHelper.translate(
-                context, AppLocalizationKeys.cancel)),
+            child: Text(AppStrings.cancel.tr),
           ),
         ],
       ),

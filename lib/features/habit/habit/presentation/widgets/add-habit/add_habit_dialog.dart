@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:habit_it/config/localization/app_localization.dart';
+import 'package:habit_it/core/utils/app_strings.dart';
 
-import '../../../../../../config/locale/app_localization_helper.dart';
 import '../../../../../../core/utils/app_colors.dart';
-import '../../../../../../core/utils/app_localization_strings.dart';
-import '../../../../../../core/utils/app_text_styles.dart';
 import '../../../../../../core/validation/validation_types.dart';
 import '../../../../../../core/widgets/forms/text_field_widget.dart';
 
@@ -29,16 +28,17 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return CupertinoTheme(
       data: CupertinoThemeData(
-        brightness: Brightness.light,
-        primaryColor: AppColors.background,
-        scaffoldBackgroundColor: AppColors.background,
+        brightness: isDark ? Brightness.dark : Brightness.light,
+        primaryColor: Theme.of(context).scaffoldBackgroundColor,
+        scaffoldBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       child: CupertinoAlertDialog(
         title: Text(
           widget.title,
-          style: AppTextStyles.alertDialogTitle,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         content: Padding(
           padding: const EdgeInsets.only(
@@ -48,19 +48,19 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
             child: TextFieldWidget(
               enabled: true,
               hintText: widget.hintText,
-              hintTextStyle: AppTextStyles.alertDialogHintTextField,
-              keyboardType: TextInputType.emailAddress,
+              hintTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor),
+              keyboardType: TextInputType.text,
               validateType: ValidationTypes.signupName,
-              errorStyle: AppTextStyles.signupNameTextFieldError,
+              errorStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.error),
               errorBorderColor: AppColors.error,
-              borderColor: AppColors.borderSecondary,
+              borderColor: Theme.of(context).dividerColor,
               borderWidth: 1,
               maxLines: 1,
               maxLength: 20,
               textAlign: TextAlign.center,
-              style: AppTextStyles.alertDialogActionTextField,
-              cursorColor: AppColors.fontSecondary,
-              counterStyle: TextStyle(color: AppColors.black),
+              style: Theme.of(context).textTheme.bodyLarge,
+              cursorColor: Theme.of(context).textTheme.bodyLarge?.color,
+              counterStyle: Theme.of(context).textTheme.bodySmall,
               secureText: false,
               onChange: (value) {
                 habitName = value;
@@ -72,27 +72,25 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
         actions: <Widget>[
           TextButton(
             style: TextButton.styleFrom(
-              foregroundColor: AppColors.black,
-              textStyle: AppTextStyles.alertDialogActionButton,
+              foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+              textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               if (habitName.isNotEmpty) {
                 widget.onAddHabit(habitName);
               }
             },
-            child: Text(AppLocalizationHelper.translate(
-                context, AppLocalizationKeys.submit)),
+            child: Text(AppStrings.submit.tr),
           ),
           TextButton(
             style: TextButton.styleFrom(
-              foregroundColor: AppColors.black,
-              textStyle: AppTextStyles.alertDialogActionButton,
+              foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+              textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text(AppLocalizationHelper.translate(
-                context, AppLocalizationKeys.cancel)),
+            child: Text(AppStrings.cancel.tr),
           ),
         ],
       ),

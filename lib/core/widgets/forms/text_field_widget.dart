@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/locale/app_localization_helper.dart';
 import '../../utils/app_colors.dart';
 import '../../validation/app_form_validator.dart';
 
@@ -83,7 +82,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       validator: (value) {
         return validation == ""
             ? null
-            : AppLocalizationHelper.translate(context, validation);
+            : validation;
       },
     );
   }
@@ -92,8 +91,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     return InputDecoration(
       hintText: widget.hintText,
       hintStyle: widget.hintTextStyle,
-      counterStyle: widget.counterStyle ?? TextStyle(color: AppColors.white),
-      floatingLabelStyle: TextStyle(color: AppColors.fontPrimary),
+      counterStyle: widget.counterStyle ?? TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+      floatingLabelStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
       contentPadding: widget.contentPadding,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(0.0),
@@ -131,7 +130,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     return InputDecoration(
       hintText: widget.hintText,
       hintStyle: widget.hintTextStyle,
-      floatingLabelStyle: TextStyle(color: AppColors.fontPrimary),
+      floatingLabelStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
       contentPadding: widget.contentPadding,
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(40.0),

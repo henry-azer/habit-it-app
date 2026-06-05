@@ -10,6 +10,7 @@ import '../../../core/services/auth/_fake_secure_storage.dart';
 class _FakeBiometric implements IBiometricManager {
   bool available;
   bool authResult;
+  // ignore: unused_element_parameter
   _FakeBiometric({this.available = true, this.authResult = true});
   @override
   Future<bool> isAvailable() async => available;

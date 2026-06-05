@@ -4,6 +4,8 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/router/app_routes.dart';
+import '../../../core/services/auth/app_lock_service.dart';
+import '../../../core/services/auth/auth_migrator.dart';
 import '../../../data/repositories/i_app_repository.dart';
 import '../../../data/repositories/i_user_repository.dart';
 
@@ -30,15 +32,21 @@ class SplashViewModel {
   SplashViewModel({
     IAppRepository? appRepo,
     IUserRepository? userRepo,
+    AuthMigrator? authMigrator,
+    AppLockService? appLock,
     Duration? splashDelay,
     DateTime Function()? now,
   })  : _appRepo = appRepo ?? getIt<IAppRepository>(),
         _userRepo = userRepo ?? getIt<IUserRepository>(),
+        _authMigrator = authMigrator ?? (getIt.isRegistered<AuthMigrator>() ? getIt<AuthMigrator>() : null),
+        _appLock = appLock ?? (getIt.isRegistered<AppLockService>() ? getIt<AppLockService>() : null),
         _splashDelay = splashDelay ?? const Duration(seconds: 1),
         _now = now ?? DateTime.now;
 
   final IAppRepository _appRepo;
   final IUserRepository _userRepo;
+  final AuthMigrator? _authMigrator;
+  final AppLockService? _appLock;
   final Duration _splashDelay;
   final DateTime Function() _now;
 
@@ -64,6 +72,16 @@ class SplashViewModel {
       target = AppRoutes.onboardingPath;
     } else if (!isRegistered) {
       target = AppRoutes.signupWelcomePath;
+    } else if (_authMigrator != null && await _authMigrator.isMigrationPending()) {
+      // AUTH-001 AC#5 — legacy plain-text PIN needs upgrading.
+      // PO G-003: send to the migration prompt; on success it routes to
+      // PasscodeUpgradeScreen, not setup or biometric.
+      target = AppRoutes.signupPinMigratePath;
+    } else if (_appLock != null && await _appLock.isSecurityEnabled()) {
+      // AUTH-005 — new PIN exists. Force the lock screen via the gate.
+      await _appRepo.setLastDate(_formatDate(_now()));
+      _appLock.lockNow();
+      target = AppRoutes.lockPath;
     } else if (isBiometric) {
       await _appRepo.setLastDate(_formatDate(_now()));
       target = AppRoutes.signinBiometricPath;

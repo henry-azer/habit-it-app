@@ -31,6 +31,7 @@ import '../../data/repositories/i_user_repository.dart';
 import '../managers/biometric/biometric_manager_impl.dart';
 import '../managers/biometric/i_biometric_manager.dart';
 import '../services/auth/app_lock_service.dart';
+import '../services/auth/auth_boot_cleanup.dart';
 import '../services/auth/auth_migrator.dart';
 import '../services/auth/i_passcode_service.dart';
 import '../services/auth/passcode_service_impl.dart';
@@ -204,6 +205,10 @@ Future<void> configureDependencies({SharedPreferences? sharedPrefs}) async {
           getIt<FlutterSecureStorage>(),
           getIt<SharedPreferences>(),
         ));
+  }
+  if (!getIt.isRegistered<AuthBootCleanup>()) {
+    getIt.registerLazySingleton<AuthBootCleanup>(
+        () => AuthBootCleanup(getIt<SharedPreferences>()));
   }
 
   // NOTE: INotificationService, IHabitSuggestionService etc. remain scoped to

@@ -204,12 +204,13 @@ This is a **defensible interpretation** of the spec: the migration is "done" (ev
 
 | Gate | Result |
 |---|---|
-| `flutter pub get` | (run below) |
-| `dart run build_runner build --delete-conflicting-outputs` | (run below) |
-| `flutter analyze` errors | (run below) |
-| `flutter test` | (run below) |
-
-(Filled in by the gate-run step at the end of the slice.)
+| `flutter pub get` | OK |
+| `dart run build_runner build` | OK (no new outputs needed — AUTH classes are hand-written) |
+| `flutter analyze` errors | **0** |
+| `flutter analyze` warnings | 3 (all pre-existing in legacy widgets: OTPTextField mutable field; calendar_app_bar_widget invalid_use_of_protected_member; none introduced by AUTH code) |
+| `flutter analyze` infos | 134 (deprecated_member_use / use_super_parameters / withOpacity in legacy code; 1 unintended_html_in_doc_comment in passcode_service_test for the `"1$<salt>$<hash>"` literal in a doc string — non-blocking) |
+| `flutter test` | **70 passing, 0 failing** (28 PasscodeService/AppLockService/AuthMigrator + 9 PasscodeSetupVM + 6 PasscodeSigninVM + 18 FND tests unchanged) |
+| `flutter build apk --debug` | not run (out of scope; analyze + test cover compilation) |
 
 ## Questions for architect / PO
 

@@ -10,6 +10,10 @@ import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 import 'package:habit_it/data/entities/app.dart';
 
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/di/injection.dart' as new_di;
+import '../../../../core/router/app_routes.dart' as new_routes;
+import '../../../../core/services/auth/app_lock_service.dart';
+import '../../../../core/services/auth/auth_migrator.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/date_util.dart';
 import '../../../../data/datasources/app/app_local_datasource.dart';
@@ -79,8 +83,31 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
 
     if (!_isUserRegistered) {
-      context.go(Routes.appSignup);
+      // AUTH-008 — route through the new multi-step signup welcome.
+      context.go(new_routes.AppRoutes.signupWelcomePath);
       return;
+    }
+
+    // AUTH-001 AC#5 — legacy plain-text PIN holders go through migration.
+    if (new_di.getIt.isRegistered<AuthMigrator>()) {
+      final pending = await new_di.getIt<AuthMigrator>().isMigrationPending();
+      if (pending) {
+        if (!mounted) return;
+        context.go(new_routes.AppRoutes.signupPinMigratePath);
+        return;
+      }
+    }
+
+    // AUTH-005 — if the new hash is set, force the lock screen via the gate.
+    if (new_di.getIt.isRegistered<AppLockService>()) {
+      final lock = new_di.getIt<AppLockService>();
+      if (await lock.isSecurityEnabled()) {
+        await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
+        lock.lockNow();
+        if (!mounted) return;
+        context.go(new_routes.AppRoutes.lockPath);
+        return;
+      }
     }
 
     if (_isUserBiometricAuthenticated) {

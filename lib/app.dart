@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'config/locale/app_localizations_setup.dart';
+import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
+import 'core/services/auth/app_lock_lifecycle_observer.dart';
+import 'core/services/auth/app_lock_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_notifier.dart';
 import 'core/utils/app_strings.dart';
@@ -38,6 +41,13 @@ class HabitItApp extends StatelessWidget {
                       AppLocalizationsSetup.localeResolutionCallback,
                   localizationsDelegates:
                       AppLocalizationsSetup.localizationsDelegates,
+                  // AUTH-005 — wrap the app in a lifecycle observer so the
+                  // AppLockService can track pause/resume and trigger the
+                  // 30s background-lock per G-004.
+                  builder: (context, child) => AppLockLifecycleObserver(
+                    service: getIt<AppLockService>(),
+                    child: child ?? const SizedBox.shrink(),
+                  ),
                 );
               },
             );

@@ -44,6 +44,14 @@ abstract final class AppRoutes {
   static const String profilePath = '/app/profile';
   static const String profileName = 'profile';
 
+  // AUTH-007 — change PIN (reachable from Settings).
+  static const String changePinPath = '/settings/security/change-pin';
+  static const String changePinName = 'changePin';
+
+  // AUTH-008 (G-003) — legacy 5-digit PIN upgrade.
+  static const String passcodeUpgradePath = '/auth/passcode-upgrade';
+  static const String passcodeUpgradeName = 'passcodeUpgrade';
+
   static const String addHabitPath = '/app/habits/add';
   static const String addHabitName = 'addHabit';
   static const String manageHabitsPath = '/app/habits/manage';

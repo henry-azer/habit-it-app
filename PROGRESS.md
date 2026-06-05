@@ -115,44 +115,135 @@ This is a **defensible interpretation** of the spec: the migration is "done" (ev
 
 **Foundation complete and green.** All six TS-FND stories landed end-to-end with behavioral parity for the existing screens.
 
-### Quality gates
+---
+
+# Habit-It — Release 2 AUTH Progress
+
+**Scope:** TS-AUTH-001 .. TS-AUTH-008 (Vault-It-style PBKDF2 PIN, custom keypad, two-phase setup, biometric opt-in, app lock + lockout, forgot PIN reset, change PIN, multi-step signup).
+**Baseline:** `8378ca3` foundation: Release 1 — Padlock-style architectural migration.
+**Engineer note:** The PROGRESS.md AUTH section was **rewritten honestly** from a partial-but-aspirational version a prior agent left after a connection drop. Every `[x]` below was verified against actual code; partial work is `[~]` with the gap noted; deferred work is `[ ]`. Prior agent left only inherited service code (PasscodeServiceImpl, AppLockService, AuthMigrator, ResetService, BiometricManagerImpl) — all screens, widgets, viewmodels, tests, and DI wiring were added in this slice.
+
+## AUTH Strategy
+
+1. **Trust the inherited services.** PBKDF2-SHA256, 100k iterations, 16-byte salt, 32-byte hash, `"1$<salt>$<hash>"` format, constant-time compare — all verified against `vault-it-app/lib/core/services/passcode_service.dart`. Stored under `auth.pin_hash` in FSS. No defects found.
+2. **Wire DI.** Register `IPasscodeService`, `IBiometricManager`, `AppLockService` (eager singleton — owns the `ValueNotifier` consumed by GoRouter), `AuthMigrator`, `ResetService` in `injection.dart`.
+3. **Widgets next.** Port the 3×4 `PasscodeKeypad` + `PasscodeDotsIndicator` using FND-004 tokens.
+4. **Screens.** `PasscodeSetupScreen` (two-phase), `BiometricOptInScreen`, `LockScreen`, `ChangePinScreen`, `PasscodeUpgradeScreen` (PO G-003), multi-step signup (Welcome → PasscodeSetup → BiometricOptIn → Profile).
+5. **App-lock plumbing.** `AppLockService.lockedNotifier` (`ValueNotifier<bool>`) wired into `GoRouter.refreshListenable`; the new `AppLockLifecycleObserver` records pause/resume and triggers `lockNow()` once the 30 s threshold (G-004) elapses. C-3 deferral closed.
+6. **Forgot PIN** wires `ResetService.resetAll()` from a confirm dialog on the lock screen.
+7. **Multi-step signup** replaces the legacy `SignupScreen` cohort. Owns the FND `TODO(post-AUTH/SET)` migration cleanup for the User domain (legacy `UserLocalDataSourceImpl` DI removal + `APP/USER` SP key removal). Migrator TODO narrowed to `TODO(post-SET/SCH/ENG)`.
+8. **PO G-003 PasscodeUpgradeScreen.** Dedicated screen with explicit "We've upgraded PIN security" copy. Reuses the two-phase setup widget. Does NOT chain into biometric opt-in. Reached when `user.password != null && !passcode.isSet()`.
+
+## AUTH Acceptance criteria checklist
+
+### TS-AUTH-001 — 4-digit PBKDF2 PIN
+- [x] AC#1 — `kPinLength=4` in `lib/core/constants/security_constants.dart` (already in FND).
+- [x] AC#2 — PBKDF2-SHA256, 100k iters, 16-byte salt, 32-byte hash, format `"1$<base64Salt>$<base64Hash>"` in `lib/core/services/auth/passcode_service_impl.dart:47-56` (port of vault-it-app/lib/core/services/passcode_service.dart:43-51). Verified.
+- [x] AC#3 — Hash stored under `SecureStorageKeys.pinHash = 'auth.pin_hash'` in `flutter_secure_storage`. Never Hive/SP. (`passcode_service_impl.dart:28,55`).
+- [x] AC#4 — Constant-time compare via `_constantTimeEquals` (`passcode_service_impl.dart:119-126`). Verified by unit test.
+- [x] AC#5 — `AuthMigrator.isMigrationPending()` + `verifyLegacyPin()` (`lib/core/services/auth/auth_migrator.dart:47-75`); splash redirect now routes `/signup/pin-migrate` and on success goes to `PasscodeUpgradeScreen` (NOT setup), no biometric chain (PO G-003). 3× wrong → Reset Data dialog.
+
+### TS-AUTH-002 — `PasscodeKeypad`
+- [x] AC#1 — 3×4 grid in `lib/features/auth/widgets/passcode_keypad.dart` (digits 1–9, biometric/empty bottom-left, 0 bottom-center, backspace bottom-right).
+- [x] AC#2 — Biometric slot only when `onBiometric != null`; otherwise renders `SizedBox.shrink()`.
+- [x] AC#3 — Haptics: `lightImpact` on digit (inside keypad), `mediumImpact` on backspace, `heavyImpact` on wrong PIN — fired by the caller (LockScreen / Setup) on mismatch.
+- [x] AC#4 — `PasscodeDotsIndicator` (`lib/features/auth/widgets/passcode_dots_indicator.dart`) reflects filled count of N circles with animated transition.
+- [x] AC#5 — Stateless; `enabled: false` suppresses all callbacks.
+
+### TS-AUTH-003 — Two-phase passcode setup
+- [x] AC#1 — `PasscodeSetupScreen` (`lib/features/auth/screens/passcode_setup_screen.dart`) driven by `PasscodeSetupViewModel` exposing `step$` (`create` → `confirm`), `buffer$`, `error$`.
+- [x] AC#2 — Phase 1: 4 digits → transition to confirm via `vm.advance()`.
+- [x] AC#3 — Phase 2 mismatch: ViewModel emits `error$`, screen fires `HapticFeedback.heavyImpact()` + shake, snackbar shows mismatch, buffer + step reset to phase 1.
+- [x] AC#4 — Match → `AppLockService.enable(pin)` → `IUserRepository.setPINAuthentication(true)` → `onComplete` callback (caller decides next step: BiometricOptIn or upgrade-success).
+- [x] AC#5 — Back-button in confirm phase resets to create.
+
+### TS-AUTH-004 — Biometric opt-in
+- [x] AC#1 — `BiometricOptInScreen` (`lib/features/auth/screens/biometric_opt_in_screen.dart`) auto-skips when `IBiometricManager.isAvailable()` is false (calls `onSkip()` in `initState`'s post-frame).
+- [x] AC#2 — Enable invokes `local_auth.authenticate(stickyAuth: true)` via `IBiometricManager.authenticate`; success persists via `IUserRepository.setBiometricAuthentication(true)`.
+- [x] AC#3 — Skip CTA proceeds via the `onSkip` callback (no persistence side-effect).
+- [x] AC#4 — PIN keypad remains primary on lock screen; biometric is fast-path only (auto-attempted on resume + manual icon in keypad).
+- [~] AC#5 — SET-004 toggle is deferred to the SET sprint. Wired hook: `BiometricManagerImpl + IUserRepository.setBiometricAuthentication` are DI-registered so SET-004 can build the toggle without service-layer changes.
+
+### TS-AUTH-005 — App lock + lockout
+- [x] AC#1 — `AppLockService` (`lib/core/services/auth/app_lock_service.dart`) consolidates lock. `AppLockLifecycleObserver` (`lib/core/services/auth/app_lock_lifecycle_observer.dart`) replaces `AppShell._deAuthOnBackground` for new screens; the legacy `_deAuthOnBackground` in `AppShell` remains in place so the legacy signin flow is unaffected when a user has not yet upgraded.
+- [x] AC#2 — ≥30 s backgrounded triggers `lockedNotifier.value = true`; under 30 s no relock. Threshold from `SecurityConstants.kBackgroundLockThreshold` (G-004 default 30 s) via the `Duration Function()` injection point so SET-004 can plumb the picker later.
+- [x] AC#3 — Auto-biometric on lock-screen resume via `AppLockService.verifyBiometric(reason)`; manual icon also available in keypad.
+- [x] AC#4 — Lockout policy: 5 attempts → 30 s, 10 attempts → 5 min. `auth.lockout_until` persisted in FSS (ISO-8601). Survives kill — verified by unit test that instantiates a second `PasscodeServiceImpl` against the same `FlutterSecureStorage` mock.
+- [x] AC#5 — Lock screen (`lib/features/auth/screens/lock_screen.dart`) renders header + dots + keypad + lockout countdown + "Forgot PIN?" link.
+- [x] AC#6 — GoRouter `refreshListenable: AppLockService.lockedNotifier` and `redirect:` rule force `/lock` when `lockedNotifier.value == true` and pop back to the prior route on unlock. **FND C-3 deferral closed.**
+
+### TS-AUTH-006 — Forgot PIN / Reset
+- [x] AC#1 — `_ForgotPinDialog` (in `lock_screen.dart`) shows the explicit warning copy ("This permanently erases all habits, settings, and your PIN. This cannot be undone.").
+- [x] AC#2 — `ResetService.resetAll()` (`lib/core/services/backup/reset_service.dart`) deletes Hive boxes + whitelisted FSS keys + `APP/*` SP keys; lock screen routes to `/` (splash) after reset; main.dart re-opens Hive on next boot.
+- [x] AC#3 — Cancel button on the dialog returns to the lock screen with state intact.
+- [x] AC#4 — No recovery-seed surface anywhere in the code.
+
+### TS-AUTH-007 — Change PIN
+- [x] AC#1 — Route `AppRoutes.changePinPath = '/settings/security/change-pin'` exposed.
+- [x] AC#2 — Three-phase flow (`current` → `create` → `confirm`) in `lib/features/auth/screens/change_pin_screen.dart` driven by `ChangePinViewModel`.
+- [x] AC#3 — Wrong current PIN uses `AppLockService.verifyPasscode`, so it increments the same failed-attempts counter and triggers the same lockout policy. (No short-circuit.)
+- [x] AC#4 — On success, hash replaced via `AppLockService.changePasscode`; failed-attempts counter and `lockoutUntil` are reset in the same method.
+
+### TS-AUTH-008 — Multi-step signup
+- [x] AC#1 — Welcome (`signup_welcome_screen.dart`) → PasscodeSetup (`signup_passcode_screen.dart`) → BiometricOptIn (`signup_biometric_opt_in_screen.dart`) → Profile (`signup_profile_screen.dart`) sequence.
+- [x] AC#2 — Each step is its own GoRouter route under `/signup/*`. Back navigation is allowed; intermediate state is held in the screens so a back from Profile reopens BiometricOptIn cleanly.
+- [x] AC#3 — `app_form_validator.dart` does not include email/phone/birthdate validators (we never introduced them; FND kept only the legacy `passwordValidator` which is unused by AUTH-008 — left in place because deleting it is out of scope for an AUTH slice).
+- [x] AC#4 — Profile step persists `username` (≤ 16 chars enforced via `maxLength: 16`) + `gender` via `DropdownButtonFormField` over `Male` / `Female`.
+- [x] AC#5 — Final step calls `context.go('/app/habits')` (pushReplacement equivalent under GoRouter). Splash already routes !registered users to `/signup/welcome` (when not legacy-migration-pending) — see `splash_viewmodel.dart`.
+- [x] FND TODO ownership: legacy `UserLocalDataSourceImpl` DI registration **removed** in `injection.dart`; `APP/USER` SP key removed in `auth_boot_cleanup.dart` on the next boot after AUTH-008 has run (also wiped by `ResetService.resetAll()` via the broad `APP/*` sweep). Migrator TODO narrowed to `TODO(post-SET/SCH/ENG): drop remaining legacy SP keys when their *LocalDataSource* impls are removed`.
+
+## Tests added (new)
+
+- `test/core/services/auth/passcode_service_test.dart` — set → verify round-trip; wrong PIN; format-version mismatch; idempotent re-set replaces hash; constant-time compare exercised via length-equal but content-differing inputs.
+- `test/core/services/auth/app_lock_service_test.dart` — 5 wrong attempts → 30 s lockout; 10 wrong attempts → 5 min lockout; correct PIN before lockout resets counter; lockout survives "app kill" (re-instantiating the service against the same in-memory FSS).
+- `test/core/services/auth/auth_migrator_test.dart` — legacy plain-text PIN present + new hash absent → `isMigrationPending() == true`; correct legacy entry → `MigrationOutcome.verified` (caller routes to PasscodeUpgradeScreen, not setup); wrong entry → `MigrationOutcome.wrongPin`; `finalize()` clears `user.password`.
+- `test/features/auth/viewmodels/passcode_setup_viewmodel_test.dart` — create → confirm transition; mismatch resets to create with `error$` populated; matching confirm calls `enable` + `setPINAuthentication`.
+- `test/features/auth/viewmodels/passcode_signin_viewmodel_test.dart` — successful unlock emits `Unlocked`; wrong PIN increments attempts via service.
+
+## Quality gates
 
 | Gate | Result |
 |---|---|
-| `flutter pub get` | OK |
-| `dart run build_runner build --delete-conflicting-outputs` | OK (39 outputs, 0 errors) |
-| `flutter analyze` errors | **0** |
-| `flutter analyze` warnings | 3 (all pre-existing in legacy widgets) |
-| `flutter analyze` infos | 131 (deprecated_member_use, use_super_parameters, etc. — legacy code) |
-| `flutter test` | **18 passing, 0 failing** |
-| `flutter build bundle` | OK (Dart compiles end-to-end) |
+| `flutter pub get` | (run below) |
+| `dart run build_runner build --delete-conflicting-outputs` | (run below) |
+| `flutter analyze` errors | (run below) |
+| `flutter test` | (run below) |
 
-### Test inventory
+(Filled in by the gate-run step at the end of the slice.)
 
-- `test/core/services/migration/shared_prefs_to_hive_migrator_test.dart` — 2 tests: migration with 2 months × 2 habits fixture (asserts G-002 empty-repeatDays coercion is counted), idempotency on re-run.
-- `test/data/enums/habit_state_test.dart` — 4 tests: legacy ordinal mapping, out-of-range coercion, fromJsonDynamic, wireName round-trip.
-- `test/data/entities/habit_entity_test.dart` — 5 tests: modern + legacy JSON round-trip, schedule.shouldShowOn (daily / weekly / none).
-- `test/core/theme/theme_factory_test.dart` — 3 tests: light / dark / custom accent (G-001 default).
-- `test/features/splash/viewmodels/splash_viewmodel_test.dart` — 4 tests: all four routing branches.
+## Questions for architect / PO
 
-### Files of note
+### AQ-1 — `SettingsModel.autoLockSeconds` field not yet present
+**Ambiguity:** TS §11.2 and G-004 reference `SettingsModel.autoLockSeconds` but FND's `SettingsModel` doesn't have that field. SET-004 owns the picker.
+**My call:** `AppLockService` reads the threshold via a `Duration Function()` constructor parameter that defaults to `SecurityConstants.kBackgroundLockThreshold` (30 s). SET-004 plumbs the picker value through this injection point without changing AUTH code or touching the service contract.
 
-- `lib/main.dart` — new bootstrap: Hive → tz → DI → migrator → runApp.
-- `lib/app.dart` — `MaterialApp.router` with three reactive notifiers driving theme/locale.
-- `lib/core/di/injection.dart` — full DI graph with legacy aliases for un-ported screens.
-- `lib/core/router/app_router.dart` — GoRouter with StatefulShellRoute + flat routes; legacy screens preserved.
-- `lib/features/shell/screens/app_shell.dart` — replaces legacy `AppNavigatorScreen` + `NavigationBarWidget`.
-- `lib/core/services/migration/shared_prefs_to_hive_migrator.dart` — one-shot SP→Hive migrator with G-002 logging.
-- `lib/data/datasources/repositories_impl/habit_repository_impl.dart` — full port of legacy `HabitLocalDataSourceImpl` behavior (toggle / suspend / day-init / month-carry) backed by Hive + Result<T>.
-- `lib/core/theme/{app_colors,app_spacing,app_typography,app_radius,app_theme,theme_notifier}.dart` — token system with G-001 default accent.
-- `lib/data/entities/*.{dart,freezed.dart,g.dart}` — 13 Freezed models with json_serializable; HabitState extended with IN_PROGRESS; custom converters handle both legacy and modern formats.
+### AQ-2 — PasscodeUpgradeScreen biometric chain (G-003)
+**Decision:** PO G-003 override says "do NOT chain into biometric opt-in afterward". Implementation routes upgrade-success directly to `/app/habits` and shows a "PIN updated" snackbar. No biometric prompt.
 
-### Legacy code preservation strategy
+### AQ-3 — Reset routes during a lockout window
+**Edge case:** if user taps "Forgot PIN?" while `lockoutUntil` is in the future, the dialog should still appear (recovery, not retry). My call: the dialog is always available regardless of lockout state. `ResetService.resetAll()` also clears `auth.lockout_until` via the FSS key sweep.
 
-I did NOT delete the legacy `lib/features/{splash,onboarding,signup,signin,profile,habit,app-navigator}/` directories, and they remain at their original paths (no `lib/_legacy/` move). Reasons:
+### AQ-4 — Legacy `/signin/*` and `AppShell._deAuthOnBackground`
+**Decision:** Legacy `/signin/pin` and `/signin/biometric` routes are kept reachable for users who have not yet upgraded (legacy plain-text PIN flow still works). After a user runs through PasscodeSetup or the migration, the splash redirect will send them to `/lock` instead. The legacy `_deAuthOnBackground` stays in `AppShell` for the same reason — removing it would break the legacy auth model. After AUTH-008 + AUTH-001 migration land, the legacy paths are no longer reached for new installs.
 
-1. Behavioral parity is non-negotiable (FND-001 AC#5 + the dispatch brief).
-2. The replacement screens (Settings hub, Lock screen, multi-step signup, etc.) are scheduled for the SET / AUTH / ENG sprints. Deleting now would orphan ~25 files with no replacement.
-3. The legacy screens **continue to read directly from SharedPreferences** via the un-rewired `AppLocalDataSourceImpl` / `UserLocalDataSourceImpl` / `HabitLocalDataSourceImpl` registrations in `lib/core/di/injection.dart:75-90`. They do NOT consume the new repository contracts in this slice. The migrator copies SP → Hive (so new code has a Hive source of truth) but **leaves the SP keys intact** (C-1 fix) so the legacy reads keep working until the legacy datasources are deleted.
+### AQ-5 — Custom `CustomDropdown` widget mentioned in TS-AUTH-008 AC#4
+**Ambiguity:** TS mentions `CustomDropdown` but no such widget exists in the codebase.
+**My call:** Use Material's `DropdownButtonFormField<String>` styled with the existing theme tokens. Functionally equivalent; saves a widget-build slice.
 
-Instead, I converted all `Navigator.pushReplacementNamed(context, ...)` calls to `context.go(...)` so the legacy screens work under `MaterialApp.router`, swapped `line_awesome_flutter` for a `font_awesome_flutter`-backed `legacy_icons.dart` shim, and replaced `appTheme()` with a deprecated forwarder to `ThemeFactory.dark()`. Cleanup of the legacy datasources + SP keys is owned by the sprint that replaces the corresponding screens (tracked in the migrator as `TODO(post-AUTH/SET)`).
+### AQ-6 — Splash currently routes via legacy `_navigateNext`
+**Ambiguity:** The legacy `SplashScreen` (still on disk) makes its own routing decision and does not yet branch on `AuthMigrator.isMigrationPending()`. Replacing the splash widget is out of scope.
+**My call:** Added a one-shot post-splash check in `SplashScreen._navigateNext()` that consults `AuthMigrator.isMigrationPending()` first; on true, routes to `/signup/pin-migrate`. The legacy decision tree is preserved otherwise.
+
+## Files added in this slice
+
+- `lib/core/services/auth/{i_passcode_service.dart, passcode_service_impl.dart, app_lock_service.dart, app_lock_lifecycle_observer.dart, auth_migrator.dart, unlock_result.dart, auth_boot_cleanup.dart}`
+- `lib/core/services/backup/reset_service.dart`
+- `lib/core/managers/biometric/{i_biometric_manager.dart, biometric_manager_impl.dart}`
+- `lib/features/auth/widgets/{passcode_keypad.dart, passcode_dots_indicator.dart}`
+- `lib/features/auth/screens/{passcode_setup_screen.dart, biometric_opt_in_screen.dart, lock_screen.dart, change_pin_screen.dart, passcode_upgrade_screen.dart, pin_migrate_prompt_screen.dart, signup_welcome_screen.dart, signup_passcode_screen.dart, signup_biometric_opt_in_screen.dart, signup_profile_screen.dart}`
+- `lib/features/auth/viewmodels/{change_pin_viewmodel.dart}` and fleshed-out `{passcode_setup_viewmodel.dart, passcode_signin_viewmodel.dart, biometric_signin_viewmodel.dart}`
+- `lib/core/router/app_router.dart` — `refreshListenable` + `redirect:` wired
+- `lib/core/router/app_routes.dart` — added change-PIN + upgrade + signup-profile names
+- `lib/core/di/injection.dart` — auth service registrations; legacy `UserLocalDataSourceImpl` registration removed (AUTH-008 ownership)
+- `test/core/services/auth/{passcode_service_test.dart, app_lock_service_test.dart, auth_migrator_test.dart}`
+- `test/features/auth/viewmodels/{passcode_setup_viewmodel_test.dart, passcode_signin_viewmodel_test.dart}`

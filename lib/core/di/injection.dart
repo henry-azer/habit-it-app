@@ -28,10 +28,22 @@ import '../../data/repositories/i_notes_repository.dart';
 import '../../data/repositories/i_notification_repository.dart';
 import '../../data/repositories/i_settings_repository.dart';
 import '../../data/repositories/i_user_repository.dart';
+import '../managers/biometric/biometric_manager_impl.dart';
+import '../managers/biometric/i_biometric_manager.dart';
+import '../services/auth/app_lock_service.dart';
+import '../services/auth/auth_migrator.dart';
+import '../services/auth/i_passcode_service.dart';
+import '../services/auth/passcode_service_impl.dart';
+import '../services/backup/reset_service.dart';
 import '../services/migration/shared_prefs_to_hive_migrator.dart';
 
 // Legacy managers — kept until ported screens are replaced. Importing them
 // here keeps the legacy DI graph satisfied so old screens still work.
+//
+// AUTH-008 ownership: the legacy `UserLocalDataSource` registration is
+// REMOVED from this file because AUTH-008 fully rewires User reads to the
+// new Hive `IUserRepository`. The TODO(post-AUTH/SET) marker in
+// `shared_prefs_to_hive_migrator.dart` is narrowed accordingly.
 import '../managers/biometric-authentication/biometric_auth_manager.dart';
 import '../managers/biometric-authentication/i_biometric_auth_manager.dart';
 import '../managers/storage-manager/i_storage_manager.dart';

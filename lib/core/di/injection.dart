@@ -176,9 +176,38 @@ Future<void> configureDependencies({SharedPreferences? sharedPrefs}) async {
             ));
   }
 
-  // NOTE: INotificationService, IPasscodeService, IHabitSuggestionService etc.
-  // are scoped to subsequent epics (SCH, AUTH, AI). They are NOT registered
-  // here as part of Foundation. When those epics land, add registrations to
+  // ---- AUTH (Release 2) ----
+  if (!getIt.isRegistered<IBiometricManager>()) {
+    getIt.registerLazySingleton<IBiometricManager>(
+        () => BiometricManagerImpl(getIt<LocalAuthentication>()));
+  }
+  if (!getIt.isRegistered<IPasscodeService>()) {
+    getIt.registerLazySingleton<IPasscodeService>(
+        () => PasscodeServiceImpl(storage: getIt<FlutterSecureStorage>()));
+  }
+  // Eager singleton — owns the `lockedNotifier` consumed by GoRouter
+  // `refreshListenable`. Must be alive before `appRouter` is constructed.
+  if (!getIt.isRegistered<AppLockService>()) {
+    getIt.registerSingleton<AppLockService>(
+      AppLockService(
+        passcode: getIt<IPasscodeService>(),
+        biometric: getIt<IBiometricManager>(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<AuthMigrator>()) {
+    getIt.registerLazySingleton<AuthMigrator>(
+        () => AuthMigrator(getIt<IUserRepository>(), getIt<IPasscodeService>()));
+  }
+  if (!getIt.isRegistered<ResetService>()) {
+    getIt.registerLazySingleton<ResetService>(() => ResetService(
+          getIt<FlutterSecureStorage>(),
+          getIt<SharedPreferences>(),
+        ));
+  }
+
+  // NOTE: INotificationService, IHabitSuggestionService etc. remain scoped to
+  // subsequent epics (SCH, AI). When those epics land, add registrations to
   // this file in the order shown in TECHNICAL_STORIES.md §TS-FND-001.
 
   await getIt.allReady();

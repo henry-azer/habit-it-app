@@ -190,7 +190,7 @@ This is a **defensible interpretation** of the spec: the migration is "done" (ev
 - [x] AC#3 — `app_form_validator.dart` does not include email/phone/birthdate validators (we never introduced them; FND kept only the legacy `passwordValidator` which is unused by AUTH-008 — left in place because deleting it is out of scope for an AUTH slice).
 - [x] AC#4 — Profile step persists `username` (≤ 16 chars enforced via `maxLength: 16`) + `gender` via `DropdownButtonFormField` over `Male` / `Female`.
 - [x] AC#5 — Final step calls `context.go('/app/habits')` (pushReplacement equivalent under GoRouter). Splash already routes !registered users to `/signup/welcome` (when not legacy-migration-pending) — see `splash_viewmodel.dart`.
-- [x] FND TODO ownership: legacy `UserLocalDataSourceImpl` DI registration **removed** in `injection.dart`; `APP/USER` SP key removed in `auth_boot_cleanup.dart` on the next boot after AUTH-008 has run (also wiped by `ResetService.resetAll()` via the broad `APP/*` sweep). Migrator TODO narrowed to `TODO(post-SET/SCH/ENG): drop remaining legacy SP keys when their *LocalDataSource* impls are removed`.
+- [~] FND TODO ownership: **partial** — see AQ-7 below. Legacy `UserLocalDataSourceImpl` registration is *retained* in `injection.dart` because Splash, AppShell, ProfileScreen, OnboardingScreen, and the legacy signin / signup widgets still consume it directly, and replacing those screens is out of scope for an AUTH slice. The `APP/USER` SP key is still cleared by `ResetService.resetAll()` (via the broad `APP/*` sweep on Forgot-PIN / reset), and a one-shot `auth_boot_cleanup.dart` step deletes `APP/USER` on the *next* boot after a user has completed AUTH-008 signup (because at that point the canonical user lives in Hive and the legacy datasource will fall back to defaults — the only consumer still reading is the legacy signin path which is dead-code for an upgraded user). The migrator's broad TODO is narrowed to `TODO(post-SET/SCH/ENG): drop remaining legacy SP keys + legacy *LocalDataSourceImpl* DI registrations when those screens are rewritten`.
 
 ## Tests added (new)
 
@@ -229,6 +229,10 @@ This is a **defensible interpretation** of the spec: the migration is "done" (ev
 ### AQ-5 — Custom `CustomDropdown` widget mentioned in TS-AUTH-008 AC#4
 **Ambiguity:** TS mentions `CustomDropdown` but no such widget exists in the codebase.
 **My call:** Use Material's `DropdownButtonFormField<String>` styled with the existing theme tokens. Functionally equivalent; saves a widget-build slice.
+
+### AQ-7 — AUTH-008 ownership of `UserLocalDataSourceImpl` removal
+**Conflict:** The dispatch brief asks AUTH-008 to *fully port User reads/writes to UserRepository (Hive)* and *remove the legacy UserLocalDataSourceImpl DI registration*. But the legacy SplashScreen, OnboardingScreen, AppShell, ProfileScreen, and legacy `/signin/{pin,biometric}` + `/signup/*` widgets all read it directly. Removing the DI registration would crash those screens for every install — including the un-upgraded legacy installs the brief explicitly says must keep working ("legacy habit/stats/profile screens still work unchanged (parity preserved)").
+**My call:** Honor the spirit (Hive is the canonical store; new AUTH flow does NOT touch the legacy datasource) but *not* the letter (registration stays in place until the screens that consume it are rewritten in subsequent sprints). Migrator TODO is narrowed accordingly. The `APP/USER` SP key is cleared by `ResetService` and by a one-shot `auth_boot_cleanup.dart` after AUTH-008 signup completes — the legacy datasource will then simply read defaults, which is harmless for the dead-code legacy signin path.
 
 ### AQ-6 — Splash currently routes via legacy `_navigateNext`
 **Ambiguity:** The legacy `SplashScreen` (still on disk) makes its own routing decision and does not yet branch on `AuthMigrator.isMigrationPending()`. Replacing the splash widget is out of scope.

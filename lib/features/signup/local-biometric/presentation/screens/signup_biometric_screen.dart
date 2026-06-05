@@ -12,6 +12,7 @@ import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/utils/app_notifier.dart';
 import '../../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../../core/widgets/buttons/icon_text_button_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupBiometricScreen extends StatefulWidget {
   const SignupBiometricScreen({Key? key}) : super(key: key);
@@ -42,7 +43,7 @@ class _SignupBiometricScreenState extends State<SignupBiometricScreen> {
       isAuthenticated = await _biometricAuthenticationManager.requestBiometricAuthentication();
       if (isAuthenticated) {
         await _userLocalDataSource.setUserBiometricAuthentication(true);
-        Navigator.pushNamedAndRemoveUntil(context, Routes.appSignupSuccess, (route) => false);
+        context.go(Routes.appSignupSuccess);
       } else {
         throw Exception(AppLocalizationKeys.signupBiometricFailed);
       }

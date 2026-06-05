@@ -14,6 +14,7 @@ import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/utils/date_util.dart';
 import '../../../../data/datasources/app/app_local_datasource.dart';
 import '../../../../data/entities/user.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -73,21 +74,21 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   _navigateNext() async {
     if (!_isInit) {
-      Navigator.pushReplacementNamed(context, Routes.appOnboarding);
+      context.go(Routes.appOnboarding);
       return;
     }
 
     if (!_isUserRegistered) {
-      Navigator.pushReplacementNamed(context, Routes.appSignup);
+      context.go(Routes.appSignup);
       return;
     }
 
     if (_isUserBiometricAuthenticated) {
       await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
-      Navigator.pushReplacementNamed(context, Routes.appSigninBiometric);
+      context.go(Routes.appSigninBiometric);
     } else {
       await _appLocalDataSource.setLastDate(DateUtil.getTodayDate().toString());
-      Navigator.pushReplacementNamed(context, Routes.appSigninPIN);
+      context.go(Routes.appSigninPIN);
     }
   }
 

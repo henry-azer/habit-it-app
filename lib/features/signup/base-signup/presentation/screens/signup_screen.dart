@@ -11,6 +11,7 @@ import '../../../../../core/utils/app_localization_strings.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../../core/widgets/buttons/icon_text_button_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _SignupScreenState extends State<SignupScreen> {
   _checkIsAppInit() async {
     final app = await _appLocalDataSource.getApp();
     if (!app.init) {
-      Navigator.pushReplacementNamed(context, Routes.appOnboarding);
+      context.go(Routes.appOnboarding);
     }
   }
 
@@ -109,7 +110,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       text: AppLocalizationHelper.translate(
                           context, AppLocalizationKeys.signupBiometricButton),
                       onPressed: () {
-                        Navigator.pushNamed(context, Routes.appSignupBiometric);
+                        context.push(Routes.appSignupBiometric);
                       },
                       textStyle: AppTextStyles.signupIconTextButton,
                     ),
@@ -126,7 +127,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 text: AppLocalizationHelper.translate(
                     context, AppLocalizationKeys.signupPINButton),
                 onPressed: () {
-                  Navigator.pushNamed(context, Routes.appSignupPIN);
+                  context.push(Routes.appSignupPIN);
                 },
                 textStyle: AppTextStyles.signupIconTextButton,
               ),

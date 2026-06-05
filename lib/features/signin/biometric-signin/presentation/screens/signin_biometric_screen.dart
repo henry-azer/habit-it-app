@@ -12,6 +12,7 @@ import '../../../../../core/utils/app_notifier.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../../core/widgets/buttons/icon_text_button_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class SigninBiometricScreen extends StatefulWidget {
   const SigninBiometricScreen({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
   _checkIfUserRegistered() async {
     final user = await _userLocalDataSource.getUser();
     if (!user.isRegistered) {
-      Navigator.pushReplacementNamed(context, Routes.initial);
+      context.go(Routes.initial);
     }
   }
 
@@ -58,7 +59,7 @@ class _SigninBiometricScreenState extends State<SigninBiometricScreen> {
 
     if (isAuthenticated) {
       await _userLocalDataSource.setUserAuthentication(true);
-      Navigator.pushReplacementNamed(context, Routes.app);
+      context.go(Routes.app);
     }
   }
 

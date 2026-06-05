@@ -1,32 +1,20 @@
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonEnum(valueField: 'wireName')
+// ignore_for_file: constant_identifier_names
 enum Day {
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday,
+  Monday('Monday'),
+  Tuesday('Tuesday'),
+  Wednesday('Wednesday'),
+  Thursday('Thursday'),
+  Friday('Friday'),
+  Saturday('Saturday'),
+  Sunday('Sunday');
+
+  const Day(this.wireName);
+  final String wireName;
 }
 
 extension DayExtension on Day {
-  String get value {
-    switch (this) {
-      case Day.Monday:
-        return 'Monday';
-      case Day.Tuesday:
-        return 'Tuesday';
-      case Day.Wednesday:
-        return 'Wednesday';
-      case Day.Thursday:
-        return 'Thursday';
-      case Day.Friday:
-        return 'Friday';
-      case Day.Saturday:
-        return 'Saturday';
-      case Day.Sunday:
-        return 'Sunday';
-      default:
-        return "";
-    }
-  }
+  String get value => wireName;
 }

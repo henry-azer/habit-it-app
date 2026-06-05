@@ -17,6 +17,7 @@ import '../../../../../core/validation/validation_types.dart';
 import '../../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../../core/widgets/dropdown/custom_dropdown.dart';
 import '../../../../../core/widgets/forms/text_field_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupSuccessScreen extends StatefulWidget {
   const SignupSuccessScreen({Key? key}) : super(key: key);
@@ -77,7 +78,7 @@ class _SignupSuccessScreenState extends State<SignupSuccessScreen> {
 
     if (isSaved) {
       await _appLocalDataSource.setInitDate(DateUtil.getTodayDate().toString());
-      Navigator.pushReplacementNamed(context, Routes.app);
+      context.go(Routes.app);
     }
   }
 

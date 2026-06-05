@@ -11,6 +11,7 @@ import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/widgets/appbar/cupertino_app_bar_widget.dart';
 import '../../../../../core/widgets/otp/otp_text_field_widget.dart';
 import '../../../../../data/datasources/user/user_local_datasource.dart';
+import 'package:go_router/go_router.dart';
 
 class SigninPINScreen extends StatefulWidget {
   const SigninPINScreen({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class _SigninPINScreenState extends State<SigninPINScreen> {
   _checkIfUserRegistered() async {
     final user = await _userLocalDataSource.getUser();
     if (!user.isRegistered) {
-      Navigator.pushReplacementNamed(context, Routes.initial);
+      context.go(Routes.initial);
     }
   }
 
@@ -50,7 +51,7 @@ class _SigninPINScreenState extends State<SigninPINScreen> {
   _authenticateUserPIN(String pin) async {
     if (pin == _authenticatedPIN) {
       await _userLocalDataSource.setUserAuthentication(true);
-      Navigator.pushReplacementNamed(context, Routes.app);
+      context.go(Routes.app);
     } else {
       AppNotifier.showSnackBar(
         context: context,

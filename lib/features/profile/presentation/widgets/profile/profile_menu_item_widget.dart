@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/app_colors.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:habit_it/core/utils/legacy_icons.dart';
 
 class ProfileMenuItemWidget extends StatelessWidget {
   final String title;

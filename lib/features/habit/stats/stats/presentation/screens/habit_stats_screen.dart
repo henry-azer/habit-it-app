@@ -16,6 +16,7 @@ import '../../../../../../core/widgets/month-picker/month_picker.dart';
 import '../../../../../../core/widgets/title/title_divider_widget.dart';
 import '../../../../../../data/datasources/app/app_local_datasource.dart';
 import '../widgets/habit_stats_item_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class HabitStatsScreen extends StatefulWidget {
   const HabitStatsScreen({Key? key}) : super(key: key);
@@ -55,8 +56,7 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
       lastDate: DateUtil.convertStringToDate(_appData.lastDate),
     );
     if (selectedDate != null) {
-      Navigator.pushNamed(context, Routes.appHabitMonthStats,
-          arguments: selectedDate);
+      context.push(Routes.appHabitMonthStats, extra: selectedDate);
     }
   }
 
@@ -67,8 +67,7 @@ class _HabitStatsScreenState extends State<HabitStatsScreen> {
       lastDate: DateUtil.convertStringToDate(_appData.lastDate),
     );
     if (selectedDate != null) {
-      Navigator.pushNamed(context, Routes.appHabitMonthProgress,
-          arguments: selectedDate);
+      context.push(Routes.appHabitMonthProgress, extra: selectedDate);
     }
   }
 

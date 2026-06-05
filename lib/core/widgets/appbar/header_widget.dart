@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:habit_it/core/utils/legacy_icons.dart';
 
 import '../../utils/app_colors.dart';
 
@@ -47,7 +47,7 @@ class HeaderWidget extends StatelessWidget {
                   child: IconButton(
                     color: Colors.white,
                     onPressed: onPressBack,
-                    icon: const Icon(LineAwesomeIcons.angle_left),
+                    icon: Icon(LineAwesomeIcons.angle_left),
                   ),
                 ),
               ],

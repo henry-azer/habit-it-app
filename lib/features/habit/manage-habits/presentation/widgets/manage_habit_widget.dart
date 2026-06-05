@@ -4,7 +4,7 @@ import 'package:habit_it/core/utils/app_text_styles.dart';
 import 'package:habit_it/core/utils/media_query_values.dart';
 import 'package:habit_it/data/entities/habit.dart';
 import 'package:habit_it/data/enums/habit_state.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:habit_it/core/utils/legacy_icons.dart';
 
 import '../../../../../core/utils/date_util.dart';
 import '../../../../../core/widgets/day-picker/model/day_in_week.dart';

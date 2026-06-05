@@ -6,7 +6,7 @@ import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/data/datasources/user/user_local_datasource.dart';
 import 'package:habit_it/data/enums/gender.dart';
 import 'package:habit_it/features/profile/presentation/widgets/base/profile_header_widget.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:habit_it/core/utils/legacy_icons.dart';
 
 import '../../../../config/locale/app_localization_helper.dart';
 import '../../../../config/routes/app_routes.dart';
@@ -16,6 +16,7 @@ import '../../../../data/entities/user.dart';
 import '../widgets/about-us/about_us_widget.dart';
 import '../widgets/profile/profile_menu_item_widget.dart';
 import '../widgets/profile/update_profile_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -58,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   _resetAppData() async {
     await _appLocalDataSource.reset();
-    Navigator.pushReplacementNamed(context, Routes.initial);
+    context.go(Routes.initial);
   }
 
   _submitUpdateUserFrom() async {
@@ -229,11 +230,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                   endIcon: false,
                   onPress: () async {
                     if (_user.isBiometricAuthenticated) {
-                      Navigator.pushReplacementNamed(
-                          context, Routes.appSigninBiometric);
+                      context.go(Routes.appSigninBiometric);
                     } else {
-                      Navigator.pushReplacementNamed(
-                          context, Routes.appSigninPIN);
+                      context.go(Routes.appSigninPIN);
                     }
                   }),
               const SizedBox(height: 10),

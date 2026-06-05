@@ -1,22 +1,19 @@
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonEnum(valueField: 'wireName')
 enum Gender {
-  male,
-  female,
+  male('male'),
+  female('female');
+
+  const Gender(this.wireName);
+  final String wireName;
+
+  String get value => this == male ? 'Male' : 'Female';
 }
 
-final List<String> genders = [
-  'Male',
-  'Female',
-];
+/// Backwards-compatible alias used by legacy screens.
+final List<String> genders = ['Male', 'Female'];
 
 extension GenderExtension on Gender {
-  String get value {
-    switch (this) {
-      case Gender.male:
-        return 'Male';
-      case Gender.female:
-        return 'Female';
-      default:
-        return "";
-    }
-  }
+  // [value] is on the enum itself; kept as an extension alias for legacy imports.
 }

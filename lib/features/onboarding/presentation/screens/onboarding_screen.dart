@@ -12,6 +12,7 @@ import 'package:habit_it/features/onboarding/presentation/widgets/onboarding_ite
 import '../../../../config/routes/app_routes.dart';
 import '../widgets/background_final_button_widget.dart';
 import '../widgets/onboarding_slider_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   _onFinishOnboarding(BuildContext context) async {
     await _appLocalDataSource.setInit(true);
-    Navigator.pushReplacementNamed(context, Routes.appSignup);
+    context.go(Routes.appSignup);
   }
 
   @override

@@ -28,6 +28,7 @@ import '../../features/auth/screens/lock_screen.dart';
 import '../../features/auth/screens/change_pin_screen.dart';
 import '../../features/auth/screens/passcode_upgrade_screen.dart';
 import '../../features/auth/screens/pin_migrate_prompt_screen.dart';
+import '../../features/auth/screens/pin_updated_success_screen.dart';
 import '../../features/auth/screens/signup_welcome_screen.dart';
 import '../../features/auth/screens/signup_passcode_screen.dart';
 import '../../features/auth/screens/signup_biometric_opt_in_screen.dart';
@@ -109,6 +110,13 @@ GoRouter buildAppRouter({AppLockService? appLock}) {
         path: AppRoutes.passcodeUpgradePath,
         name: AppRoutes.passcodeUpgradeName,
         builder: (_, __) => const PasscodeUpgradeScreen(),
+      ),
+
+      // ---- AUTH-008 AQ-2 (PM override) — migration-only success screen ----
+      GoRoute(
+        path: AppRoutes.pinUpdatedPath,
+        name: AppRoutes.pinUpdatedName,
+        builder: (_, __) => const PinUpdatedSuccessScreen(),
       ),
 
       // ---- AUTH-007 change PIN (reachable from Settings hub) ----

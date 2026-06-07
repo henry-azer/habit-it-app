@@ -16,7 +16,10 @@ import 'passcode_setup_screen.dart';
 ///   - explicit "We've upgraded PIN security" copy,
 ///   - reuses the AUTH-003 two-phase setup widget internally,
 ///   - does NOT chain into the biometric opt-in afterward,
-///   - routes directly to `/app/habits` on success + shows a confirmation snackbar.
+///   - on success, routes to the dedicated `PinUpdatedSuccessScreen`
+///     (`/auth/pin-updated`) per AQ-2 PM override (replaces the prior
+///     snackbar + immediate `/app/habits` redirect). The success screen's
+///     own Continue CTA routes to `/app/habits`.
 class PasscodeUpgradeScreen extends StatelessWidget {
   const PasscodeUpgradeScreen({super.key});
 
@@ -60,13 +63,10 @@ class PasscodeUpgradeScreen extends StatelessWidget {
             onComplete: () async {
               await getIt<AuthMigrator>().finalize();
               if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('PIN updated.'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-              context.go(AppRoutes.habitsPath);
+              // AQ-2 PM override: replace snackbar + direct /app/habits redirect
+              // with a dedicated confirmation screen. The success screen owns
+              // the final hop to /app/habits via its Continue CTA.
+              context.go(AppRoutes.pinUpdatedPath);
             },
             onBack: () {
               // Block back navigation while migration is pending — if they

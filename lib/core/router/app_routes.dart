@@ -52,6 +52,11 @@ abstract final class AppRoutes {
   static const String passcodeUpgradePath = '/auth/passcode-upgrade';
   static const String passcodeUpgradeName = 'passcodeUpgrade';
 
+  // AUTH-008 AQ-2 (PM override) — migration-only success confirmation.
+  // Reached from PasscodeUpgradeScreen.onComplete; CTA routes to /app/habits.
+  static const String pinUpdatedPath = '/auth/pin-updated';
+  static const String pinUpdatedName = 'pinUpdated';
+
   static const String addHabitPath = '/app/habits/add';
   static const String addHabitName = 'addHabit';
   static const String manageHabitsPath = '/app/habits/manage';

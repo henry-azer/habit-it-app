@@ -147,5 +147,8 @@
   "month_stats": "Month Stats",
   "your_habit_monthly_stats": "Your habit it monthly stats",
   "month_progress": "Month Progress",
-  "your_habit_monthly_report": "Your habit it monthly report"
+  "your_habit_monthly_report": "Your habit it monthly report",
+
+  "auth.pin_updated_title": "PIN updated successfully",
+  "auth.pin_updated_message": "Your new 4-digit PIN is set. Use it the next time you open the app."
 }

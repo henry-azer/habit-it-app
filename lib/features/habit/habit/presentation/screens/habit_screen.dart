@@ -50,21 +50,28 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
   }
 
   _initMonthHabits() async {
-    String previousMonthString = DateUtil.getPreviousMonthDateString(_selectedDate);
-    bool isInit = await _habitLocalDataSource.isMonthHabitsInit(_currentMonthString);
-    List<Habit> previousMonthHabits = await _habitLocalDataSource.getHabits(previousMonthString);
+    String previousMonthString =
+        DateUtil.getPreviousMonthDateString(_selectedDate);
+    bool isInit =
+        await _habitLocalDataSource.isMonthHabitsInit(_currentMonthString);
+    List<Habit> previousMonthHabits =
+        await _habitLocalDataSource.getHabits(previousMonthString);
     if (!isInit && previousMonthHabits.isNotEmpty) {
       AppNotifier.showMoveHabitsActionDialog(
           context: context,
-          message: AppLocalizationHelper.translate(context, AppLocalizationKeys.keepYourHabits),
-          descriptionMessage: "${AppLocalizationHelper.translate(context, AppLocalizationKeys.moveMonthHabits)}",
+          message: AppLocalizationHelper.translate(
+              context, AppLocalizationKeys.keepYourHabits),
+          descriptionMessage:
+              "${AppLocalizationHelper.translate(context, AppLocalizationKeys.moveMonthHabits)}",
           onClickYes: () async {
-            await _habitLocalDataSource.moveMonthHabits(previousMonthString, _currentMonthString, true);
+            await _habitLocalDataSource.moveMonthHabits(
+                previousMonthString, _currentMonthString, true);
             await _loadHabits();
             Navigator.of(context).pop();
           },
           onClickNo: () async {
-            await _habitLocalDataSource.moveMonthHabits(previousMonthString, _currentMonthString, false);
+            await _habitLocalDataSource.moveMonthHabits(
+                previousMonthString, _currentMonthString, false);
             await _loadHabits();
             Navigator.of(context).pop();
           });
@@ -72,8 +79,10 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
   }
 
   _loadHabits() async {
-    await _habitLocalDataSource.updateDayHabits(_selectedDate, _currentMonthString);
-    final habits = await _habitLocalDataSource.getHabitsByDay(_selectedDate, _currentMonthString);
+    await _habitLocalDataSource.updateDayHabits(
+        _selectedDate, _currentMonthString);
+    final habits = await _habitLocalDataSource.getHabitsByDay(
+        _selectedDate, _currentMonthString);
     setState(() {
       _habits = habits;
     });
@@ -97,6 +106,14 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
     await Navigator.pushNamed(context, Routes.appHabitManage,
         arguments: _selectedDate.day);
     await _loadHabits();
+  }
+
+  // TEMPORARY (Sprint 2 dogfood hook): pushes the new unified
+  // AddScheduledItemScreen so the 5 recurrence flavors are reachable for
+  // smoke-testing before Sprint 4 ships the planner home. Remove this hook
+  // when the planner becomes the primary entry surface.
+  _navigateToAddScheduledItem() async {
+    await Navigator.pushNamed(context, Routes.appSchedulerItemAdd);
   }
 
   _reorderHabit(int oldIndex, int newIndex) async {
@@ -217,6 +234,18 @@ class _HabitScreenState extends State<HabitScreen> with WidgetsBindingObserver {
               label: 'Manage Habits',
               onPressed: () async {
                 await _navigateToManageHabits();
+              },
+            ),
+            // TEMPORARY (Sprint 2): scheduler dogfood entry. Sprint 4 replaces
+            // this with the planner home and the proper quick-add sheet.
+            FloatingSpeedDialChild(
+              child: const Icon(LineAwesomeIcons.calendar),
+              foregroundColor: AppColors.black,
+              backgroundColor: AppColors.secondary.withOpacity(0.9),
+              label: AppLocalizationHelper.translate(
+                  context, AppLocalizationKeys.schedulerDogfoodAddItem),
+              onPressed: () async {
+                await _navigateToAddScheduledItem();
               },
             ),
           ],

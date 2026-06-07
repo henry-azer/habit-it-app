@@ -5,11 +5,14 @@ import 'package:habit_it/features/habit/stats/month-stats/presentation/screens/h
 import 'package:habit_it/features/habit/stats/stats/presentation/screens/habit_stats_screen.dart';
 import 'package:habit_it/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:habit_it/features/profile/presentation/screens/profile_screen.dart';
+import 'package:habit_it/features/scheduler/add-item/presentation/screens/add_scheduled_item_screen.dart';
+import 'package:habit_it/features/scheduler/edit-item/presentation/screens/edit_scheduled_item_screen.dart';
 import 'package:habit_it/features/signup/local-biometric/presentation/screens/signup_biometric_screen.dart';
 import 'package:habit_it/features/signup/local-pin/presentation/screens/signup_pin_screen.dart';
 import 'package:habit_it/features/splash/presentation/screens/splash_screen.dart';
 
 import '../../core/utils/app_strings.dart';
+import '../../data/enums/recurrence_kind.dart';
 import '../../features/habit/add-habit/presentation/screens/add_habit_screen.dart';
 import '../../features/habit/habit/presentation/screens/habit_screen.dart';
 import '../../features/habit/stats/month-progress/presentation/screens/habit_month_progress.dart';
@@ -40,6 +43,10 @@ class Routes {
   static const String appHabitMonthProgress = '/app/habit/stats/month-progress';
 
   static const String appProfile = '/app/profile';
+
+  // Sprint 2 — Scheduler expansion. Add/Edit screens for any ScheduledItem.
+  static const String appSchedulerItemAdd = '/app/scheduler/item/add';
+  static const String appSchedulerItemEdit = '/app/scheduler/item/edit';
 }
 
 class AppRoutes {
@@ -126,7 +133,9 @@ class AppRoutes {
         int selectedDay = routeSettings.arguments as int;
         return MaterialPageRoute(
             builder: (context) {
-              return ManageHabitsScreen(selectedDay: selectedDay,);
+              return ManageHabitsScreen(
+                selectedDay: selectedDay,
+              );
             },
             settings: routeSettings);
 
@@ -141,7 +150,9 @@ class AppRoutes {
         DateTime date = routeSettings.arguments as DateTime;
         return MaterialPageRoute(
             builder: (context) {
-              return HabitMonthStatsScreen(date: date,);
+              return HabitMonthStatsScreen(
+                date: date,
+              );
             },
             settings: routeSettings);
 
@@ -149,7 +160,9 @@ class AppRoutes {
         DateTime date = routeSettings.arguments as DateTime;
         return MaterialPageRoute(
             builder: (context) {
-              return HabitMonthProgressScreen(date: date,);
+              return HabitMonthProgressScreen(
+                date: date,
+              );
             },
             settings: routeSettings);
 
@@ -160,7 +173,30 @@ class AppRoutes {
             },
             settings: routeSettings);
 
+      case Routes.appSchedulerItemAdd:
+        RecurrenceKind? initialKind;
+        DateTime? prefillDate;
+        final args = routeSettings.arguments;
+        if (args is Map<String, dynamic>) {
+          initialKind = args['initialKind'] as RecurrenceKind?;
+          prefillDate = args['prefillDate'] as DateTime?;
+        }
+        return MaterialPageRoute(
+            builder: (context) {
+              return AddScheduledItemScreen(
+                initialKind: initialKind,
+                prefillDate: prefillDate,
+              );
+            },
+            settings: routeSettings);
 
+      case Routes.appSchedulerItemEdit:
+        final String itemId = routeSettings.arguments as String;
+        return MaterialPageRoute(
+            builder: (context) {
+              return EditScheduledItemScreen(itemId: itemId);
+            },
+            settings: routeSettings);
 
       default:
         return undefinedRoute();

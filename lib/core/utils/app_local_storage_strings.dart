@@ -11,4 +11,8 @@ class AppLocalStorageKeys {
       "APP/SCHEDULER/MIGRATION/V1_COMPLETE";
   static const String schedulerMigrationV1Backup =
       "APP/SCHEDULER/MIGRATION/V1_BACKUP";
+
+  // One-time hint flag for the yearly "no notifications" snackbar (Story 2.5).
+  static const String schedulerYearlyHintShown =
+      "APP/SCHEDULER/HINT/YEARLY_NO_NOTIFICATIONS";
 }

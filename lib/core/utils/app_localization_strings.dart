@@ -37,13 +37,16 @@ class AppLocalizationKeys {
   static const String onboardingGettingStarted = 'onboarding_getting_started';
 
   static const String onboardingPageOneTitle = 'onboarding_page_one_title';
-  static const String onboardingPageOneDescription = 'onboarding_page_one_description';
+  static const String onboardingPageOneDescription =
+      'onboarding_page_one_description';
 
   static const String onboardingPageTwoTitle = 'onboarding_page_two_title';
-  static const String onboardingPageTwoDescription = 'onboarding_page_two_description';
+  static const String onboardingPageTwoDescription =
+      'onboarding_page_two_description';
 
   static const String onboardingPageThreeTitle = 'onboarding_page_three_title';
-  static const String onboardingPageThreeDescription = 'onboarding_page_three_description';
+  static const String onboardingPageThreeDescription =
+      'onboarding_page_three_description';
 
   /// SIGNUP
   static const String signupTitle = 'signup_title';
@@ -58,7 +61,8 @@ class AppLocalizationKeys {
   static const String signupPINFailed = 'signup_biometric_failed';
 
   static const String signupBiometricTitle = 'signup_biometric_title';
-  static const String signupBiometricDescription = 'signup_biometric_description';
+  static const String signupBiometricDescription =
+      'signup_biometric_description';
   static const String signupBiometricButton = 'signup_biometric_button';
   static const String signupBiometricSuccess = 'signup_biometric_success';
   static const String signupBiometricFailed = 'signup_biometric_failed';
@@ -78,7 +82,8 @@ class AppLocalizationKeys {
   static const String signinPINInvalid = 'signin_pin_invalid';
 
   static const String signinBiometricTitle = 'signin_biometric_title';
-  static const String signinBiometricDescription = 'signin_biometric_description';
+  static const String signinBiometricDescription =
+      'signin_biometric_description';
   static const String signinBiometricInvalid = 'signin_biometric_invalid';
 
   static const String signinSuccess = 'signin_success';
@@ -87,10 +92,12 @@ class AppLocalizationKeys {
   static const String profileUpdateTitle = 'profile_update_title';
   static const String profileUpdateFailed = 'profile_update_failed';
   static const String profileUpdateSuccess = 'profile_update_success';
-  static const String profileUpdateUserProfileTitle = 'profile_update_user_profile_title';
+  static const String profileUpdateUserProfileTitle =
+      'profile_update_user_profile_title';
   static const String profileAboutUs = 'profile_about_us';
   static const String profileResetAppData = 'profile_reset_app_data';
-  static const String profileYouAreAboutToRemoveAllData = 'profile_you_are_about_to_remove_all_data';
+  static const String profileYouAreAboutToRemoveAllData =
+      'profile_you_are_about_to_remove_all_data';
 
   /// HABITS
   static const String habit = 'habit';
@@ -116,4 +123,68 @@ class AppLocalizationKeys {
   static const String yourHabitMonthlyStats = 'your_habit_monthly_stats';
   static const String monthProgress = 'month_progress';
   static const String yourHabitMonthlyReport = 'your_habit_monthly_report';
+
+  /// SCHEDULER — Add / Edit screens (Sprint 2)
+  static const String schedulerAddTitle = 'scheduler_add_title';
+  static const String schedulerEditTitle = 'scheduler_edit_title';
+  static const String schedulerItemName = 'scheduler_item_name';
+  static const String schedulerItemNameHint = 'scheduler_item_name_hint';
+  static const String schedulerItemNameRequired =
+      'scheduler_item_name_required';
+  static const String schedulerRecurrenceTitle = 'scheduler_recurrence_title';
+  static const String schedulerRecurrenceOneOff = 'scheduler_recurrence_oneoff';
+  static const String schedulerRecurrenceDaily = 'scheduler_recurrence_daily';
+  static const String schedulerRecurrenceWeekly = 'scheduler_recurrence_weekly';
+  static const String schedulerRecurrenceMonthly =
+      'scheduler_recurrence_monthly';
+  static const String schedulerRecurrenceYearly = 'scheduler_recurrence_yearly';
+  static const String schedulerSave = 'scheduler_save';
+  static const String schedulerDelete = 'scheduler_delete';
+  static const String schedulerDeleteConfirm = 'scheduler_delete_confirm';
+  static const String schedulerCancel = 'scheduler_cancel';
+
+  // One-off
+  static const String schedulerOneOffDate = 'scheduler_oneoff_date';
+  static const String schedulerOneOffPickDate = 'scheduler_oneoff_pick_date';
+  static const String schedulerOneOffPastDateHint =
+      'scheduler_oneoff_past_date_hint';
+  static const String schedulerOneOffPastDateLocked =
+      'scheduler_oneoff_past_date_locked';
+
+  // Daily
+  static const String schedulerDailyStartsToday =
+      'scheduler_daily_starts_today';
+
+  // Weekly
+  static const String schedulerWeeklyWeekdays = 'scheduler_weekly_weekdays';
+  static const String schedulerWeeklyPickAtLeastOne =
+      'scheduler_weekly_pick_at_least_one';
+  static const String schedulerWeeklyAllDaysHint =
+      'scheduler_weekly_all_days_hint';
+
+  // Monthly
+  static const String schedulerMonthlyDayOfMonth =
+      'scheduler_monthly_day_of_month';
+  static const String schedulerMonthlyShortMonthsHint =
+      'scheduler_monthly_short_months_hint';
+  static const String schedulerMonthlyCarryOverToggle =
+      'scheduler_monthly_carry_over_toggle';
+  static const String schedulerMonthlyCarryOverHelper =
+      'scheduler_monthly_carry_over_helper';
+
+  // Yearly
+  static const String schedulerYearlyMonth = 'scheduler_yearly_month';
+  static const String schedulerYearlyDay = 'scheduler_yearly_day';
+  static const String schedulerYearlyLeapHint = 'scheduler_yearly_leap_hint';
+  static const String schedulerYearlyNoNotificationsHint =
+      'scheduler_yearly_no_notifications_hint';
+
+  // Edit-screen helpers
+  static const String schedulerEditKindLockedHint =
+      'scheduler_edit_kind_locked_hint';
+  static const String schedulerEditStartDateLockedHint =
+      'scheduler_edit_start_date_locked_hint';
+
+  // Dogfood entry on HabitScreen (temporary — replaced in Sprint 4)
+  static const String schedulerDogfoodAddItem = 'scheduler_dogfood_add_item';
 }

@@ -147,5 +147,47 @@
   "month_stats": "Month Stats",
   "your_habit_monthly_stats": "Your habit it monthly stats",
   "month_progress": "Month Progress",
-  "your_habit_monthly_report": "Your habit it monthly report"
+  "your_habit_monthly_report": "Your habit it monthly report",
+
+  "scheduler_add_title": "Add Item",
+  "scheduler_edit_title": "Edit Item",
+  "scheduler_item_name": "Item Name",
+  "scheduler_item_name_hint": "What is this item?",
+  "scheduler_item_name_required": "Item name is required",
+  "scheduler_recurrence_title": "Recurrence",
+  "scheduler_recurrence_oneoff": "One-off",
+  "scheduler_recurrence_daily": "Daily",
+  "scheduler_recurrence_weekly": "Weekly",
+  "scheduler_recurrence_monthly": "Monthly",
+  "scheduler_recurrence_yearly": "Yearly",
+  "scheduler_save": "Save",
+  "scheduler_delete": "Delete",
+  "scheduler_delete_confirm": "Delete this item and all its history? This can't be undone.",
+  "scheduler_cancel": "Cancel",
+
+  "scheduler_oneoff_date": "Date",
+  "scheduler_oneoff_pick_date": "Pick a date",
+  "scheduler_oneoff_past_date_hint": "Past date — will appear as overdue today.",
+  "scheduler_oneoff_past_date_locked": "Past one-off date cannot be changed.",
+
+  "scheduler_daily_starts_today": "Starts today and repeats every day.",
+
+  "scheduler_weekly_weekdays": "Weekdays",
+  "scheduler_weekly_pick_at_least_one": "Pick at least one weekday.",
+  "scheduler_weekly_all_days_hint": "Use Daily instead — same behavior, simpler model.",
+
+  "scheduler_monthly_day_of_month": "Day of Month",
+  "scheduler_monthly_short_months_hint": "Days 29-31 are skipped on shorter months.",
+  "scheduler_monthly_carry_over_toggle": "Carry over if missed",
+  "scheduler_monthly_carry_over_helper": "If you miss it, the item shows up on later days of the same month until you do it or the month ends.",
+
+  "scheduler_yearly_month": "Month",
+  "scheduler_yearly_day": "Day",
+  "scheduler_yearly_leap_hint": "This item only appears in leap years (next: {year}).",
+  "scheduler_yearly_no_notifications_hint": "Yearly items rely on you opening the app on the day — notifications come later.",
+
+  "scheduler_edit_kind_locked_hint": "Recurrence type cannot be changed after creation. Delete and re-add to use a different type.",
+  "scheduler_edit_start_date_locked_hint": "Start date cannot be changed after creation.",
+
+  "scheduler_dogfood_add_item": "Add Scheduled Item"
 }

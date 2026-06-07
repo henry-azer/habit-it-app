@@ -79,44 +79,246 @@ void main() {
     expect(summary.scheduledItemsCreated, 0);
   });
 
-  test('three-month seed dedupes "Walk" across Apr/May/Jun', () async {
-    final runner = await _buildRunner(
-      legacy: LegacyHabitFixtures.threeMonthHabits(),
-    );
-    await runner.run();
+  test(
+    'three months same habit merges (realistic moveMonthHabits) — §12.8',
+    () async {
+      // The fixture mirrors the real `moveMonthHabits` output: distinct
+      // legacy `id` and `createdDate` per month-copy. The §12.8 dedup key
+      // (name + sorted weekday set) collapses them; the oldest-month copy
+      // wins on `id`, `createdDate`, and `recurrence.weekdays`.
+      final runner = await _buildRunner(
+        legacy: LegacyHabitFixtures.threeMonthHabits(),
+      );
+      await runner.run();
 
-    final deps = _depsOf(runner);
-    final items = await deps.datasource.getAll();
-    expect(items.length, 2);
+      final deps = _depsOf(runner);
+      final items = await deps.datasource.getAll();
+      expect(items.length, 2);
 
-    final walk = items.firstWhere((it) => it.name == 'Walk');
-    expect(walk.id, 'WALK0001');
-    expect(walk.recurrence.kind, RecurrenceKind.weekly);
-    expect(walk.recurrence.weekdays, <String>['Monday', 'Wednesday', 'Friday']);
-    expect(walk.carryOverEnabled, isFalse);
+      final walk = items.firstWhere((it) => it.name == 'Walk');
+      // Apr is the oldest month (ASCII-sorted first) — its id, createdDate,
+      // and repeatDays win.
+      expect(walk.id, 'WALK0001');
+      expect(walk.createdDate, DateTime(2026, 4, 1));
+      expect(walk.recurrence.kind, RecurrenceKind.weekly);
+      expect(walk.recurrence.weekdays, <String>[
+        'Friday',
+        'Monday',
+        'Wednesday',
+      ]);
+      expect(walk.recurrence.startDate, DateTime(2026, 4, 1));
+      expect(walk.carryOverEnabled, isFalse);
 
-    // Apr 1 (DONE), Apr 3 (NOT_DONE), Apr 6 (DONE) +
-    // May 4 (DONE), May 6 (SUSPENDED), May 8 (DONE) +
-    // Jun 1 (NOT_DONE), Jun 15 (DONE)
-    expect(walk.completionLog, {
-      '2026-04-01': HabitState.DONE,
-      '2026-04-03': HabitState.NOT_DONE,
-      '2026-04-06': HabitState.DONE,
-      '2026-05-04': HabitState.DONE,
-      '2026-05-06': HabitState.SUSPENDED,
-      '2026-05-08': HabitState.DONE,
-      '2026-06-01': HabitState.NOT_DONE,
-      '2026-06-15': HabitState.DONE,
-    });
+      // Apr 1 (DONE), Apr 3 (NOT_DONE), Apr 6 (DONE) +
+      // May 4 (DONE), May 6 (SUSPENDED), May 8 (DONE) +
+      // Jun 1 (NOT_DONE), Jun 15 (DONE)
+      expect(walk.completionLog, {
+        '2026-04-01': HabitState.DONE,
+        '2026-04-03': HabitState.NOT_DONE,
+        '2026-04-06': HabitState.DONE,
+        '2026-05-04': HabitState.DONE,
+        '2026-05-06': HabitState.SUSPENDED,
+        '2026-05-08': HabitState.DONE,
+        '2026-06-01': HabitState.NOT_DONE,
+        '2026-06-15': HabitState.DONE,
+      });
 
-    final stretch = items.firstWhere((it) => it.name == 'Stretch');
-    expect(stretch.id, 'STRETCH1');
-    expect(stretch.completionLog, {
-      '2026-05-12': HabitState.DONE,
-      '2026-05-14': HabitState.NOT_DONE,
-      '2026-06-02': HabitState.DONE,
-    });
-  });
+      final stretch = items.firstWhere((it) => it.name == 'Stretch');
+      // May is the oldest month Stretch appears in.
+      expect(stretch.id, 'STRETCH1');
+      expect(stretch.createdDate, DateTime(2026, 5, 10));
+      expect(stretch.recurrence.weekdays, <String>['Thursday', 'Tuesday']);
+      expect(stretch.completionLog, {
+        '2026-05-12': HabitState.DONE,
+        '2026-05-14': HabitState.NOT_DONE,
+        '2026-06-02': HabitState.DONE,
+      });
+    },
+  );
+
+  test(
+    'two different "Workout" habits with different weekdays stay separate — '
+    '§12.8',
+    () async {
+      final runner = await _buildRunner(
+        legacy: LegacyHabitFixtures.twoWorkoutsDifferentWeekdays(),
+      );
+      await runner.run();
+
+      final items = await _depsOf(runner).datasource.getAll();
+      expect(items.length, 2);
+
+      // Same name — must be distinguished by the sorted-weekday key.
+      final mwf = items.firstWhere(
+        (it) => it.recurrence.weekdays!.contains('Monday'),
+      );
+      final tt = items.firstWhere(
+        (it) => it.recurrence.weekdays!.contains('Tuesday'),
+      );
+      expect(mwf.name, 'Workout');
+      expect(tt.name, 'Workout');
+      // Sorted ASCII: [Friday, Monday, Wednesday] and [Thursday, Tuesday].
+      expect(mwf.recurrence.weekdays, <String>[
+        'Friday',
+        'Monday',
+        'Wednesday',
+      ]);
+      expect(tt.recurrence.weekdays, <String>['Thursday', 'Tuesday']);
+
+      // Oldest-month id wins per dedup group.
+      expect(mwf.id, 'WORKOUT_JAN');
+      expect(mwf.createdDate, DateTime(2026, 1, 1));
+      expect(tt.id, 'WORKOUT_JUN');
+      expect(tt.createdDate, DateTime(2026, 6, 1));
+
+      // Completion logs are scoped to each group's months.
+      expect(mwf.completionLog.keys, contains('2026-01-05'));
+      expect(mwf.completionLog.keys, contains('2026-02-04'));
+      expect(mwf.completionLog.keys, contains('2026-03-06'));
+      expect(mwf.completionLog.keys, isNot(contains('2026-06-02')));
+      expect(tt.completionLog.keys, contains('2026-06-02'));
+      expect(tt.completionLog.keys, contains('2026-06-04'));
+      expect(tt.completionLog.keys, isNot(contains('2026-01-05')));
+    },
+  );
+
+  test(
+    'repeatDays order does not affect dedup — §12.8',
+    () async {
+      final runner = await _buildRunner(
+        legacy: LegacyHabitFixtures.sameWeekdaySetDifferentOrder(),
+      );
+      await runner.run();
+
+      final items = await _depsOf(runner).datasource.getAll();
+      // Apr [Monday, Wednesday, Friday] and May [Friday, Monday, Wednesday]
+      // have the same set — they must merge into ONE item via the sort.
+      expect(items.length, 1);
+      final read = items.single;
+      expect(read.name, 'Read');
+      expect(read.id, 'READ_APR'); // Oldest month wins.
+      expect(read.createdDate, DateTime(2026, 4, 1));
+      // Canonical sorted order is stored.
+      expect(read.recurrence.weekdays, <String>[
+        'Friday',
+        'Monday',
+        'Wednesday',
+      ]);
+      // Both months' logs are merged.
+      expect(read.completionLog, {
+        '2026-04-07': HabitState.DONE,
+        '2026-05-08': HabitState.NOT_DONE,
+      });
+    },
+  );
+
+  test(
+    'mid-life weekday-set edit produces two items (deliberate split) — '
+    '§12.8 + §11.7',
+    () async {
+      final runner = await _buildRunner(
+        legacy: LegacyHabitFixtures.midLifeWeekdayEdit(),
+      );
+      await runner.run();
+
+      final items = await _depsOf(runner).datasource.getAll();
+      // Mon/Wed/Fri group (Apr+May) and Mon/Wed/Fri/Sat group (Jun) split.
+      expect(items.length, 2);
+
+      final original = items.firstWhere(
+        (it) => it.recurrence.weekdays!.length == 3,
+      );
+      final edited = items.firstWhere(
+        (it) => it.recurrence.weekdays!.length == 4,
+      );
+
+      expect(original.name, 'Gym');
+      expect(original.recurrence.weekdays, <String>[
+        'Friday',
+        'Monday',
+        'Wednesday',
+      ]);
+      expect(original.id, 'GYM_APR');
+      expect(original.completionLog, {
+        '2026-04-06': HabitState.DONE,
+        '2026-05-04': HabitState.DONE,
+      });
+
+      expect(edited.name, 'Gym');
+      expect(edited.recurrence.weekdays, <String>[
+        'Friday',
+        'Monday',
+        'Saturday',
+        'Wednesday',
+      ]);
+      expect(edited.id, 'GYM_JUN');
+      expect(edited.completionLog, {
+        '2026-06-06': HabitState.DONE,
+        '2026-06-13': HabitState.DONE,
+      });
+    },
+  );
+
+  test(
+    'per-cell conflict resolves last-write-wins by month order — §6.3',
+    () async {
+      // Same dedup key (Ridge, Mon/Wed/Fri) in Apr and May; Apr day 15 -> DONE
+      // produces 2026-04-15 entry; May day 15 -> NOT_DONE produces
+      // 2026-05-15. The two ISO dates do NOT collide — they belong to
+      // different months — so both end up in the merged log. The §6.3 rule
+      // is reaffirmed: per-cell *same iso date* conflicts would resolve
+      // last-write-wins via natural map overwrite. We additionally assert the
+      // newer-month write *does not* get shadowed by the older.
+      final runner = await _buildRunner(
+        legacy: LegacyHabitFixtures.perCellConflict(),
+      );
+      await runner.run();
+
+      final items = await _depsOf(runner).datasource.getAll();
+      expect(items.length, 1);
+      final ridge = items.single;
+      expect(ridge.completionLog['2026-04-15'], HabitState.DONE);
+      expect(ridge.completionLog['2026-05-15'], HabitState.NOT_DONE);
+    },
+  );
+
+  test(
+    'same-iso-date conflict in same month blob: later record overwrites '
+    'earlier (per-cell last-write-wins) — §6.3',
+    () async {
+      // Construct by hand: a single month blob containing two records with
+      // the same dedup key, both with daysStates[10]. The second record's
+      // state must win because iteration within a month preserves array
+      // order and the overwrite is naked (no containsKey guard).
+      final earlyDoneIso = jsonEncode([
+        {
+          'id': 'CONFLICT_A',
+          'name': 'Walk',
+          'createdDate': DateTime(2026, 6, 1).toIso8601String(),
+          'repeatDays': <String>['Monday', 'Wednesday', 'Friday'],
+          'daysStates': <String, dynamic>{'10': HabitState.DONE.index},
+        },
+        {
+          'id': 'CONFLICT_B',
+          'name': 'Walk',
+          'createdDate': DateTime(2026, 6, 1).toIso8601String(),
+          'repeatDays': <String>['Monday', 'Wednesday', 'Friday'],
+          'daysStates': <String, dynamic>{'10': HabitState.NOT_DONE.index},
+        },
+      ]);
+      final runner = await _buildRunner(
+        legacy: {
+          '${AppLocalStorageKeys.habitMonth}2026-6': earlyDoneIso,
+        },
+      );
+      await runner.run();
+
+      final items = await _depsOf(runner).datasource.getAll();
+      expect(items.length, 1);
+      // Later record wins — DONE has been overwritten with NOT_DONE.
+      expect(items.single.completionLog['2026-06-10'], HabitState.NOT_DONE);
+    },
+  );
 
   test(
     'byte-identical APP/SCHEDULER/ITEMS across re-runs (idempotency)',
@@ -192,7 +394,8 @@ void main() {
     await runner.run();
     final walk = (await _depsOf(
       runner,
-    ).datasource.getAll()).firstWhere((it) => it.name == 'Walk');
+    ).datasource.getAll())
+        .firstWhere((it) => it.name == 'Walk');
     expect(walk.completionLog['2026-05-06'], HabitState.SUSPENDED);
   });
 
@@ -327,7 +530,8 @@ void main() {
   });
 
   test(
-    'Recurrence.weekly migrated items preserve full weekday names',
+    'Recurrence.weekly migrated items preserve full weekday names '
+    '(canonical sorted order)',
     () async {
       final runner = await _buildRunner(
         legacy: LegacyHabitFixtures.threeMonthHabits(),
@@ -335,9 +539,11 @@ void main() {
       await runner.run();
       final walk = (await _depsOf(
         runner,
-      ).datasource.getAll()).firstWhere((it) => it.name == 'Walk');
+      ).datasource.getAll())
+          .firstWhere((it) => it.name == 'Walk');
       final reread = Recurrence.fromJson(walk.recurrence.toJson());
-      expect(reread.weekdays, <String>['Monday', 'Wednesday', 'Friday']);
+      // §12.8 — stored weekdays are in canonical (sorted) order.
+      expect(reread.weekdays, <String>['Friday', 'Monday', 'Wednesday']);
     },
   );
 

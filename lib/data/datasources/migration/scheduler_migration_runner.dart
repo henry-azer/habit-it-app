@@ -20,6 +20,16 @@ import '../scheduler/scheduled_item_local_datasource.dart';
 // `NumbersUtil.getRandomId()` call deterministic. New (non-migrated) items
 // continue to use `NumbersUtil.getRandomId()` at creation time.
 
+// §12.8 — dedup on (name, sorted weekday set). The legacy `createdDate` and
+// `id` are NOT stable across month-copies (moveMonthHabits re-stamps both via
+// addHabit), so they cannot be part of the key. The sorted-list serialization
+// is for stability only; weekday-name strings ('Monday'..'Sunday') contain no
+// commas so the join is unambiguous.
+String _dedupKey(Habit h) {
+  final sortedDays = [...h.repeatDays]..sort();
+  return '${h.name}::${sortedDays.join(',')}';
+}
+
 /// One-shot migration from the legacy `APP/HABIT/MONTH/*` blobs into the
 /// unified `APP/SCHEDULER/ITEMS` store. Runs once, is idempotent, never
 /// throws, never deletes legacy data. See
@@ -36,8 +46,7 @@ class SchedulerMigrationRunner {
   });
 
   Future<MigrationSummary> run() async {
-    final alreadyComplete =
-        await storageManager.getValue<bool>(
+    final alreadyComplete = await storageManager.getValue<bool>(
           AppLocalStorageKeys.schedulerMigrationV1Complete,
         ) ??
         false;
@@ -125,15 +134,14 @@ class SchedulerMigrationRunner {
   BuildResult buildItems(Map<String, dynamic> legacy) {
     // Data keys only: `APP/HABIT/MONTH/<year>-<month>`. The init flags
     // (`APP/HABIT/MONTH/INIT<...>` and `APP/HABIT/INIT/<...>`) are filtered.
-    final monthKeys =
-        legacy.keys
-            .where(
-              (k) =>
-                  k.startsWith(AppLocalStorageKeys.habitMonth) &&
-                  !k.startsWith(AppLocalStorageKeys.habitMonthInit),
-            )
-            .toList()
-          ..sort();
+    final monthKeys = legacy.keys
+        .where(
+          (k) =>
+              k.startsWith(AppLocalStorageKeys.habitMonth) &&
+              !k.startsWith(AppLocalStorageKeys.habitMonthInit),
+        )
+        .toList()
+      ..sort();
 
     final byDedupKey = <String, ScheduledItem>{};
     int scanned = 0;
@@ -172,18 +180,23 @@ class SchedulerMigrationRunner {
             skippedNoRepeatDays++;
             continue;
           }
-          final dedupKey =
-              '${legacyHabit.name}::${legacyHabit.createdDate.toIso8601String()}';
-          ScheduledItem target =
-              byDedupKey[dedupKey] ??
+          // §12.8 — dedup on stable fields only (name + sorted weekday set).
+          final dedupKey = _dedupKey(legacyHabit);
+          ScheduledItem target = byDedupKey[dedupKey] ??
               ScheduledItem(
-                // Reuse the legacy id so a re-run produces a byte-identical
-                // blob (idempotency AC in tech story 1.2).
+                // Oldest-month copy is canonical. ASCII-sorted month-key
+                // iteration guarantees this is the first time we've seen this
+                // key, so legacyHabit IS the oldest copy. Reusing its legacy
+                // id keeps the migration byte-idempotent on re-runs (no
+                // NumbersUtil.getRandomId() call inside the runner).
                 id: legacyHabit.id,
                 name: legacyHabit.name,
                 createdDate: legacyHabit.createdDate,
                 recurrence: Recurrence.weekly(
-                  legacyHabit.repeatDays,
+                  // Sort the list so the migrated item's stored weekdays are in
+                  // a canonical order; required for byte-idempotency when two
+                  // legacy copies have weekday lists in different orders.
+                  [...legacyHabit.repeatDays]..sort(),
                   legacyHabit.createdDate,
                 ),
                 completionLog: <String, HabitState>{},
@@ -192,6 +205,10 @@ class SchedulerMigrationRunner {
 
           legacyHabit.daysStates.forEach((day, state) {
             final iso = DateUtil.isoDate(DateTime(year, month, day));
+            // §6.3 per-cell last-write-wins: oldest-month iterated first, so
+            // this overwrite means newer-month state replaces older-month
+            // state. Do NOT gate this with containsKey — that would invert
+            // the rule.
             target.completionLog[iso] = state;
             copied++;
           });
@@ -240,28 +257,28 @@ class MigrationSummary {
   int get skippedRecords => skippedNoRepeatDays + skippedMalformed;
 
   factory MigrationSummary.freshInstall() => MigrationSummary(
-    wasFreshInstall: true,
-    wasAlreadyComplete: false,
-    legacyKeysFound: 0,
-    legacyHabitsScanned: 0,
-    scheduledItemsCreated: 0,
-    completionEntriesCopied: 0,
-    skippedNoRepeatDays: 0,
-    skippedMalformed: 0,
-    completedAt: DateTime.now(),
-  );
+        wasFreshInstall: true,
+        wasAlreadyComplete: false,
+        legacyKeysFound: 0,
+        legacyHabitsScanned: 0,
+        scheduledItemsCreated: 0,
+        completionEntriesCopied: 0,
+        skippedNoRepeatDays: 0,
+        skippedMalformed: 0,
+        completedAt: DateTime.now(),
+      );
 
   factory MigrationSummary.alreadyComplete() => MigrationSummary(
-    wasFreshInstall: false,
-    wasAlreadyComplete: true,
-    legacyKeysFound: 0,
-    legacyHabitsScanned: 0,
-    scheduledItemsCreated: 0,
-    completionEntriesCopied: 0,
-    skippedNoRepeatDays: 0,
-    skippedMalformed: 0,
-    completedAt: DateTime.now(),
-  );
+        wasFreshInstall: false,
+        wasAlreadyComplete: true,
+        legacyKeysFound: 0,
+        legacyHabitsScanned: 0,
+        scheduledItemsCreated: 0,
+        completionEntriesCopied: 0,
+        skippedNoRepeatDays: 0,
+        skippedMalformed: 0,
+        completedAt: DateTime.now(),
+      );
 }
 
 class BuildResult {

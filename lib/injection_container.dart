@@ -6,6 +6,8 @@ import 'package:habit_it/core/managers/storage-manager/local_storage_manager.dar
 import 'package:habit_it/data/datasources/app/app_local_datasource.dart';
 import 'package:habit_it/data/datasources/habit/habit_local_datasource.dart';
 import 'package:habit_it/data/datasources/habit/habit_stats_local_datasource.dart';
+import 'package:habit_it/data/datasources/migration/scheduler_migration_runner.dart';
+import 'package:habit_it/data/datasources/scheduler/scheduled_item_local_datasource.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/datasources/user/user_local_datasource.dart';
@@ -13,15 +15,50 @@ import 'data/datasources/user/user_local_datasource.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // !---- Data Sources ----!
-  sl.registerLazySingleton<AppLocalDataSource>(() => AppLocalDataSourceImpl(storageManager: sl()));
-  sl.registerLazySingleton<UserLocalDataSource>(() => UserLocalDataSourceImpl(storageManager: sl()));
-  sl.registerLazySingleton<HabitLocalDataSource>(() => HabitLocalDataSourceImpl(storageManager: sl()));
-  sl.registerLazySingleton<HabitStatsLocalDataSource>(() => HabitStatsLocalDataSourceImpl(storageManager: sl()));
-
   // !---- External ----!
-  sl.registerLazySingleton(() => SharedPreferences.getInstance());
+  // Resolve SharedPreferences once up front. The migration runner needs the
+  // synchronous instance for `getKeys()`/`getString()`; everything else
+  // (`IStorageManager`, etc.) keeps its existing get-instance-on-demand path.
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
   sl.registerLazySingleton<IStorageManager>(() => LocalStorageManager());
   sl.registerLazySingleton<LocalAuthentication>(() => LocalAuthentication());
-  sl.registerLazySingleton<IBiometricAuthenticationManager>(() => BiometricAuthenticationManager(localAuthentication: sl(), userLocalDataSource: sl()));
+  sl.registerLazySingleton<IBiometricAuthenticationManager>(
+    () => BiometricAuthenticationManager(
+      localAuthentication: sl(),
+      userLocalDataSource: sl(),
+    ),
+  );
+
+  // !---- Data Sources ----!
+  sl.registerLazySingleton<AppLocalDataSource>(
+    () => AppLocalDataSourceImpl(storageManager: sl()),
+  );
+  sl.registerLazySingleton<UserLocalDataSource>(
+    () => UserLocalDataSourceImpl(storageManager: sl()),
+  );
+  sl.registerLazySingleton<HabitLocalDataSource>(
+    () => HabitLocalDataSourceImpl(storageManager: sl()),
+  );
+  sl.registerLazySingleton<HabitStatsLocalDataSource>(
+    () => HabitStatsLocalDataSourceImpl(storageManager: sl()),
+  );
+  sl.registerLazySingleton<ScheduledItemLocalDataSource>(
+    () => ScheduledItemLocalDataSourceImpl(storageManager: sl()),
+  );
+
+  // !---- Scheduler Migration ----!
+  // Factory, not singleton: runs once and its (potentially large) backup blob
+  // should not be retained. See architecture.md §7.
+  sl.registerFactory<SchedulerMigrationRunner>(
+    () => SchedulerMigrationRunner(
+      storageManager: sl(),
+      scheduledItemLocalDataSource: sl(),
+      sharedPreferences: sl(),
+    ),
+  );
+
+  // Run the migration before the first screen renders. Idempotent: a second
+  // boot returns immediately via the V1_COMPLETE flag.
+  await sl<SchedulerMigrationRunner>().run();
 }

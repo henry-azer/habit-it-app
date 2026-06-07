@@ -36,8 +36,9 @@ class DateUtil {
 
     for (int i = 0; i < todayDate.day; i++) {
       DateTime currentDay = firstDayOfCurrentMonth.add(Duration(days: i));
-      monthDaysList
-          .add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
+      monthDaysList.add(
+        DateTime(currentDay.year, currentDay.month, currentDay.day, 0),
+      );
     }
 
     return monthDaysList.reversed.toList();
@@ -49,8 +50,9 @@ class DateUtil {
 
     for (int i = 0; i < date.day; i++) {
       DateTime currentDay = firstDayOfCurrentMonth.add(Duration(days: i));
-      monthDaysList
-          .add(DateTime(currentDay.year, currentDay.month, currentDay.day, 0));
+      monthDaysList.add(
+        DateTime(currentDay.year, currentDay.month, currentDay.day, 0),
+      );
     }
 
     return monthDaysList.reversed.toList();
@@ -112,8 +114,14 @@ class DateUtil {
     return DateTime.now().add(const Duration(days: 1)).difference(date).inDays;
   }
 
-  static bool isDateInRange(DateTime checkDate, DateTime startMonth, DateTime endMonth) {
-    return (checkDate.isAfter(startMonth) || checkDate.isAtSameMomentAs(startMonth)) && (checkDate.isBefore(endMonth) || checkDate.isAtSameMomentAs(endMonth));
+  static bool isDateInRange(
+    DateTime checkDate,
+    DateTime startMonth,
+    DateTime endMonth,
+  ) {
+    return (checkDate.isAfter(startMonth) ||
+            checkDate.isAtSameMomentAs(startMonth)) &&
+        (checkDate.isBefore(endMonth) || checkDate.isAtSameMomentAs(endMonth));
   }
 
   /// Today Name
@@ -211,5 +219,25 @@ class DateUtil {
       default:
         throw Exception('Unexpected weekday value: $weekday');
     }
+  }
+
+  /// Scheduler helpers — zero-padded ISO `yyyy-MM-dd` for completionLog keys.
+  /// Distinct from [convertDateToString] (which does NOT zero-pad) — see
+  /// `docs/scheduler/architecture.md` §3 for the rationale.
+  static String isoDate(DateTime date) {
+    final y = date.year.toString().padLeft(4, '0');
+    final m = date.month.toString().padLeft(2, '0');
+    final d = date.day.toString().padLeft(2, '0');
+    return "$y-$m-$d";
+  }
+
+  /// Number of days in [month] for [year]. Month is 1..12.
+  static int daysInMonth(int year, int month) {
+    return DateTime(year, month + 1, 0).day;
+  }
+
+  /// Standard proleptic Gregorian leap-year rule.
+  static bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
   }
 }
